@@ -1,0 +1,13 @@
+# Ignore generated files
+result
+result-*
+
+# Ignore backup files
+*.backup
+*.bak
+*~
+
+# Ignore hardware-configuration.nix if you want (it's machine-specific)
+# Uncomment the line below if you have multiple machines
+# hardware-configuration.nix
+
