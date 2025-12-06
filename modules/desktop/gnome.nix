@@ -4,8 +4,6 @@
   # Enable X11 and GNOME
   services.xserver = {
     enable = true;
-    displayManager.gdm.enable = true;
-    desktopManager.gnome.enable = true;
 
     # Keyboard layout
     xkb = {
@@ -13,6 +11,10 @@
       variant = "";
     };
   };
+
+  # Display manager and desktop environment (new options)
+  services.displayManager.gdm.enable = true;
+  services.desktopManager.gnome.enable = true;
 
   # Sound with PipeWire (modern audio system)
   services.pulseaudio.enable = false;

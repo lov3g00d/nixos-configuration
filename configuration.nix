@@ -9,8 +9,9 @@
     ./modules/system/boot.nix
     ./modules/system/networking.nix
 
-    # Desktop environment
+    # Desktop environments
     ./modules/desktop/gnome.nix
+    ./modules/desktop/hyprland.nix
 
     # User configuration
     ./users/art
@@ -20,6 +21,8 @@
   nix.settings = {
     experimental-features = [ "nix-command" "flakes" ];
     auto-optimise-store = true;
+    warn-dirty = false;
+    trusted-users = [ "root" "@wheel" ];
   };
 
   # Automatic garbage collection
