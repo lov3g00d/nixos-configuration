@@ -3,23 +3,60 @@
 {
   home.stateVersion = "25.11";
 
+  # Catppuccin theme
+  catppuccin.enable = true;
+  catppuccin.flavor = "mocha";
+
   # User packages
   home.packages = with pkgs; [
-    # Terminal tools
+    # Terminal utilities
     ripgrep
     fd
     bat
     eza
     fzf
     yazi
+    btop
+    atuin
+    tmux
+    lazygit
+    lazydocker
+
+    claude-code
+
+    # Productivity
+    thunderbird
+
+    # Containers and orchestration
+    docker
+    docker-compose
+
+    # Cloud providers
+    awscli2
+    google-cloud-sdk
+
+    # Kubernetes tools
+    kubectl
+    krew
+    k9s
+    lens
+    argocd
+
+    # IaC & Configuration management
+    terraform
+    terragrunt
+    ansible
+
+    # Development tools
+    devbox
+    gcc
+    gnumake
+
+    # === === === #
 
     # Fonts
     nerd-fonts.fira-code
     nerd-fonts.jetbrains-mono
-
-    # Development
-    gcc
-    gnumake
   ];
 
   # Font configuration
@@ -37,6 +74,7 @@
       ll = "eza -l --icons";
       la = "eza -la --icons";
       cat = "bat";
+      y = "yazi";
 
       # NixOS helpers
       rebuild = "sudo nixos-rebuild switch --flake '/etc/nixos#nixos'";
@@ -94,9 +132,6 @@
       # UI
       lualine-nvim
       nvim-web-devicons
-
-      # Color scheme
-      catppuccin-nvim
     ];
 
     extraLuaConfig = ''
@@ -109,14 +144,8 @@
       vim.opt.smartindent = true
       vim.opt.termguicolors = true
 
-      -- Color scheme
-      require("catppuccin").setup()
-      vim.cmd.colorscheme "catppuccin"
-
       -- Lualine statusline
-      require('lualine').setup {
-        options = { theme = 'catppuccin' }
-      }
+      require('lualine').setup()
 
       -- Telescope keybindings
       local builtin = require('telescope.builtin')
@@ -149,6 +178,15 @@
       exec-once = [
         "waybar"
       ];
+
+      # Input configuration
+      input = {
+        touchpad = {
+          natural_scroll = true;
+          tap-to-click = true;
+          disable_while_typing = true;
+        };
+      };
 
       bind = [
         "$mod, Return, exec, kitty"
@@ -212,21 +250,14 @@
       mainBar = {
         layer = "top";
         position = "top";
-        height = 35;
+        height = 30;
 
         modules-left = [ "hyprland/workspaces" "hyprland/window" ];
         modules-center = [ "clock" ];
         modules-right = [ "pulseaudio" "network" "battery" "tray" ];
 
         "hyprland/workspaces" = {
-          format = "{icon}";
-          format-icons = {
-            "1" = "1";
-            "2" = "2";
-            "3" = "3";
-            "4" = "4";
-            "5" = "5";
-          };
+          format = "{name}";
         };
 
         "hyprland/window" = {
@@ -234,30 +265,27 @@
         };
 
         clock = {
-          format = "{:%H:%M %d/%m/%Y}";
+          format = "{:%H:%M}";
+          format-alt = "{:%Y-%m-%d}";
           tooltip-format = "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>";
         };
 
         pulseaudio = {
-          format = "{icon} {volume}%";
-          format-muted = "󰝟";
-          format-icons = {
-            default = [ "" "" "" ];
-          };
+          format = "VOL {volume}%";
+          format-muted = "MUTE";
           on-click = "pavucontrol";
         };
 
         network = {
-          format-wifi = " {signalStrength}%";
-          format-ethernet = "󰈀";
-          format-disconnected = "󰖪";
+          format-wifi = "WIFI {signalStrength}%";
+          format-ethernet = "ETH";
+          format-disconnected = "DISC";
           tooltip-format = "{ifname}: {ipaddr}";
         };
 
         battery = {
-          format = "{icon} {capacity}%";
-          format-icons = [ "" "" "" "" "" ];
-          format-charging = "󰂄 {capacity}%";
+          format = "BAT {capacity}%";
+          format-charging = "CHG {capacity}%";
         };
 
         tray = {
@@ -268,30 +296,14 @@
 
     style = ''
       * {
-        font-family: "JetBrainsMono Nerd Font";
-        font-size: 13px;
+        font-family: JetBrainsMono Nerd Font, monospace;
+        font-size: 12px;
         min-height: 0;
-      }
-
-      window#waybar {
-        background: rgba(30, 30, 46, 0.9);
-        color: #cdd6f4;
       }
 
       #workspaces button {
         padding: 0 10px;
-        color: #cdd6f4;
-        background: transparent;
         border-radius: 8px;
-      }
-
-      #workspaces button.active {
-        background: #89b4fa;
-        color: #1e1e2e;
-      }
-
-      #workspaces button:hover {
-        background: #45475a;
       }
 
       #window,
@@ -302,24 +314,7 @@
       #tray {
         padding: 0 10px;
         margin: 5px 5px;
-        background: rgba(69, 71, 90, 0.8);
         border-radius: 8px;
-      }
-
-      #pulseaudio.muted {
-        color: #f38ba8;
-      }
-
-      #battery.charging {
-        color: #a6e3a1;
-      }
-
-      #battery.warning {
-        color: #fab387;
-      }
-
-      #battery.critical {
-        color: #f38ba8;
       }
     '';
   };
@@ -327,7 +322,6 @@
   # Rofi customization
   programs.rofi = {
     enable = true;
-    theme = "Arc-Dark";
     extraConfig = {
       modi = "drun,run,window";
       show-icons = true;
@@ -336,6 +330,74 @@
       display-window = "Windows";
       drun-display-format = "{name}";
       window-format = "{w} · {c} · {t}";
+    };
+  };
+
+  # Yazi file manager
+  programs.yazi = {
+    enable = true;
+    enableZshIntegration = true;
+
+    settings = {
+      manager = {
+        show_hidden = true;
+        sort_by = "natural";
+        sort_dir_first = true;
+        linemode = "size";
+      };
+    };
+  };
+
+  # Kitty terminal
+  programs.kitty = {
+    enable = true;
+
+    font = {
+      name = "JetBrainsMono Nerd Font";
+      size = 14;
+    };
+
+    settings = {
+      # Window
+      background_opacity = "0.90";
+      confirm_os_window_close = 0;
+      window_padding_width = 8;
+
+      # Cursor
+      cursor_shape = "beam";
+      cursor_blink_interval = 0;
+
+      # Scrollback
+      scrollback_lines = 10000;
+
+      # Bell
+      enable_audio_bell = false;
+
+      # Performance
+      repaint_delay = 10;
+      input_delay = 3;
+      sync_to_monitor = true;
+
+      # Tab bar
+      tab_bar_style = "powerline";
+      tab_powerline_style = "slanted";
+    };
+
+    keybindings = {
+      # Tabs
+      "ctrl+shift+t" = "new_tab";
+      "ctrl+shift+w" = "close_tab";
+      "ctrl+shift+right" = "next_tab";
+      "ctrl+shift+left" = "previous_tab";
+
+      # Font size
+      "ctrl+shift+equal" = "increase_font_size";
+      "ctrl+shift+minus" = "decrease_font_size";
+      "ctrl+shift+backspace" = "restore_font_size";
+
+      # Copy/Paste
+      "ctrl+shift+c" = "copy_to_clipboard";
+      "ctrl+shift+v" = "paste_from_clipboard";
     };
   };
 }
