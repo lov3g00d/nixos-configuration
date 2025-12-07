@@ -21,11 +21,18 @@
     tmux
     lazygit
     lazydocker
+    cliphist
+    pavucontrol
+    brightnessctl
+    playerctl
 
     claude-code
 
     # Productivity
+    slack
     thunderbird
+    _1password-cli
+    _1password-gui
 
     # Containers and orchestration
     docker
@@ -48,6 +55,7 @@
     ansible
 
     # Development tools
+    vscode
     devbox
     gcc
     gnumake
@@ -55,8 +63,11 @@
     # === === === #
 
     # Fonts
+    nerd-fonts.hack
     nerd-fonts.fira-code
     nerd-fonts.jetbrains-mono
+    nerd-fonts.symbols-only
+    font-awesome
   ];
 
   # Font configuration
@@ -174,13 +185,24 @@
     settings = {
       "$mod" = "SUPER";
 
+      # Monitor configuration
+      monitor = ",preferred,auto,auto";
+
       # Auto-start programs
       exec-once = [
         "waybar"
+        "mako"
+        "wl-paste --type text --watch cliphist store"
+        "wl-paste --type image --watch cliphist store"
       ];
 
       # Input configuration
       input = {
+        kb_layout = "us,ua,ru";
+        kb_options = "grp:alt_shift_toggle";
+        follow_mouse = 1;
+        sensitivity = 0;
+
         touchpad = {
           natural_scroll = true;
           tap-to-click = true;
@@ -189,20 +211,41 @@
       };
 
       bind = [
+        # Applications
         "$mod, Return, exec, kitty"
-        "$mod, Q, killactive"
-        "$mod, M, exit"
-        "$mod, E, exec, nautilus"
-        "$mod, V, togglefloating"
         "$mod, D, exec, rofi -show drun"
+        "$mod, E, exec, nautilus"
+
+        # Window management
+        "$mod, Q, killactive"
+        "$mod, F, fullscreen"
+        "$mod, V, togglefloating"
         "$mod, P, pseudo"
         "$mod, J, togglesplit"
 
-        # Move focus
+        # Move focus (arrow keys)
         "$mod, left, movefocus, l"
         "$mod, right, movefocus, r"
         "$mod, up, movefocus, u"
         "$mod, down, movefocus, d"
+
+        # Move focus (vim keys)
+        "$mod, H, movefocus, l"
+        "$mod, L, movefocus, r"
+        "$mod, K, movefocus, u"
+        "$mod, J, movefocus, d"
+
+        # Move windows (vim keys)
+        "$mod SHIFT, H, movewindow, l"
+        "$mod SHIFT, L, movewindow, r"
+        "$mod SHIFT, K, movewindow, u"
+        "$mod SHIFT, J, movewindow, d"
+
+        # Resize windows
+        "$mod CTRL, H, resizeactive, -40 0"
+        "$mod CTRL, L, resizeactive, 40 0"
+        "$mod CTRL, K, resizeactive, 0 -40"
+        "$mod CTRL, J, resizeactive, 0 40"
 
         # Workspaces
         "$mod, 1, workspace, 1"
@@ -210,13 +253,41 @@
         "$mod, 3, workspace, 3"
         "$mod, 4, workspace, 4"
         "$mod, 5, workspace, 5"
+        "$mod, 6, workspace, 6"
+        "$mod, 7, workspace, 7"
+        "$mod, 8, workspace, 8"
+        "$mod, 9, workspace, 9"
+        "$mod, 0, workspace, 10"
 
-        # Move to workspace
+        # Move windows to workspace
         "$mod SHIFT, 1, movetoworkspace, 1"
         "$mod SHIFT, 2, movetoworkspace, 2"
         "$mod SHIFT, 3, movetoworkspace, 3"
         "$mod SHIFT, 4, movetoworkspace, 4"
         "$mod SHIFT, 5, movetoworkspace, 5"
+        "$mod SHIFT, 6, movetoworkspace, 6"
+        "$mod SHIFT, 7, movetoworkspace, 7"
+        "$mod SHIFT, 8, movetoworkspace, 8"
+        "$mod SHIFT, 9, movetoworkspace, 9"
+        "$mod SHIFT, 0, movetoworkspace, 10"
+
+        # Special workspace (scratchpad)
+        "$mod, S, togglespecialworkspace, magic"
+        "$mod SHIFT, S, movetoworkspace, special:magic"
+
+        # Scroll through workspaces
+        "$mod, mouse_down, workspace, e+1"
+        "$mod, mouse_up, workspace, e-1"
+
+        # Screenshot
+        ", Print, exec, grim -g \"$(slurp)\" - | wl-copy"
+        "$mod, Print, exec, grim - | wl-copy"
+
+        # Screen lock
+        "$mod, Escape, exec, swaylock"
+
+        # Exit Hyprland
+        "$mod SHIFT, M, exit"
       ];
 
       bindm = [
@@ -228,8 +299,6 @@
         gaps_in = 5;
         gaps_out = 10;
         border_size = 2;
-        "col.active_border" = "rgba(33ccffee) rgba(00ff99ee) 45deg";
-        "col.inactive_border" = "rgba(595959aa)";
       };
 
       decoration = {
@@ -240,81 +309,330 @@
           passes = 1;
         };
       };
+
+      animations = {
+        enabled = true;
+        bezier = "myBezier, 0.05, 0.9, 0.1, 1.05";
+        animation = [
+          "windows, 1, 7, myBezier"
+          "windowsOut, 1, 7, default, popin 80%"
+          "border, 1, 10, default"
+          "borderangle, 1, 8, default"
+          "fade, 1, 7, default"
+          "workspaces, 1, 6, default"
+        ];
+      };
+
+      misc = {
+        disable_hyprland_logo = true;
+        disable_splash_rendering = true;
+        mouse_move_enables_dpms = true;
+        key_press_enables_dpms = true;
+      };
     };
   };
 
-  # Waybar (top bar for Hyprland)
+  # Waybar
   programs.waybar = {
     enable = true;
+
     settings = {
       mainBar = {
         layer = "top";
         position = "top";
-        height = 30;
+        margin-top = 5;
+        margin-left = 10;
+        margin-right = 10;
 
-        modules-left = [ "hyprland/workspaces" "hyprland/window" ];
-        modules-center = [ "clock" ];
-        modules-right = [ "pulseaudio" "network" "battery" "tray" ];
+        modules-left = [ "hyprland/window" ];
 
-        "hyprland/workspaces" = {
-          format = "{name}";
-        };
+        # Center: workspaces + media
+        modules-center = [
+          "hyprland/workspaces"
+          "custom/media"
+        ];
+
+        # Right: more icons + tray
+        modules-right = [
+          "pulseaudio"
+          "backlight"
+          "network"
+          "cpu"
+          "memory"
+          "temperature"
+          "battery"
+          "tray"
+          "clock"
+        ];
 
         "hyprland/window" = {
-          max-length = 50;
+          format = "{}";
+          max-length = 45;
+          separate-outputs = true;
         };
 
-        clock = {
-          format = "{:%H:%M}";
-          format-alt = "{:%Y-%m-%d}";
-          tooltip-format = "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>";
+        "hyprland/workspaces" = {
+          format = "{icon}";
+          on-click = "activate";
+
+          all-outputs = false;
+          active-only = false;
+
+          on-scroll-up = "hyprctl dispatch workspace e+1";
+          on-scroll-down = "hyprctl dispatch workspace e-1";
+
+          format-icons = {
+            "1" = "";
+            "2" = "";
+            "3" = "";
+            "4" = "";
+            "5" = "";
+            "6" = "";
+            "7" = "";
+            "8" = "";
+            "9" = "";
+            "10" = "";
+            urgent = "";
+            default = "";
+          };
+        };
+
+        # 🎵 Center media widget (uses your installed playerctl)
+        "custom/media" = {
+          format = "󰎆  {}";
+          exec = "playerctl metadata --format '{{artist}} - {{title}}' 2>/dev/null || echo ''";
+          interval = 2;
+          on-click = "playerctl play-pause";
+          on-scroll-up = "playerctl next";
+          on-scroll-down = "playerctl previous";
+          max-length = 40;
+          tooltip = false;
         };
 
         pulseaudio = {
-          format = "VOL {volume}%";
-          format-muted = "MUTE";
+          format = "󰕾 {volume}%";
+          format-muted = "󰖁 Muted";
           on-click = "pavucontrol";
+          tooltip-format = "{desc} | {volume}%";
         };
 
+        # 💡 Brightness (you already have brightnessctl)
+        backlight = {
+          format = "󰃠 {percent}%";
+          on-scroll-up = "brightnessctl set +5%";
+          on-scroll-down = "brightnessctl set 5%-";
+        };
+
+        # 🌐 Better icons + cleaner output
         network = {
-          format-wifi = "WIFI {signalStrength}%";
-          format-ethernet = "ETH";
-          format-disconnected = "DISC";
-          tooltip-format = "{ifname}: {ipaddr}";
+          format-wifi = " {signalStrength}% {bandwidthDownBytes}";
+          format-ethernet = "󰈀";
+          format-disconnected = "󰖪";
+          tooltip-format-wifi = "{essid} ({signalStrength}%) - {ipaddr}";
+          tooltip-format-ethernet = "{ifname} - {ipaddr}";
+          on-click = "kitty -e nmtui";
+          interval = 2;
+        };
+
+        cpu = {
+          format = " {usage}%";
+          interval = 2;
+          tooltip = true;
+        };
+
+        memory = {
+          format = " {percentage}%";
+          interval = 2;
+          tooltip-format = "{used:0.1f}G / {total:0.1f}G used";
+        };
+
+        temperature = {
+          format = " {temperatureC}°C";
+          critical-threshold = 80;
+          tooltip = true;
         };
 
         battery = {
-          format = "BAT {capacity}%";
-          format-charging = "CHG {capacity}%";
+          states = {
+            warning = 30;
+            critical = 15;
+          };
+          format = "{icon} {capacity}%";
+          format-charging = "󰂄 {capacity}%";
+          format-plugged = "󰚥 {capacity}%";
+          format-icons = [ "󰂎" "󰁺" "󰁻" "󰁼" "󰁽" "󰁾" "󰁿" "󰂀" "󰂁" "󰂂" "󰁹" ];
+          tooltip-format = "{timeTo}";
         };
 
         tray = {
-          spacing = 10;
+          spacing = 8;
+        };
+
+        clock = {
+          format = " {:%I:%M %p}";
+          format-alt = "{:%A, %B %d, %Y}";
+          tooltip-format = "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>";
+          interval = 1;
         };
       };
     };
 
     style = ''
+      /* Catppuccin Mocha Colors */
+      @define-color rosewater #f5e0dc;
+      @define-color flamingo #f2cdcd;
+      @define-color pink #f5c2e7;
+      @define-color mauve #cba6f7;
+      @define-color red #f38ba8;
+      @define-color maroon #eba0ac;
+      @define-color peach #fab387;
+      @define-color yellow #f9e2af;
+      @define-color green #a6e3a1;
+      @define-color teal #94e2d5;
+      @define-color sky #89dceb;
+      @define-color sapphire #74c7ec;
+      @define-color blue #89b4fa;
+      @define-color lavender #b4befe;
+      @define-color text #cdd6f4;
+      @define-color subtext1 #bac2de;
+      @define-color subtext0 #a6adc8;
+      @define-color overlay2 #9399b2;
+      @define-color overlay1 #7f849c;
+      @define-color overlay0 #6c7086;
+      @define-color surface2 #585b70;
+      @define-color surface1 #45475a;
+      @define-color surface0 #313244;
+      @define-color base #1e1e2e;
+      @define-color mantle #181825;
+      @define-color crust #11111b;
+
       * {
-        font-family: JetBrainsMono Nerd Font, monospace;
-        font-size: 12px;
+        font-family: "Symbols Nerd Font Mono", "JetBrainsMono Nerd Font Mono", "Font Awesome 6 Free", monospace;
+        font-size: 14px;
         min-height: 0;
+        border: none;
+        border-radius: 0;
+        transition-duration: 0.3s;
+      }
+      
+      #workspaces button {
+        border-radius: 999px;
+      }
+
+      #workspaces button.active,
+      
+      #workspaces button.urgent {
+        border-radius: 999px;
+      }
+
+      window#waybar {
+        background: rgba(0, 0, 0, 0);
+      }
+
+      /* Left Section */
+      .modules-left {
+        background-color: @base;
+        padding: 0 10px;
+        margin: 0;
+        border-radius: 15px;
+      }
+
+      #window {
+        color: @text;
+        padding: 5px 10px;
+      }
+
+      /* Center Section */
+      .modules-center {
+        background-color: @base;
+        padding: 0 5px;
+        margin: 0;
+        border-radius: 15px;
+      }
+
+      #workspaces {
+        padding: 0;
       }
 
       #workspaces button {
-        padding: 0 10px;
-        border-radius: 8px;
+        padding: 5px 10px;
+        color: @overlay0;
+        background: transparent;
+        transition: all 0.3s ease;
       }
 
-      #window,
-      #clock,
-      #pulseaudio,
-      #network,
-      #battery,
-      #tray {
+      #workspaces button.active {
+        background-color: @lavender;
+        color: @base;
+      }
+
+      #workspaces button.urgent {
+        background-color: @red;
+        color: @base;
+      }
+
+      #workspaces button:hover {
+        box-shadow: inset 0 -3px @lavender;
+      }
+
+      #custom-media {
+        padding: 5px 10px;
+        color: @mauve;
+      }
+
+      /* Right Section */
+      .modules-right {
+        background-color: @base;
         padding: 0 10px;
-        margin: 5px 5px;
-        border-radius: 8px;
+        margin: 0;
+        border-radius: 15px;
+      }
+
+      #pulseaudio,
+      #backlight,
+      #network,
+      #cpu,
+      #memory,
+      #temperature,
+      #battery,
+      #tray,
+      #clock {
+        padding: 5px 10px;
+        color: @text;
+      }
+
+      #pulseaudio { color: @pink; }
+      #backlight  { color: @sky; }
+      #network    { color: @blue; }
+      #cpu        { color: @green; }
+      #memory     { color: @yellow; }
+      #temperature{ color: @peach; }
+      #battery    { color: @teal; }
+      #clock      { color: @lavender; }
+
+      #temperature.critical {
+        color: @red;
+        animation: blink 1s linear infinite;
+      }
+
+      #battery.warning {
+        color: @yellow;
+      }
+
+      #battery.critical {
+        color: @red;
+        animation: blink 1s linear infinite;
+      }
+
+      #battery.charging {
+        color: @sapphire;
+      }
+
+      @keyframes blink {
+        to {
+          background-color: @red;
+          color: @base;
+        }
       }
     '';
   };
@@ -330,6 +648,23 @@
       display-window = "Windows";
       drun-display-format = "{name}";
       window-format = "{w} · {c} · {t}";
+    };
+  };
+
+  # Hyprpaper wallpaper daemon
+  services.hyprpaper = {
+    enable = true;
+    settings = {
+      ipc = "on";
+      splash = false;
+
+      preload = [
+        "~/Pictures/wallpapers/default.jpeg"
+      ];
+
+      wallpaper = [
+        ",~/Pictures/wallpapers/default.jpeg"
+      ];
     };
   };
 
@@ -353,7 +688,7 @@
     enable = true;
 
     font = {
-      name = "JetBrainsMono Nerd Font";
+      name = "Fira Code";
       size = 14;
     };
 
