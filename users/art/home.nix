@@ -23,6 +23,7 @@
     fzf
     zip
     unzip
+    neofetch
     yazi
     btop
     atuin
@@ -56,11 +57,15 @@
     k9s
     lens
     argocd
+    velero
 
     # IaC & Configuration management
     terraform
     terragrunt
     ansible
+
+    # Database tools
+    dbeaver-bin
 
     # Development tools
     vscode
@@ -88,14 +93,16 @@
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
 
+    # Additional zsh plugins
+    # plugins = [ ];
+
     shellAliases = {
       ls = "eza --icons";
       ll = "eza -l --icons";
       la = "eza -la --icons";
       cat = "bat";
-      y = "yazi";
       k = "kubectl";
-      t = "terraform";
+      tf = "terraform";
       tg = "terragrunt";
 
       # NixOS helpers
@@ -109,6 +116,15 @@
       SAVEHIST=10000
       setopt HIST_IGNORE_ALL_DUPS
       setopt HIST_FIND_NO_DUPS
+
+      # Yazi shell wrapper - changes directory on exit
+      function y() {
+        local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+        yazi "$@" --cwd-file="$tmp"
+        IFS= read -r -d "" cwd < "$tmp"
+        [ -n "$cwd" ] && [ "$cwd" != "$PWD" ] && builtin cd -- "$cwd"
+        rm -f -- "$tmp"
+      }
     '';
   };
 
@@ -478,6 +494,12 @@
       bindm = [
         "$mod, mouse:272, movewindow"
         "$mod, mouse:273, resizewindow"
+      ];
+
+      # Window rules - assign apps to specific workspaces
+      windowrulev2 = [
+        "workspace 3, class:^(firefox)$"
+        "workspace 4, class:^(Slack)$"
       ];
 
       general = {
