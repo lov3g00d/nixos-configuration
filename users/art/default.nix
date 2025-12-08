@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   # Define your user account
@@ -20,4 +25,3 @@
   # Enable ZSH system-wide
   programs.zsh.enable = true;
 }
-

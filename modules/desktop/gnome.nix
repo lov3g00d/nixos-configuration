@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   # Enable X11 and GNOME
@@ -7,7 +12,7 @@
 
     # Keyboard layout
     xkb = {
-      layout = "us";
+      layout = "us,ua,ru";
       variant = "";
     };
   };
@@ -32,7 +37,7 @@
   # Exclude some default GNOME apps to keep it minimal
   environment.gnome.excludePackages = with pkgs; [
     gnome-tour
-    epiphany  # GNOME web browser (you have Firefox)
-    geary     # Email (you have Thunderbird)
+    epiphany # GNOME web browser (you have Firefox)
+    geary # Email (you have Thunderbird)
   ];
 }

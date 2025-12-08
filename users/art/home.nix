@@ -7,6 +7,12 @@
   catppuccin.enable = true;
   catppuccin.flavor = "mocha";
 
+  # Set default editor
+  home.sessionVariables = {
+    EDITOR = "nvim";
+    VISUAL = "nvim";
+  };
+
   # User packages
   home.packages = with pkgs; [
     # Terminal utilities
@@ -15,6 +21,8 @@
     bat
     eza
     fzf
+    zip
+    unzip
     yazi
     btop
     atuin
@@ -86,6 +94,9 @@
       la = "eza -la --icons";
       cat = "bat";
       y = "yazi";
+      k = "kubectl";
+      t = "terraform";
+      tg = "terragrunt";
 
       # NixOS helpers
       rebuild = "sudo nixos-rebuild switch --flake '/etc/nixos#nixos'";
@@ -117,53 +128,227 @@
     };
   };
 
-  # Neovim configuration
-  programs.neovim = {
+  # Neovim configuration with nvf
+  programs.nvf = {
     enable = true;
-    defaultEditor = true;
-    viAlias = true;
-    vimAlias = true;
+    settings.vim = {
+      viAlias = true;
+      vimAlias = true;
 
-    plugins = with pkgs.vimPlugins; [
-      # Essential plugins
-      vim-nix
-      nvim-treesitter.withAllGrammars
-      telescope-nvim
-      plenary-nvim
+      # Use Catppuccin theme
+      theme = {
+        enable = true;
+        name = "catppuccin";
+        style = "mocha";
+      };
+
+      # Line numbers
+      lineNumberMode = "relNumber";
+
+      # Vim options (replaces deprecated top-level settings)
+      options = {
+        number = true;
+        relativenumber = true;
+        tabstop = 2;
+        shiftwidth = 2;
+        softtabstop = 2;
+        expandtab = true;
+        autoindent = true;
+        smartindent = true;
+        cmdheight = 1;
+        updatetime = 300;
+        signcolumn = "yes";
+        timeoutlen = 500;
+        mouse = "a";
+        termguicolors = true;
+        splitbelow = true;
+        splitright = true;
+        scrolloff = 8;
+      };
+
+      # Globals (replaces leaderKey)
+      globals.mapleader = " ";
+
+      # Clipboard - use luaConfigRC for system clipboard
+      luaConfigRC.clipboard = ''
+        vim.opt.clipboard:append("unnamedplus")
+      '';
 
       # LSP
-      nvim-lspconfig
+      lsp = {
+        enable = true;
+        formatOnSave = true;
+        lightbulb.enable = true;
+        trouble.enable = true;
+        lspSignature.enable = true;
+      };
 
-      # Completion
-      nvim-cmp
-      cmp-nvim-lsp
-      cmp-buffer
-      cmp-path
+      # UI - fastaction replaces nvimCodeActionMenu
+      ui.fastaction.enable = true;
 
-      # UI
-      lualine-nvim
-      nvim-web-devicons
-    ];
+      # Language servers
+      languages = {
+        enableTreesitter = true;
 
-    extraLuaConfig = ''
-      -- Basic settings
-      vim.opt.number = true
-      vim.opt.relativenumber = true
-      vim.opt.expandtab = true
-      vim.opt.shiftwidth = 2
-      vim.opt.tabstop = 2
-      vim.opt.smartindent = true
-      vim.opt.termguicolors = true
+        nix.enable = true;
+        bash.enable = true;
+        python.enable = true;
+        ts.enable = true;
+        go.enable = true;
+        rust.enable = true;
+        html.enable = true;
+        markdown.enable = true;
+      };
 
-      -- Lualine statusline
-      require('lualine').setup()
+      # Treesitter
+      treesitter = {
+        enable = true;
+        fold = true;
+        context.enable = true;
+      };
 
-      -- Telescope keybindings
-      local builtin = require('telescope.builtin')
-      vim.keymap.set('n', '<leader>ff', builtin.find_files, {})
-      vim.keymap.set('n', '<leader>fg', builtin.live_grep, {})
-      vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
-    '';
+      # Autocompletion - use per-plugin enable
+      autocomplete.nvim-cmp.enable = true;
+
+      # Statusline
+      statusline = {
+        lualine = {
+          enable = true;
+          theme = "catppuccin";
+        };
+      };
+
+      # File tree
+      filetree = {
+        nvimTree = {
+          enable = true;
+          openOnSetup = false;
+          setupOpts = {
+            view = {
+              width = 20;
+              side = "left";
+            };
+          };
+        };
+      };
+
+      # Telescope
+      telescope.enable = true;
+
+      # Git integration
+      git = {
+        enable = true;
+        gitsigns.enable = true;
+      };
+
+      # Autopairs - use per-plugin enable
+      autopairs.nvim-autopairs.enable = true;
+
+      # Comment plugin
+      comments = {
+        comment-nvim.enable = true;
+      };
+
+      # Terminal
+      terminal = {
+        toggleterm = {
+          enable = true;
+          setupOpts = {
+            direction = "horizontal";
+            enable_winbar = false;
+          };
+        };
+      };
+
+      # Keybindings
+      maps = {
+        normal = {
+          # Telescope
+          "<leader>ff" = {
+            action = "<cmd>Telescope find_files<CR>";
+            desc = "Find files";
+          };
+          "<leader>fg" = {
+            action = "<cmd>Telescope live_grep<CR>";
+            desc = "Live grep";
+          };
+          "<leader>fb" = {
+            action = "<cmd>Telescope buffers<CR>";
+            desc = "Buffers";
+          };
+          "<leader>fh" = {
+            action = "<cmd>Telescope help_tags<CR>";
+            desc = "Help tags";
+          };
+
+          # NvimTree
+          "<leader>e" = {
+            action = "<cmd>NvimTreeToggle<CR>";
+            desc = "Toggle file tree";
+          };
+
+          # Terminal
+          "<leader>t" = {
+            action = "<cmd>ToggleTerm<CR>";
+            desc = "Toggle terminal";
+          };
+
+          # Buffer navigation
+          "<leader>bn" = {
+            action = "<cmd>bnext<CR>";
+            desc = "Next buffer";
+          };
+          "<leader>bp" = {
+            action = "<cmd>bprevious<CR>";
+            desc = "Previous buffer";
+          };
+          "<leader>bd" = {
+            action = "<cmd>bdelete<CR>";
+            desc = "Delete buffer";
+          };
+
+          # Window navigation
+          "<C-h>" = {
+            action = "<C-w>h";
+            desc = "Move to left window";
+          };
+          "<C-j>" = {
+            action = "<C-w>j";
+            desc = "Move to bottom window";
+          };
+          "<C-k>" = {
+            action = "<C-w>k";
+            desc = "Move to top window";
+          };
+          "<C-l>" = {
+            action = "<C-w>l";
+            desc = "Move to right window";
+          };
+
+          # Save and quit
+          "<leader>w" = {
+            action = "<cmd>w<CR>";
+            desc = "Save file";
+          };
+          "<leader>q" = {
+            action = "<cmd>q<CR>";
+            desc = "Quit";
+          };
+        };
+
+        visual = {
+          # Indent
+          "<" = {
+            action = "<gv";
+            desc = "Indent left";
+          };
+          ">" = {
+            action = ">gv";
+            desc = "Indent right";
+          };
+        };
+      };
+    };
   };
 
   # Git configuration
@@ -185,8 +370,8 @@
     settings = {
       "$mod" = "SUPER";
 
-      # Monitor configuration
-      monitor = ",preferred,auto,auto";
+      # Monitor configuration - scale 1.25x to match GNOME
+      monitor = ",preferred,auto,1.25";
 
       # Auto-start programs
       exec-once = [
@@ -352,7 +537,7 @@
           "custom/media"
         ];
 
-        # Right: more icons + tray
+        # Right panel
         modules-right = [
           "pulseaudio"
           "backlight"
@@ -460,7 +645,19 @@
           format = "{icon} {capacity}%";
           format-charging = "󰂄 {capacity}%";
           format-plugged = "󰚥 {capacity}%";
-          format-icons = [ "󰂎" "󰁺" "󰁻" "󰁼" "󰁽" "󰁾" "󰁿" "󰂀" "󰂁" "󰂂" "󰁹" ];
+          format-icons = [
+            "󰂎"
+            "󰁺"
+            "󰁻"
+            "󰁼"
+            "󰁽"
+            "󰁾"
+            "󰁿"
+            "󰂀"
+            "󰂁"
+            "󰂂"
+            "󰁹"
+          ];
           tooltip-format = "{timeTo}";
         };
 
@@ -514,13 +711,13 @@
         border-radius: 0;
         transition-duration: 0.3s;
       }
-      
+
       #workspaces button {
         border-radius: 999px;
       }
 
       #workspaces button.active,
-      
+
       #workspaces button.urgent {
         border-radius: 999px;
       }
@@ -659,11 +856,11 @@
       splash = false;
 
       preload = [
-        "~/Pictures/wallpapers/default.jpeg"
+        "~/Pictures/wallpapers/default.png"
       ];
 
       wallpaper = [
-        ",~/Pictures/wallpapers/default.jpeg"
+        ",~/Pictures/wallpapers/default.png"
       ];
     };
   };
@@ -674,7 +871,7 @@
     enableZshIntegration = true;
 
     settings = {
-      manager = {
+      mgr = {
         show_hidden = true;
         sort_by = "natural";
         sort_dir_first = true;
@@ -736,4 +933,3 @@
     };
   };
 }
-
