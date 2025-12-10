@@ -1,4 +1,9 @@
-{ config, pkgs, ... }:
+{
+  config,
+  pkgs,
+  pkgs-24-05,
+  ...
+}:
 
 {
   home.stateVersion = "25.11";
@@ -7,11 +12,17 @@
   catppuccin.enable = true;
   catppuccin.flavor = "mocha";
 
-  # Set default editor
+  # Environment variables
   home.sessionVariables = {
     EDITOR = "nvim";
     VISUAL = "nvim";
+    KREW_ROOT = "${config.home.homeDirectory}/.krew";
   };
+
+  # PATH additions
+  home.sessionPath = [
+    "${config.home.homeDirectory}/.krew/bin"
+  ];
 
   # User packages
   home.packages = with pkgs; [
@@ -24,7 +35,6 @@
     zip
     unzip
     neofetch
-    yazi
     btop
     atuin
     tmux
@@ -36,10 +46,21 @@
     playerctl
     wireguard-tools
 
+    # Hyprland utilities
+    grim
+    slurp
+    wl-clipboard
+
     claude-code
 
-    # Productivity
+    # Terminal emulators
+    alacritty
+
+    # Connect
     slack
+    telegram-desktop
+
+    # Productivity
     thunderbird
     _1password-cli
     _1password-gui
@@ -50,12 +71,15 @@
 
     # Cloud providers
     awscli2
-    google-cloud-sdk
+    (pkgs-24-05.google-cloud-sdk.withExtraComponents [
+      pkgs-24-05.google-cloud-sdk.components.gke-gcloud-auth-plugin
+    ])
 
     # Kubernetes tools
     kubectl
     krew
     k9s
+    kubernetes-helm
     lens
     argocd
     velero
@@ -105,6 +129,7 @@
       k = "kubectl";
       tf = "terraform";
       tg = "terragrunt";
+      lg = "lazygit";
 
       # NixOS helpers
       rebuild = "sudo nixos-rebuild switch --flake '/etc/nixos#nixos'";
@@ -387,7 +412,7 @@
     settings = {
       "$mod" = "SUPER";
 
-      # Monitor configuration - scale 1.25x to match GNOME
+      # Monitor configuration - scale 1.25x
       monitor = ",preferred,auto,1.25";
 
       # Auto-start programs
@@ -896,6 +921,29 @@
     };
   };
 
+  # Mako notifications
+  services.mako = {
+    enable = true;
+    settings = {
+      default-timeout = 5000;
+      border-radius = 10;
+      border-size = 2;
+      padding = "15";
+      margin = "10";
+      layer = "overlay";
+    };
+  };
+
+  # Swaylock screen locker (colors from Catppuccin module)
+  programs.swaylock = {
+    enable = true;
+    settings = {
+      indicator-radius = 100;
+      indicator-thickness = 10;
+      show-failed-attempts = true;
+    };
+  };
+
   # Hyprpaper wallpaper daemon
   services.hyprpaper = {
     enable = true;
@@ -939,7 +987,7 @@
 
     settings = {
       # Window
-      background_opacity = "0.90";
+      background_opacity = "0.80";
       confirm_os_window_close = 0;
       window_padding_width = 8;
 

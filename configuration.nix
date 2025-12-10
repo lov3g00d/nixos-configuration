@@ -9,6 +9,7 @@
   imports = [
     # Hardware configuration
     ./hardware-configuration.nix
+    ./modules/hardware/nvidia.nix
 
     # System modules
     ./modules/system/boot.nix

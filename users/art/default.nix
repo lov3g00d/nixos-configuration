@@ -1,12 +1,7 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}:
+{ pkgs, ... }:
 
 {
-  # Define your user account
+  # Define user account
   users.users.art = {
     isNormalUser = true;
     description = "Art";
@@ -15,11 +10,9 @@
       "wheel"
       "video"
       "audio"
+      "docker"
     ];
     shell = pkgs.zsh;
-    packages = with pkgs; [
-      thunderbird
-    ];
   };
 
   # Enable ZSH system-wide

@@ -1,9 +1,4 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}:
+{ pkgs, ... }:
 
 {
   # Enable Hyprland
@@ -12,42 +7,17 @@
     xwayland.enable = true;
   };
 
+  # Wayland environment variables
+  environment.sessionVariables = {
+    NIXOS_OZONE_WL = "1"; # Electron apps use Wayland
+    WLR_NO_HARDWARE_CURSORS = "1"; # Fix cursor issues with NVIDIA
+  };
+
   # XDG portal for screen sharing, etc.
   xdg.portal = {
     enable = true;
     extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
   };
-
-  # Required packages for a good Hyprland experience
-  environment.systemPackages = with pkgs; [
-    # Terminal
-    kitty
-
-    # App launcher
-    rofi
-
-    # Status bar
-    waybar
-
-    # Notifications
-    mako
-
-    # Screenshot
-    grim
-    slurp
-
-    # Wallpaper
-    hyprpaper
-
-    # Screen lock
-    swaylock
-
-    # Clipboard
-    wl-clipboard
-
-    # File manager
-    nautilus
-  ];
 
   # Enable required services
   services.gnome.gnome-keyring.enable = true;
