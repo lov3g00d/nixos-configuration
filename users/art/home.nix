@@ -32,6 +32,7 @@
     bat
     eza
     fzf
+    jq
     zip
     unzip
     neofetch
@@ -45,6 +46,7 @@
     brightnessctl
     playerctl
     wireguard-tools
+    speedtest-cli
 
     # Hyprland utilities
     grim
@@ -551,6 +553,7 @@
       windowrulev2 = [
         "workspace 3, class:^(firefox)$"
         "workspace 4, class:^(Slack)$"
+        "workspace 9, class:^(thunderbird)$"
       ];
 
       general = {
@@ -602,15 +605,15 @@
         margin-left = 10;
         margin-right = 10;
 
-        modules-left = [ "hyprland/window" ];
-
-        # Center: workspaces + media
-        modules-center = [
+        modules-left = [
           "hyprland/workspaces"
+          "hyprland/window"
+        ];
+
+        modules-center = [
           "custom/media"
         ];
 
-        # Right panel
         modules-right = [
           "pulseaudio"
           "backlight"
@@ -643,19 +646,18 @@
             "1" = "";
             "2" = "";
             "3" = "";
-            "4" = "";
+            "4" = "";
             "5" = "";
             "6" = "";
             "7" = "";
             "8" = "";
-            "9" = "";
+            "9" = "";
             "10" = "";
             urgent = "";
             default = "";
           };
         };
 
-        # 🎵 Center media widget (uses your installed playerctl)
         "custom/media" = {
           format = "󰎆  {}";
           exec = "playerctl metadata --format '{{artist}} - {{title}}' 2>/dev/null || echo ''";
@@ -674,14 +676,12 @@
           tooltip-format = "{desc} | {volume}%";
         };
 
-        # 💡 Brightness (you already have brightnessctl)
         backlight = {
           format = "󰃠 {percent}%";
           on-scroll-up = "brightnessctl set +5%";
           on-scroll-down = "brightnessctl set 5%-";
         };
 
-        # 🌐 Better icons + cleaner output
         network = {
           format-wifi = " {signalStrength}% {bandwidthDownBytes}";
           format-ethernet = "󰈀";
