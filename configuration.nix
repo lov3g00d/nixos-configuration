@@ -60,7 +60,7 @@
   nixpkgs.config.allowUnfree = true;
 
   # Locale and timezone
-  time.timeZone = "Asia/Manila";
+  time.timeZone = "Asia/Bangkok";
 
   i18n.defaultLocale = "en_US.UTF-8";
   i18n.extraLocaleSettings = {

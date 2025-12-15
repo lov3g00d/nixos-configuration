@@ -9,6 +9,7 @@
   networking = {
     hostName = "nixos";
     networkmanager.enable = true;
+    networkmanager.dns = "systemd-resolved";
 
     # Enable firewall (best practice for security)
     firewall = {
@@ -22,7 +23,7 @@
   # Better DNS
   services.resolved = {
     enable = true;
-    dnssec = "true";
+    dnssec = "allow-downgrade";
     domains = [ "~." ];
     fallbackDns = [
       "1.1.1.1"
