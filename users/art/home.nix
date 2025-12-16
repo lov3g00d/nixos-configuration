@@ -35,7 +35,7 @@
     jq
     zip
     unzip
-    neofetch
+    fastfetch
     btop
     atuin
     tmux
@@ -54,9 +54,6 @@
     wl-clipboard
 
     claude-code
-
-    # Terminal emulators
-    alacritty
 
     # Connect
     slack
@@ -152,6 +149,20 @@
         IFS= read -r -d "" cwd < "$tmp"
         [ -n "$cwd" ] && [ "$cwd" != "$PWD" ] && builtin cd -- "$cwd"
         rm -f -- "$tmp"
+      }
+
+      # SSH wrapper that auto-installs terminfo on remote hosts
+      function ssh() {
+        if [[ "$TERM" =~ ^(xterm-kitty|xterm-ghostty|alacritty)$ ]] && command -v infocmp &>/dev/null; then
+          # Extract just the host (last arg that doesn't start with -)
+          local host_args=()
+          for arg in "$@"; do
+            [[ "$arg" != -* ]] && host_args+=("$arg")
+          done
+          # Install terminfo silently in background
+          infocmp -x "$TERM" 2>/dev/null | command ssh -o BatchMode=yes "''${host_args[@]}" 'mkdir -p ~/.terminfo && tic -x - 2>/dev/null' 2>/dev/null &
+        fi
+        command ssh "$@"
       }
     '';
   };
@@ -441,7 +452,9 @@
 
       bind = [
         # Applications
-        "$mod, Return, exec, kitty"
+        "$mod, Return, exec, ghostty"
+        "$mod SHIFT, Return, exec, alacritty"
+        "$mod ALT, Return, exec, kitty"
         "$mod, D, exec, rofi -show drun"
         "$mod, E, exec, nautilus"
 
@@ -450,7 +463,7 @@
         "$mod, F, fullscreen"
         "$mod, V, togglefloating"
         "$mod, P, pseudo"
-        "$mod, J, togglesplit"
+        "$mod, O, togglesplit"
 
         # Move focus (arrow keys)
         "$mod, left, movefocus, l"
@@ -511,12 +524,37 @@
         # Screenshot
         ", Print, exec, grim -g \"$(slurp)\" - | wl-copy"
         "$mod, Print, exec, grim - | wl-copy"
+        "$mod SHIFT, Print, exec, grim -g \"$(slurp)\" ~/Pictures/screenshots/$(date +%Y%m%d_%H%M%S).png"
+
+        # Clipboard history
+        "$mod, C, exec, cliphist list | rofi -dmenu | cliphist decode | wl-copy"
 
         # Screen lock
         "$mod, Escape, exec, swaylock"
 
         # Exit Hyprland
         "$mod SHIFT, M, exit"
+
+        # Reload Hyprland config
+        "$mod SHIFT, R, exec, hyprctl reload"
+
+        # Quick app shortcuts
+        "$mod, B, exec, firefox"
+
+        # Floating window controls
+        "$mod, G, centerwindow"
+        "$mod, T, pin"
+
+        # Swap with master/biggest
+        "$mod, M, layoutmsg, swapwithmaster"
+
+        # Cycle through windows
+        "$mod, Tab, cyclenext"
+        "$mod SHIFT, Tab, cyclenext, prev"
+
+        # Move workspace to other monitor
+        "$mod CTRL, left, movecurrentworkspacetomonitor, l"
+        "$mod CTRL, right, movecurrentworkspacetomonitor, r"
       ];
 
       # Media and function keys
@@ -589,6 +627,10 @@
         disable_splash_rendering = true;
         mouse_move_enables_dpms = true;
         key_press_enables_dpms = true;
+      };
+
+      dwindle = {
+        preserve_split = true;
       };
     };
   };
@@ -688,7 +730,7 @@
           format-disconnected = "󰖪";
           tooltip-format-wifi = "{essid} ({signalStrength}%) - {ipaddr}";
           tooltip-format-ethernet = "{ifname} - {ipaddr}";
-          on-click = "kitty -e nmtui";
+          on-click = "ghostty -e nmtui";
           interval = 2;
         };
 
@@ -976,12 +1018,54 @@
     };
   };
 
-  # Kitty terminal
+  # Ghostty terminal (default)
+  programs.ghostty = {
+    enable = true;
+    enableZshIntegration = true;
+    settings = {
+      font-family = "Hack Nerd Font";
+      font-size = 14;
+      background-opacity = 0.80;
+      window-padding-x = 8;
+      window-padding-y = 8;
+      cursor-style = "bar";
+      cursor-style-blink = false;
+      scrollback-limit = 10000;
+      confirm-close-surface = false;
+    };
+  };
+
+  # Alacritty terminal (secondary)
+  programs.alacritty = {
+    enable = true;
+    settings = {
+      font = {
+        normal.family = "Hack Nerd Font";
+        size = 14;
+      };
+      window = {
+        opacity = 0.80;
+        padding = {
+          x = 8;
+          y = 8;
+        };
+      };
+      cursor = {
+        style = {
+          shape = "Beam";
+          blinking = "Off";
+        };
+      };
+      scrolling.history = 10000;
+    };
+  };
+
+  # Kitty terminal (tertiary)
   programs.kitty = {
     enable = true;
 
     font = {
-      name = "Fira Code";
+      name = "Hack Nerd Font";
       size = 14;
     };
 
