@@ -57,20 +57,22 @@
         ];
       };
 
+      # Development shell for NixOS configuration
       devShells.${system}.default =
         let
           pkgs = import nixpkgs { inherit system; };
         in
         pkgs.mkShell {
+          name = "nixos-config";
           packages = with pkgs; [
-            nil
-            nixfmt-rfc-style
-            nix-tree
-            nix-diff
-            curl
-            jq
+            # Nix tools
+            nil           # Nix LSP
+            nixfmt-rfc-style # Nix formatter
+            nix-tree      # Dependency tree viewer
+            nix-diff      # Compare derivations
+            nvd           # NixOS version diff
+            nix-output-monitor # Better build output
           ];
-          shellHook = "";
         };
     };
 }

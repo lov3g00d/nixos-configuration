@@ -1,13 +1,21 @@
-# Ignore generated files
+# Nix build outputs
 result
 result-*
 
-# Ignore backup files
+# Direnv
+.direnv/
+.envrc
+
+# Backup files
 *.backup
 *.bak
 *~
 
-# Ignore hardware-configuration.nix if you want (it's machine-specific)
-# Uncomment the line below if you have multiple machines
-# hardware-configuration.nix
+# Editor
+.vscode/
+.idea/
+*.swp
 
+# Secrets (never commit)
+secrets/
+*.age
