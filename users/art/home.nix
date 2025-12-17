@@ -11,6 +11,7 @@
   # Catppuccin theme
   catppuccin.enable = true;
   catppuccin.flavor = "mocha";
+  catppuccin.waybar.enable = false;
 
   # Environment variables
   home.sessionVariables = {
@@ -677,7 +678,6 @@
         "hyprland/workspaces" = {
           format = "{icon}";
           on-click = "activate";
-
           all-outputs = false;
           active-only = false;
 
@@ -686,15 +686,15 @@
 
           format-icons = {
             "1" = "";
-            "2" = "";
+            "2" = "";
             "3" = "";
-            "4" = "";
-            "5" = "";
-            "6" = "";
-            "7" = "";
-            "8" = "";
-            "9" = "";
-            "10" = "";
+            "4" = "";
+            "5" = "";
+            "6" = "";
+            "7" = "";
+            "8" = "";
+            "9" = "";
+            "10" = "";
             urgent = "";
             default = "";
           };

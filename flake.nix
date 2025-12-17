@@ -35,27 +35,23 @@
       };
     in
     {
-      nixosConfigurations = {
-        nixos = nixpkgs.lib.nixosSystem {
-          inherit system;
-          modules = [
-            ./configuration.nix
-            catppuccin.nixosModules.catppuccin
-
-            # Home Manager module
-            home-manager.nixosModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.users.art = import ./users/art/home.nix;
-              home-manager.extraSpecialArgs = { inherit pkgs-24-05; };
-              home-manager.sharedModules = [
-                catppuccin.homeModules.catppuccin
-                nvf.homeManagerModules.default
-              ];
-            }
-          ];
-        };
+      nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
+        inherit system;
+        modules = [
+          ./configuration.nix
+          catppuccin.nixosModules.catppuccin
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.art = import ./users/art/home.nix;
+            home-manager.extraSpecialArgs = { inherit pkgs-24-05; };
+            home-manager.sharedModules = [
+              catppuccin.homeModules.catppuccin
+              nvf.homeManagerModules.default
+            ];
+          }
+        ];
       };
     };
 }

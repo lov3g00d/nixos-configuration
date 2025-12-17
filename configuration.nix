@@ -7,23 +7,15 @@
 
 {
   imports = [
-    # Hardware configuration
     ./hardware-configuration.nix
     ./modules/hardware/nvidia.nix
-
-    # System modules
     ./modules/system/boot.nix
     ./modules/system/networking.nix
-
-    # Desktop environments
     ./modules/desktop/gnome.nix
     ./modules/desktop/hyprland.nix
-
-    # User configuration
     ./users/art
   ];
 
-  # Nix settings
   nix.settings = {
     experimental-features = [
       "nix-command"
@@ -37,14 +29,12 @@
     ];
   };
 
-  # Automatic garbage collection
   nix.gc = {
     automatic = true;
     dates = "weekly";
     options = "--delete-older-than 21d";
   };
 
-  # System-wide packages
   environment.systemPackages = with pkgs; [
     vim
     wget
@@ -53,15 +43,10 @@
     tree
   ];
 
-  # Firefox
   programs.firefox.enable = true;
-
-  # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
-  # Locale and timezone
   time.timeZone = "Asia/Bangkok";
-
   i18n.defaultLocale = "en_US.UTF-8";
   i18n.extraLocaleSettings = {
     LC_ADDRESS = "en_US.UTF-8";
@@ -75,6 +60,5 @@
     LC_TIME = "en_US.UTF-8";
   };
 
-  # This value determines the NixOS release
   system.stateVersion = "25.11";
 }

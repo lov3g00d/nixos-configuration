@@ -1,7 +1,6 @@
 { pkgs, ... }:
 
 {
-  # Define user account
   users.users.art = {
     isNormalUser = true;
     description = "Art";
@@ -15,6 +14,5 @@
     shell = pkgs.zsh;
   };
 
-  # Enable ZSH system-wide
   programs.zsh.enable = true;
 }
