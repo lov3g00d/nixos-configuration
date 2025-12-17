@@ -6,6 +6,10 @@
 }:
 
 {
+  imports = [
+    ../../modules/home/welcome.nix
+  ];
+
   home.stateVersion = "25.11";
 
   # Catppuccin theme
@@ -44,10 +48,22 @@
     tldr
     mtr
     dnsutils
+    sd
+    dust
+    duf
+    procs
+    tokei
+    hyperfine
+    nh
+    nix-output-monitor
+    nvd
 
     # Git & Docker TUI
     lazygit
     lazydocker
+    gh
+    git-absorb
+    difftastic
 
     # Desktop utilities
     cliphist
@@ -58,6 +74,8 @@
     # Network tools
     wireguard-tools
     speedtest-cli
+    bandwhich
+    dogdns
 
     # Hyprland utilities
     grim
@@ -192,6 +210,14 @@
         truncate_to_repo = true;
       };
     };
+  };
+
+  # Direnv - per-directory environments
+  programs.direnv = {
+    enable = true;
+    enableZshIntegration = true;
+    nix-direnv.enable = true;
+    silent = true;
   };
 
   # Atuin - shell history
@@ -1046,6 +1072,9 @@
       ];
     };
   };
+
+  # Custom welcome message
+  programs.welcome.enable = true;
 
   # Yazi file manager
   programs.yazi = {

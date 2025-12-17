@@ -3,6 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+
     nixpkgs-24-05.url = "github:nixos/nixpkgs/nixos-24.05";
     catppuccin.url = "github:catppuccin/nix";
 
@@ -15,6 +16,7 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
   };
 
   outputs =
@@ -54,5 +56,21 @@
           }
         ];
       };
+
+      devShells.${system}.default =
+        let
+          pkgs = import nixpkgs { inherit system; };
+        in
+        pkgs.mkShell {
+          packages = with pkgs; [
+            nil
+            nixfmt-rfc-style
+            nix-tree
+            nix-diff
+            curl
+            jq
+          ];
+          shellHook = "";
+        };
     };
 }
