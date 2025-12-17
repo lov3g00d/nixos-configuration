@@ -34,18 +34,28 @@
     eza
     fzf
     jq
+    yq
     zip
     unzip
     fastfetch
     btop
-    atuin
     tmux
+    httpie
+    tldr
+    mtr
+    dnsutils
+
+    # Git & Docker TUI
     lazygit
     lazydocker
+
+    # Desktop utilities
     cliphist
     pavucontrol
     brightnessctl
     playerctl
+
+    # Network tools
     wireguard-tools
     speedtest-cli
 
@@ -182,6 +192,28 @@
         truncate_to_repo = true;
       };
     };
+  };
+
+  # Atuin - shell history
+  programs.atuin = {
+    enable = true;
+    enableZshIntegration = true;
+    flags = [ "--disable-up-arrow" ];
+    settings = {
+      auto_sync = false;
+      search_mode = "fuzzy";
+      filter_mode = "global";
+      style = "compact";
+      inline_height = 20;
+      show_preview = true;
+      enter_accept = true;
+    };
+  };
+
+  # Zoxide - smarter cd
+  programs.zoxide = {
+    enable = true;
+    enableZshIntegration = true;
   };
 
   # Neovim configuration with nvf
@@ -417,6 +449,18 @@
       };
       init.defaultBranch = "main";
       pull.rebase = true;
+      merge.conflictstyle = "diff3";
+      diff.colorMoved = "default";
+    };
+  };
+
+  # Delta - better git diffs
+  programs.delta = {
+    enable = true;
+    options = {
+      navigate = true;
+      side-by-side = true;
+      line-numbers = true;
     };
   };
 

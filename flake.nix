@@ -44,6 +44,7 @@
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
+            home-manager.backupFileExtension = "bak";
             home-manager.users.art = import ./users/art/home.nix;
             home-manager.extraSpecialArgs = { inherit pkgs-24-05; };
             home-manager.sharedModules = [
