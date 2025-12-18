@@ -1,11 +1,4 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}:
-
-{
+{...}: {
   networking = {
     hostName = "nixos";
     networkmanager.enable = true;
@@ -16,7 +9,7 @@
   services.resolved = {
     enable = true;
     dnssec = "allow-downgrade";
-    domains = [ "~." ];
+    domains = ["~."];
     fallbackDns = [
       "1.1.1.1"
       "1.0.0.1"

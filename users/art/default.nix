@@ -1,6 +1,4 @@
-{ pkgs, ... }:
-
-{
+{pkgs, ...}: {
   users.users.art = {
     isNormalUser = true;
     description = "Art";

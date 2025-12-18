@@ -3,9 +3,7 @@
   pkgs,
   pkgs-24-05,
   ...
-}:
-
-{
+}: {
   imports = [
     ../../modules/home/welcome.nix
   ];
@@ -224,7 +222,7 @@
   programs.atuin = {
     enable = true;
     enableZshIntegration = true;
-    flags = [ "--disable-up-arrow" ];
+    flags = ["--disable-up-arrow"];
     settings = {
       auto_sync = false;
       search_mode = "fuzzy";
@@ -304,7 +302,12 @@
       languages = {
         enableTreesitter = true;
 
-        nix.enable = true;
+        nix = {
+          enable = true;
+          lsp.enable = true;
+          format.enable = true;
+          extraDiagnostics.enable = true;
+        };
         bash.enable = true;
         python.enable = true;
         ts.enable = true;

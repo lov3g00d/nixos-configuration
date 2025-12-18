@@ -1,10 +1,10 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
-let
+{
+  config,
+  lib,
+  ...
+}:
+with lib; let
   cfg = config.programs.welcome;
-
 in {
   options.programs.welcome = {
     enable = mkEnableOption "custom welcome message";
@@ -23,7 +23,15 @@ in {
           };
         };
         display = {
-          separator = " ";
+          separator = " → ";
+          key = {
+            width = 10;
+            paddingLeft = 0;
+          };
+          size = {
+            binaryPrefix = "si";
+            ndigits = 1;
+          };
         };
         modules = [
           {
@@ -131,9 +139,13 @@ in {
     };
 
     programs.zsh.initContent = lib.mkBefore ''
-      # Run fastfetch on new interactive shell
+      # Run fastfetch on new interactive shell (skip if terminal too narrow)
       if [[ -o interactive && -z "$DIRENV_IN_ENVRC" ]]; then
-        fastfetch
+        if (( COLUMNS >= 80 )); then
+          fastfetch
+        elif (( COLUMNS >= 50 )); then
+          fastfetch -l none
+        fi
       fi
     '';
   };

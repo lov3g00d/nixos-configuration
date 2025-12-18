@@ -1,11 +1,4 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}:
-
-{
+{pkgs, ...}: {
   imports = [
     ./hardware-configuration.nix
     ./modules/hardware/nvidia.nix
