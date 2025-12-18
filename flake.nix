@@ -16,6 +16,11 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    nix-index-database = {
+      url = "github:nix-community/nix-index-database";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {
@@ -24,6 +29,7 @@
     home-manager,
     catppuccin,
     nvf,
+    nix-index-database,
     ...
   }: let
     system = "x86_64-linux";
@@ -47,6 +53,7 @@
           home-manager.sharedModules = [
             catppuccin.homeModules.catppuccin
             nvf.homeManagerModules.default
+            nix-index-database.homeModules.nix-index
           ];
         }
       ];

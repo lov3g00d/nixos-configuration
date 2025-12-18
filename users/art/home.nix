@@ -240,6 +240,13 @@
     enableZshIntegration = true;
   };
 
+  # nix-index + comma - run any package without installing
+  programs.nix-index = {
+    enable = true;
+    enableZshIntegration = true;
+  };
+  programs.nix-index-database.comma.enable = true;
+
   # Neovim configuration with nvf
   programs.nvf = {
     enable = true;
@@ -257,10 +264,7 @@
       # Line numbers
       lineNumberMode = "relNumber";
 
-      # Vim options (replaces deprecated top-level settings)
       options = {
-        number = true;
-        relativenumber = true;
         tabstop = 2;
         shiftwidth = 2;
         softtabstop = 2;
@@ -295,8 +299,32 @@
         lspSignature.enable = true;
       };
 
-      # UI - fastaction replaces nvimCodeActionMenu
-      ui.fastaction.enable = true;
+      # UI enhancements
+      ui = {
+        fastaction.enable = true;
+        noice.enable = true;
+        illuminate.enable = true;
+        breadcrumbs.enable = true;
+        colorizer.enable = true;
+      };
+
+      # Which-key for keybinding hints
+      binds.whichKey.enable = true;
+
+      # Notifications
+      notify.nvim-notify.enable = true;
+
+      # Dashboard on startup
+      dashboard.alpha.enable = true;
+
+      # Bufferline for buffer tabs
+      tabline.nvimBufferline.enable = true;
+
+      # Indent guides
+      visuals = {
+        indent-blankline.enable = true;
+        nvim-cursorline.enable = true;
+      };
 
       # Language servers
       languages = {
@@ -309,12 +337,32 @@
           extraDiagnostics.enable = true;
         };
         bash.enable = true;
-        python.enable = true;
+        python = {
+          enable = true;
+          dap.enable = true;
+        };
         ts.enable = true;
-        go.enable = true;
-        rust.enable = true;
+        go = {
+          enable = true;
+          dap.enable = true;
+        };
+        rust = {
+          enable = true;
+          dap.enable = true;
+        };
         html.enable = true;
+        css.enable = true;
         markdown.enable = true;
+        yaml.enable = true;
+        lua.enable = true;
+        sql.enable = true;
+        terraform.enable = true;
+      };
+
+      # Debugging
+      debugger.nvim-dap = {
+        enable = true;
+        ui.enable = true;
       };
 
       # Treesitter
@@ -324,8 +372,9 @@
         context.enable = true;
       };
 
-      # Autocompletion - use per-plugin enable
+      # Autocompletion with snippets
       autocomplete.nvim-cmp.enable = true;
+      snippets.luasnip.enable = true;
 
       # Statusline
       statusline = {
@@ -356,6 +405,18 @@
       git = {
         enable = true;
         gitsigns.enable = true;
+        vim-fugitive.enable = true;
+      };
+
+      # Mini modules
+      mini = {
+        icons.enable = true;
+        surround.enable = true;
+      };
+
+      # Utilities
+      utility = {
+        motion.hop.enable = true;
       };
 
       # Autopairs - use per-plugin enable
@@ -410,20 +471,6 @@
             desc = "Toggle terminal";
           };
 
-          # Buffer navigation
-          "<leader>bn" = {
-            action = "<cmd>bnext<CR>";
-            desc = "Next buffer";
-          };
-          "<leader>bp" = {
-            action = "<cmd>bprevious<CR>";
-            desc = "Previous buffer";
-          };
-          "<leader>bd" = {
-            action = "<cmd>bdelete<CR>";
-            desc = "Delete buffer";
-          };
-
           # Window navigation
           "<C-h>" = {
             action = "<C-w>h";
@@ -447,6 +494,55 @@
             action = "<cmd>w<CR>";
             desc = "Save file";
           };
+
+          # Debugging (DAP)
+          "<leader>db" = {
+            action = "<cmd>DapToggleBreakpoint<CR>";
+            desc = "Toggle breakpoint";
+          };
+          "<leader>dc" = {
+            action = "<cmd>DapContinue<CR>";
+            desc = "Continue";
+          };
+          "<leader>do" = {
+            action = "<cmd>DapStepOver<CR>";
+            desc = "Step over";
+          };
+          "<leader>di" = {
+            action = "<cmd>DapStepInto<CR>";
+            desc = "Step into";
+          };
+          "<leader>du" = {
+            action = "<cmd>lua require('dapui').toggle()<CR>";
+            desc = "Toggle DAP UI";
+          };
+
+          # Hop motions
+          "<leader>hw" = {
+            action = "<cmd>HopWord<CR>";
+            desc = "Hop to word";
+          };
+          "<leader>hl" = {
+            action = "<cmd>HopLine<CR>";
+            desc = "Hop to line";
+          };
+
+          # Git
+          "<leader>gg" = {
+            action = "<cmd>Git<CR>";
+            desc = "Git status";
+          };
+          "<leader>gp" = {
+            action = "<cmd>Git push<CR>";
+            desc = "Git push";
+          };
+
+          # Trouble diagnostics
+          "<leader>xx" = {
+            action = "<cmd>Trouble diagnostics toggle<CR>";
+            desc = "Toggle diagnostics";
+          };
+
           "<leader>q" = {
             action = "<cmd>q<CR>";
             desc = "Quit";
