@@ -25,6 +25,7 @@
   # PATH additions
   home.sessionPath = [
     "${config.home.homeDirectory}/.krew/bin"
+    "${config.home.homeDirectory}/.local/bin"
   ];
 
   # User packages
@@ -79,6 +80,7 @@
     grim
     slurp
     wl-clipboard
+    swww
 
     claude-code
 
@@ -344,7 +346,10 @@
         ts.enable = true;
         go = {
           enable = true;
+          lsp.enable = true;
+          format.enable = true;
           dap.enable = true;
+          treesitter.enable = true;
         };
         rust = {
           enable = true;
@@ -358,6 +363,14 @@
         sql.enable = true;
         terraform.enable = true;
       };
+
+      extraPackages = with pkgs; [
+        gofumpt
+        golangci-lint
+        gotools
+        go-tools
+        delve
+      ];
 
       # Debugging
       debugger.nvim-dap = {
@@ -375,6 +388,37 @@
       # Autocompletion with snippets
       autocomplete.nvim-cmp.enable = true;
       snippets.luasnip.enable = true;
+
+      extraPlugins = with pkgs.vimPlugins; {
+        cmp-path = {package = cmp-path;};
+        cmp-buffer = {package = cmp-buffer;};
+        cmp-cmdline = {package = cmp-cmdline;};
+      };
+
+      luaConfigRC.cmp-sources = ''
+        local cmp = require('cmp')
+        local config = cmp.get_config()
+
+        table.insert(config.sources, { name = 'path' })
+        table.insert(config.sources, { name = 'buffer', keyword_length = 3 })
+        cmp.setup(config)
+
+        cmp.setup.cmdline(':', {
+          mapping = cmp.mapping.preset.cmdline(),
+          sources = cmp.config.sources({
+            { name = 'path' }
+          }, {
+            { name = 'cmdline' }
+          })
+        })
+
+        cmp.setup.cmdline('/', {
+          mapping = cmp.mapping.preset.cmdline(),
+          sources = {
+            { name = 'buffer' }
+          }
+        })
+      '';
 
       # Statusline
       statusline = {
@@ -604,7 +648,11 @@
         "mako"
         "wl-paste --type text --watch cliphist store"
         "wl-paste --type image --watch cliphist store"
+        "swww-daemon"
+        "~/.local/bin/hypr-session-restore"
       ];
+
+      exec = ["~/.local/bin/wallpaper-random"];
 
       # Input configuration
       input = {
@@ -705,7 +753,6 @@
         # Exit Hyprland
         "$mod SHIFT, M, exit"
 
-        # Reload Hyprland config
         "$mod SHIFT, R, exec, hyprctl reload"
 
         # Quick app shortcuts
@@ -1155,21 +1202,141 @@
     };
   };
 
-  # Hyprpaper wallpaper daemon
-  services.hyprpaper = {
-    enable = true;
-    settings = {
-      ipc = "on";
-      splash = false;
+  home.file.".local/bin/wallpaper-random" = {
+    executable = true;
+    text = ''
+      #!/usr/bin/env bash
+      DIR="$HOME/Pictures/wallpapers"
+      IMG=$(find "$DIR" -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" -o -iname "*.webp" -o -iname "*.gif" \) | shuf -n 1)
+      [ -n "$IMG" ] && swww img "$IMG" --transition-type random --transition-duration 1
+    '';
+  };
 
-      preload = [
-        "~/Pictures/wallpapers/default.png"
-      ];
-
-      wallpaper = [
-        ",~/Pictures/wallpapers/default.png"
-      ];
+  systemd.user.services.hypr-session-save = {
+    Unit = {
+      Description = "Hyprland session auto-save";
+      PartOf = ["graphical-session.target"];
     };
+    Service = {
+      Type = "oneshot";
+      ExecStart = "%h/.local/bin/hypr-session-save";
+    };
+  };
+
+  systemd.user.timers.hypr-session-save = {
+    Unit = {
+      Description = "Periodic Hyprland session save";
+      PartOf = ["graphical-session.target"];
+    };
+    Timer = {
+      OnBootSec = "5min";
+      OnUnitActiveSec = "5min";
+    };
+    Install = {
+      WantedBy = ["timers.target"];
+    };
+  };
+
+  home.file.".local/bin/hypr-session-save" = {
+    executable = true;
+    text = ''
+      #!/usr/bin/env bash
+      set -euo pipefail
+
+      SESSION_DIR="''${XDG_STATE_HOME:-$HOME/.local/state}/hyprland"
+      SESSION_FILE="$SESSION_DIR/session.json"
+      mkdir -p "$SESSION_DIR"
+
+      hyprctl clients -j 2>/dev/null | jq '[.[] | {
+        workspace: .workspace.id,
+        class: .class,
+        initialClass: .initialClass,
+        floating: .floating,
+        fullscreen: .fullscreen,
+        position: {x: .at[0], y: .at[1]},
+        size: {w: .size[0], h: .size[1]}
+      }]' > "$SESSION_FILE" 2>/dev/null || true
+    '';
+  };
+
+  home.file.".local/bin/hypr-session-restore" = {
+    executable = true;
+    text = ''
+      #!/usr/bin/env bash
+      set -euo pipefail
+
+      SESSION_DIR="''${XDG_STATE_HOME:-$HOME/.local/state}/hyprland"
+      SESSION_FILE="$SESSION_DIR/session.json"
+
+      [ ! -f "$SESSION_FILE" ] && exit 0
+
+      find_desktop_file() {
+        local class="$1"
+        local class_lower=$(echo "$class" | tr '[:upper:]' '[:lower:]')
+        local search_paths=(
+          "$HOME/.local/share/applications"
+          "$HOME/.nix-profile/share/applications"
+          "/run/current-system/sw/share/applications"
+          "/usr/share/applications"
+        )
+
+        for dir in "''${search_paths[@]}"; do
+          [ ! -d "$dir" ] && continue
+          for pattern in "$class.desktop" "$class_lower.desktop" "*$class*.desktop" "*$class_lower*.desktop"; do
+            local found=$(find "$dir" -maxdepth 1 -iname "$pattern" 2>/dev/null | head -1)
+            [ -n "$found" ] && echo "$found" && return 0
+          done
+        done
+        return 1
+      }
+
+      launch_app() {
+        local class="$1"
+        local workspace="$2"
+
+        case "$class" in
+          ""|"xdg-desktop-portal"*|"polkit"*|"waybar"|"mako"|"swww"*|"rofi") return 0 ;;
+        esac
+
+        local desktop_file
+        if desktop_file=$(find_desktop_file "$class"); then
+          hyprctl dispatch workspace "$workspace" >/dev/null
+          gtk-launch "$(basename "$desktop_file" .desktop)" &
+          sleep 0.8
+          return 0
+        fi
+
+        if command -v "$class" &>/dev/null; then
+          hyprctl dispatch workspace "$workspace" >/dev/null
+          "$class" &
+          sleep 0.8
+          return 0
+        fi
+
+        local class_lower=$(echo "$class" | tr '[:upper:]' '[:lower:]')
+        if command -v "$class_lower" &>/dev/null; then
+          hyprctl dispatch workspace "$workspace" >/dev/null
+          "$class_lower" &
+          sleep 0.8
+        fi
+      }
+
+      sleep 2
+
+      declare -A launched
+      jq -r '.[] | "\(.workspace) \(.class) \(.initialClass)"' "$SESSION_FILE" | while read -r workspace class initialClass; do
+        [ -z "$class" ] && continue
+        app_class="''${class:-$initialClass}"
+        [ -z "$app_class" ] && continue
+        [ -n "''${launched[$app_class]:-}" ] && continue
+        launched[$app_class]=1
+        launch_app "$app_class" "$workspace"
+      done
+
+      sleep 1
+      hyprctl dispatch workspace 1 >/dev/null
+      notify-send -u low "Session Restored" "Applications restored from previous session"
+    '';
   };
 
   # Custom welcome message
