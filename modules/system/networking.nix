@@ -1,8 +1,10 @@
 {...}: {
   networking = {
     hostName = "nixos";
-    networkmanager.enable = true;
-    networkmanager.dns = "systemd-resolved";
+    networkmanager = {
+      enable = true;
+      dns = "systemd-resolved";
+    };
     firewall.enable = true;
   };
 
@@ -10,10 +12,6 @@
     enable = true;
     dnssec = "allow-downgrade";
     domains = ["~."];
-    fallbackDns = [
-      "1.1.1.1"
-      "1.0.0.1"
-      "8.8.8.8"
-    ];
+    fallbackDns = ["1.1.1.1" "1.0.0.1" "8.8.8.8"];
   };
 }

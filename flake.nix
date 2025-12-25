@@ -1,22 +1,18 @@
 {
-  description = "NixOS configuration with flakes";
+  description = "NixOS configuration";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-
-    nixpkgs-24-05.url = "github:nixos/nixpkgs/nixos-24.05";
+    nixpkgs-24-05.url = "github:nixos/nixpkgs/nixos-24.05"; # google-cloud-sdk compatibility
     catppuccin.url = "github:catppuccin/nix";
-
     nvf = {
       url = "github:notashelf/nvf";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     nix-index-database = {
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -45,37 +41,37 @@
         catppuccin.nixosModules.catppuccin
         home-manager.nixosModules.home-manager
         {
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
-          home-manager.backupFileExtension = "bak";
-          home-manager.users.art = import ./users/art/home.nix;
-          home-manager.extraSpecialArgs = {inherit pkgs-24-05;};
-          home-manager.sharedModules = [
-            catppuccin.homeModules.catppuccin
-            nvf.homeManagerModules.default
-            nix-index-database.homeModules.nix-index
-          ];
+          home-manager = {
+            useGlobalPkgs = true;
+            useUserPackages = true;
+            backupFileExtension = "bak";
+            users.art = import ./users/art/home;
+            extraSpecialArgs = {inherit pkgs-24-05;};
+            sharedModules = [
+              catppuccin.homeModules.catppuccin
+              nvf.homeManagerModules.default
+              nix-index-database.homeModules.nix-index
+            ];
+          };
         }
       ];
     };
 
-    # Development shell for NixOS configuration
     devShells.${system}.default = let
       pkgs = import nixpkgs {inherit system;};
     in
       pkgs.mkShell {
         name = "nixos-config";
         packages = with pkgs; [
-          # Nix tools
-          nil # Nix LSP
-          nixfmt-rfc-style # Nix formatter
-          statix # Nix linter
-          deadnix # Find unused code
-          manix # Documentation search
-          nix-tree # Dependency tree viewer
-          nix-diff # Compare derivations
-          nvd # NixOS version diff
-          nix-output-monitor # Better build output
+          nil
+          nixfmt-rfc-style
+          statix
+          deadnix
+          manix
+          nix-tree
+          nix-diff
+          nvd
+          nix-output-monitor
         ];
       };
   };
