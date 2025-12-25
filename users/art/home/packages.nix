@@ -48,6 +48,7 @@
     slurp
     wl-clipboard
     swww
+    swayosd
 
     # Network
     wireguard-tools
