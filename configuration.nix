@@ -1,7 +1,6 @@
 {pkgs, ...}: {
   imports = [
     ./hardware-configuration.nix
-    ./modules/hardware/nvidia.nix
     ./modules/system/boot.nix
     ./modules/system/networking.nix
     ./modules/desktop/gnome.nix

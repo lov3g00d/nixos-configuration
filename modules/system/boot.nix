@@ -4,16 +4,14 @@
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
   hardware.enableRedistributableFirmware = true;
-  hardware.cpu.amd.updateMicrocode = true;
 
-  # Ryzen 5 5600H freeze workarounds (none worked, kept for reference)
-  boot.kernelParams = [
-    # "processor.max_cstate=1"    # disable deep C-states
-    # "idle=nomwait"              # skip mwait-based idle
-    # "amdgpu.runpm=0"            # disable GPU runtime PM
-    # "amdgpu.aspm=0"             # disable GPU ASPM
-    # "pcie_aspm=off"             # disable PCIe ASPM globally
-  ];
+  # Intel laptop power management
+  services.thermald.enable = true;
+  powerManagement.powertop.enable = true;
+
+  # Intel graphics
+  hardware.graphics.enable = true;
+  hardware.graphics.extraPackages = with pkgs; [intel-media-driver];
 
   boot.kernel.sysctl = {
     "vm.swappiness" = 10;

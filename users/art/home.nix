@@ -640,7 +640,7 @@
       "$mod" = "SUPER";
 
       # Monitor configuration - scale 1.25x
-      monitor = ",preferred,auto,1.25";
+      monitor = ",preferred,auto,auto";
 
       # Auto-start programs
       exec-once = [
