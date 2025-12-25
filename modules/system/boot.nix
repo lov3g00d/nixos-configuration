@@ -1,8 +1,17 @@
 {pkgs, ...}: {
   boot = {
     loader = {
-      systemd-boot.enable = true;
+      systemd-boot.enable = false;
       efi.canTouchEfiVariables = true;
+      grub = {
+        enable = true;
+        device = "nodev";
+        efiSupport = true;
+        useOSProber = true;
+        theme = pkgs.catppuccin-grub.override {flavor = "mocha";};
+        gfxmodeEfi = "2880x1800";
+      };
+      timeout = 5;
     };
     kernelPackages = pkgs.linuxPackages_latest;
     consoleLogLevel = 0;
