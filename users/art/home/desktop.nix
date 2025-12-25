@@ -10,6 +10,8 @@
         "waybar"
         "mako"
         "swayosd-server"
+        "~/.local/bin/gammastep-auto"
+        "~/.local/bin/bt-autoconnect"
         "wl-paste --type text --watch cliphist store"
         "wl-paste --type image --watch cliphist store"
         "swww-daemon"
@@ -234,7 +236,6 @@
         on-click = "xdg-open https://wttr.in";
       };
 
-
       "hyprland/window" = {
         format = "{title}";
         max-length = 35;
@@ -344,7 +345,10 @@
         format-icons = ["▁" "▂" "▃" "▄" "▅" "▆" "▇" "█"];
         interval = 2;
         tooltip-format = "CPU: {usage}%\n{avg_frequency}GHz";
-        states = {warning = 70; critical = 90;};
+        states = {
+          warning = 70;
+          critical = 90;
+        };
       };
 
       memory = {
@@ -352,7 +356,10 @@
         format-icons = ["▁" "▂" "▃" "▄" "▅" "▆" "▇" "█"];
         interval = 3;
         tooltip-format = "RAM: {used:0.1f}G / {total:0.1f}G";
-        states = {warning = 70; critical = 90;};
+        states = {
+          warning = 70;
+          critical = 90;
+        };
       };
 
       temperature = {
@@ -363,7 +370,11 @@
       };
 
       battery = {
-        states = {good = 80; warning = 30; critical = 15;};
+        states = {
+          good = 80;
+          warning = 30;
+          critical = 15;
+        };
         format = "{icon} {capacity}%";
         format-charging = "󱐋 {capacity}%";
         format-plugged = "󰚥 {capacity}%";
@@ -679,6 +690,46 @@
         }
       ];
     };
+  };
+
+  # Auto-connect Bluetooth headphones
+  home.file.".local/bin/bt-autoconnect" = {
+    executable = true;
+    text = ''
+      #!/usr/bin/env bash
+      sleep 3
+      bluetoothctl connect 50:5E:5C:88:38:93
+    '';
+  };
+
+  # Gammastep started via script for auto-location
+  home.file.".local/bin/gammastep-auto" = {
+    executable = true;
+    text = ''
+      #!/usr/bin/env bash
+      get_location() {
+        # Try ip-api.com (works with IPv4/IPv6)
+        LOC=$(curl -4sf --max-time 5 "http://ip-api.com/line/?fields=lat,lon" 2>/dev/null | tr '\n' ':')
+        [ -n "$LOC" ] && echo "$LOC" && return
+        # Try ipinfo.io as backup
+        LOC=$(curl -sf --max-time 5 "https://ipinfo.io/loc" 2>/dev/null | tr ',' ':')
+        [ -n "$LOC" ] && echo "$LOC" && return
+        # Try ifconfig.co as backup
+        LAT=$(curl -sf --max-time 5 "https://ifconfig.co/latitude" 2>/dev/null)
+        LON=$(curl -sf --max-time 5 "https://ifconfig.co/longitude" 2>/dev/null)
+        [ -n "$LAT" ] && [ -n "$LON" ] && echo "$LAT:$LON" && return
+      }
+
+      LOC=$(get_location)
+      LAT=$(echo "$LOC" | cut -d: -f1)
+      LON=$(echo "$LOC" | cut -d: -f2)
+
+      if [ -n "$LAT" ] && [ -n "$LON" ]; then
+        exec gammastep -l "$LAT:$LON" -t 6000:3400 -b 1.0:0.9
+      else
+        exec gammastep -l 13.75:100.5 -t 6000:3400 -b 1.0:0.9
+      fi
+    '';
   };
 
   services.hypridle = {

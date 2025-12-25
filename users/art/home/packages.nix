@@ -49,6 +49,7 @@
     wl-clipboard
     swww
     swayosd
+    gammastep
 
     # Network
     wireguard-tools
