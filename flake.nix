@@ -4,6 +4,7 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-24-05.url = "github:nixos/nixpkgs/nixos-24.05"; # google-cloud-sdk compatibility
+    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     catppuccin.url = "github:catppuccin/nix";
     nvf = {
       url = "github:notashelf/nvf";
@@ -22,6 +23,7 @@
   outputs = {
     nixpkgs,
     nixpkgs-24-05,
+    nixos-hardware,
     home-manager,
     catppuccin,
     nvf,
@@ -38,6 +40,7 @@
       inherit system;
       modules = [
         ./configuration.nix
+        nixos-hardware.nixosModules.lenovo-thinkpad-x1-13th-gen
         catppuccin.nixosModules.catppuccin
         home-manager.nixosModules.home-manager
         {

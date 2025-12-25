@@ -1,25 +1,15 @@
 {pkgs, ...}: {
-  hardware = {
-    graphics = {
-      enable = true;
-      extraPackages = [pkgs.intel-media-driver];
-    };
-    bluetooth = {
-      enable = true;
-      powerOnBoot = true;
-    };
+  hardware.graphics.extraPackages = [pkgs.intel-compute-runtime];
+
+  hardware.bluetooth = {
+    enable = true;
+    powerOnBoot = true;
+    settings.General.Experimental = true;
   };
 
   services = {
-    thermald.enable = true;
     blueman.enable = true;
     fprintd.enable = true;
     fwupd.enable = true;
-    fstrim = {
-      enable = true;
-      interval = "weekly";
-    };
   };
-
-  powerManagement.powertop.enable = true;
 }

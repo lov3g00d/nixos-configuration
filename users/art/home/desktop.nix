@@ -179,7 +179,7 @@
 
       modules-left = ["custom/logo" "hyprland/workspaces" "hyprland/window"];
       modules-center = ["custom/weather" "custom/media"];
-      modules-right = ["tray" "bluetooth" "pulseaudio" "backlight" "network" "cpu" "memory" "temperature" "battery" "clock" "custom/power"];
+      modules-right = ["tray" "custom/powerprofile" "bluetooth" "pulseaudio" "backlight" "network" "cpu" "memory" "temperature" "battery" "clock" "hyprland/language" "custom/power"];
 
       "custom/logo" = {
         format = "󱄅";
@@ -192,6 +192,38 @@
         tooltip = false;
         on-click = "systemctl suspend";
         on-click-right = "systemctl poweroff";
+      };
+
+      "custom/powerprofile" = {
+        format = "{icon}";
+        return-type = "json";
+        interval = 5;
+        exec = ''
+          profile=$(powerprofilesctl get)
+          case $profile in
+            "performance") icon="󰓅" ;;
+            "balanced") icon="󰾅" ;;
+            "power-saver") icon="󰾆" ;;
+            *) icon="󰾅"; profile="unknown" ;;
+          esac
+          echo "{\"text\": \"$icon\", \"tooltip\": \"Power: $profile\", \"class\": \"$profile\"}"
+        '';
+        format-icons = {
+          "default" = "󰾅";
+        };
+        on-click = ''
+          current=$(powerprofilesctl get)
+          case $current in
+            "balanced") powerprofilesctl set performance ;;
+            "performance") powerprofilesctl set power-saver ;;
+            "power-saver") powerprofilesctl set balanced ;;
+          esac
+        '';
+      };
+
+      "hyprland/language" = {
+        format = "{short}";
+        on-click = "hyprctl switchxkblayout at-translated-set-2-keyboard next";
       };
 
       "custom/weather" = {
@@ -494,9 +526,16 @@
 
       /* Individual modules */
       #bluetooth, #pulseaudio, #backlight, #network,
-      #cpu, #memory, #temperature, #battery {
+      #cpu, #memory, #temperature, #battery,
+      #custom-powerprofile, #language {
         padding: 0 8px;
       }
+
+      #custom-powerprofile { color: @green; }
+      #custom-powerprofile.performance { color: @red; }
+      #custom-powerprofile.power-saver { color: @blue; }
+
+      #language { color: @flamingo; }
 
       #bluetooth { color: @blue; }
       #bluetooth.connected { color: @sapphire; }
@@ -536,7 +575,7 @@
       #bluetooth:hover, #pulseaudio:hover, #backlight:hover,
       #network:hover, #cpu:hover, #memory:hover,
       #temperature:hover, #battery:hover, #clock:hover,
-      #custom-weather:hover {
+      #custom-weather:hover, #custom-powerprofile:hover, #language:hover {
         background: @surface0;
         border-radius: 6px;
       }
