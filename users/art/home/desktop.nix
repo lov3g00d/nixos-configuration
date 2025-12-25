@@ -231,7 +231,7 @@
       "custom/weather" = {
         format = "{}";
         interval = 900;
-        exec = ''curl -sf "wttr.in/?format=%l:+%c%t" | tr -d "+"'';
+        exec = ''curl -sf "wttr.in/?format=%l:+%c%t" | sed 's/,.*:/:/; s/+//' '';
         tooltip-format = "Click for details";
         on-click = "xdg-open https://wttr.in";
       };
