@@ -7,7 +7,7 @@
         enable = true;
         device = "nodev";
         efiSupport = true;
-        useOSProber = true;
+        useOSProber = false;
         theme = pkgs.catppuccin-grub.override {flavor = "mocha";};
         gfxmodeEfi = "2880x1800";
       };
@@ -24,6 +24,7 @@
       "rd.systemd.show_status=false"
       "rd.udev.log_level=3"
       "udev.log_priority=3"
+      "i915.enable_guc=3"
     ];
     plymouth = {
       enable = true;

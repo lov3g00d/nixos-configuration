@@ -4,7 +4,7 @@
     settings = {
       "$mod" = "SUPER";
 
-      monitor = ",preferred,auto,auto";
+      monitor = "eDP-1,2880x1800@120,0x0,auto";
 
       exec-once = [
         "waybar"
@@ -22,7 +22,7 @@
 
       input = {
         kb_layout = "us,ua,ru";
-        kb_options = "grp:alt_shift_toggle";
+        kb_options = "";
         follow_mouse = 1;
         sensitivity = 0;
         touchpad = {
@@ -98,6 +98,8 @@
         "$mod SHIFT, Tab, cyclenext, prev"
         "$mod CTRL, left, movecurrentworkspacetomonitor, l"
         "$mod CTRL, right, movecurrentworkspacetomonitor, r"
+        "ALT, Shift_L, exec, ~/.local/bin/kb-switch"
+        "SHIFT, Alt_L, exec, ~/.local/bin/kb-switch"
       ];
 
       bindl = [
@@ -197,41 +199,39 @@
       };
 
       "custom/powerprofile" = {
-        format = "{icon}";
+        format = "{}";
         return-type = "json";
         interval = 5;
         exec = ''
-          profile=$(powerprofilesctl get)
+          profile=$(cat /sys/firmware/acpi/platform_profile 2>/dev/null || echo "unknown")
           case $profile in
-            "performance") icon="󰓅" ;;
-            "balanced") icon="󰾅" ;;
-            "power-saver") icon="󰾆" ;;
-            *) icon="󰾅"; profile="unknown" ;;
+            "performance") icon="󰓅"; class="performance" ;;
+            "balanced") icon="󰾅"; class="balanced" ;;
+            "low-power") icon="󰾆"; class="powersave" ;;
+            *) icon="󰾅"; class="balanced" ;;
           esac
-          echo "{\"text\": \"$icon\", \"tooltip\": \"Power: $profile\", \"class\": \"$profile\"}"
+          echo "{\"text\": \"$icon\", \"tooltip\": \"Profile: $profile\", \"class\": \"$class\"}"
         '';
-        format-icons = {
-          "default" = "󰾅";
-        };
-        on-click = ''
-          current=$(powerprofilesctl get)
-          case $current in
-            "balanced") powerprofilesctl set performance ;;
-            "performance") powerprofilesctl set power-saver ;;
-            "power-saver") powerprofilesctl set balanced ;;
-          esac
-        '';
+        on-click = "~/.local/bin/power-menu";
+        on-click-right = "ghostty -e sudo tlp-stat";
       };
 
       "hyprland/language" = {
-        format = "{short}";
+        format = "{short} {variant}";
+        format-en = "EN";
+        format-uk = "UA";
+        format-ru = "RU";
         on-click = "hyprctl switchxkblayout at-translated-set-2-keyboard next";
       };
 
       "custom/weather" = {
         format = "{}";
         interval = 900;
-        exec = ''curl -sf "wttr.in/?format=%l:+%c%t" | sed 's/,.*:/:/; s/+//' '';
+        exec = ''
+          city=$(curl -4sf --max-time 3 "http://ip-api.com/line/?fields=city" 2>/dev/null | head -1)
+          [ -z "$city" ] && city="Bangkok"
+          curl -sf --max-time 5 "wttr.in/$city?format=%c+%t" 2>/dev/null | sed 's/+//' || echo "󰖐 --"
+        '';
         tooltip-format = "Click for details";
         on-click = "xdg-open https://wttr.in";
       };
@@ -544,7 +544,8 @@
 
       #custom-powerprofile { color: @green; }
       #custom-powerprofile.performance { color: @red; }
-      #custom-powerprofile.power-saver { color: @blue; }
+      #custom-powerprofile.balanced { color: @green; }
+      #custom-powerprofile.powersave { color: @blue; }
 
       #language { color: @flamingo; }
 
@@ -615,6 +616,7 @@
       padding = "15";
       margin = "10";
       layer = "overlay";
+      on-notify = "exec pw-play /run/current-system/sw/share/sounds/freedesktop/stereo/message-new-instant.oga";
     };
   };
 
@@ -622,71 +624,18 @@
     enable = true;
     settings = {
       general = {
-        grace = 5;
-        hide_cursor = true;
-      };
-      "auth:fingerprint" = {
-        enabled = true;
-        ready_message = "Scan fingerprint or type password";
-        present_message = "Scanning...";
+        grace = 3;
+        ignore_empty_input = true;
       };
       background = [
         {
           monitor = "";
           path = "screenshot";
-          blur_passes = 3;
-          blur_size = 8;
-        }
-      ];
-      input-field = [
-        {
-          monitor = "";
-          size = "300, 50";
-          outline_thickness = 3;
-          dots_size = 0.33;
-          dots_spacing = 0.15;
-          dots_center = true;
-          outer_color = "rgb(b4befe)";
-          inner_color = "rgb(1e1e2e)";
-          font_color = "rgb(cdd6f4)";
-          fade_on_empty = true;
-          placeholder_text = "Password...";
-          hide_input = false;
-          position = "0, -20";
-          halign = "center";
-          valign = "center";
-        }
-      ];
-      label = [
-        {
-          monitor = "";
-          text = "$TIME";
-          font_size = 64;
-          font_family = "JetBrainsMono Nerd Font";
-          color = "rgb(cdd6f4)";
-          position = "0, 150";
-          halign = "center";
-          valign = "center";
-        }
-        {
-          monitor = "";
-          text = "cmd[update:3600000] date +'%a, %d %b'";
-          font_size = 24;
-          font_family = "JetBrainsMono Nerd Font";
-          color = "rgb(b4befe)";
-          position = "0, 80";
-          halign = "center";
-          valign = "center";
-        }
-        {
-          monitor = "";
-          text = "Use fingerprint or type password";
-          font_size = 12;
-          font_family = "JetBrainsMono Nerd Font";
-          color = "rgb(6c7086)";
-          position = "0, -120";
-          halign = "center";
-          valign = "center";
+          blur_passes = 4;
+          blur_size = 6;
+          noise = 0.02;
+          contrast = 0.9;
+          brightness = 0.7;
         }
       ];
     };
@@ -765,6 +714,38 @@
       DIR="$HOME/Pictures/wallpapers"
       IMG=$(find "$DIR" -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" -o -iname "*.webp" -o -iname "*.gif" \) | shuf -n 1)
       [ -n "$IMG" ] && swww img "$IMG" --transition-type random --transition-duration 1
+    '';
+  };
+
+  home.file.".local/bin/power-menu" = {
+    executable = true;
+    text = ''
+      #!/usr/bin/env bash
+      current=$(cat /sys/firmware/acpi/platform_profile 2>/dev/null || echo "unknown")
+
+      options="󰾆  Power Saver\n󰾅  Balanced\n󰓅  Performance"
+      selected=$(echo -e "$options" | rofi -dmenu -p "Power Profile" -mesg "Current: $current" -theme-str 'window {width: 300px;}')
+
+      case "$selected" in
+        *"Power Saver"*) profile="low-power" ;;
+        *"Balanced"*) profile="balanced" ;;
+        *"Performance"*) profile="performance" ;;
+        *) exit 0 ;;
+      esac
+
+      echo "$profile" | pkexec tee /sys/firmware/acpi/platform_profile > /dev/null
+      notify-send "Power Profile" "Switched to $profile" -i battery
+    '';
+  };
+
+  home.file.".local/bin/kb-switch" = {
+    executable = true;
+    text = ''
+      #!/usr/bin/env bash
+      hyprctl switchxkblayout all next
+      sleep 0.05
+      layout=$(hyprctl devices -j | jq -r '.keyboards[] | select(.main) | .active_keymap')
+      hyprctl notify 5 1500 "rgb(cba6f7)" "  $layout"
     '';
   };
 

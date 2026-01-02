@@ -5,6 +5,7 @@
 }: {
   home.packages = with pkgs; [
     # CLI utilities
+    aria2
     ripgrep
     fd
     bat
@@ -26,11 +27,12 @@
     tldr
     mtr
     dnsutils
+    ttyper
+    typioca
 
     # Nix tools
     nh
     nix-output-monitor
-    nvd
 
     # Git tools
     lazygit
@@ -40,6 +42,7 @@
     difftastic
 
     # Desktop/Wayland
+    libnotify
     cliphist
     pavucontrol
     brightnessctl
@@ -65,6 +68,8 @@
     # Productivity
     _1password-cli
     _1password-gui
+    xournalpp
+    libreoffice
 
     # Containers & K8s
     docker-compose

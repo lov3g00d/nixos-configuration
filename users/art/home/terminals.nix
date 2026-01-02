@@ -64,6 +64,7 @@ in {
       sync_to_monitor = true;
       tab_bar_style = "powerline";
       tab_powerline_style = "slanted";
+      wheel_scroll_multiplier = 1;
     };
     keybindings = {
       "ctrl+shift+t" = "new_tab";

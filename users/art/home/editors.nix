@@ -46,7 +46,7 @@
       };
 
       ui = {
-        fastaction.enable = true;
+        fastaction.enable = false;
         noice.enable = true;
         illuminate.enable = true;
         breadcrumbs.enable = true;

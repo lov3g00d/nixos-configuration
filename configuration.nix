@@ -21,6 +21,11 @@
       dates = "weekly";
       options = "--delete-older-than 21d";
     };
+    registry.seashells.to = {
+      type = "github";
+      owner = "lov3g00d";
+      repo = "seashells";
+    };
   };
 
   environment.systemPackages = with pkgs; [vim wget git curl tree];
@@ -29,11 +34,7 @@
   nixpkgs.config.allowUnfree = true;
   virtualisation.docker.enable = true;
 
-  security.pam.services = {
-    hyprlock = {fprintAuth = true;};
-    greetd.fprintAuth = true;
-    login.fprintAuth = true;
-  };
+  security.pam.services.hyprlock = {};
 
   time.timeZone = "Asia/Bangkok";
   i18n.defaultLocale = "en_US.UTF-8";
