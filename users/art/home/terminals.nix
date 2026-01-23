@@ -4,7 +4,7 @@
     fontSize = 14;
     opacity = 0.80;
     padding = 8;
-    scrollback = 10000;
+    scrollback = 1000000;
   };
 in {
   programs.ghostty = {
@@ -20,6 +20,7 @@ in {
       cursor-style-blink = false;
       scrollback-limit = commonSettings.scrollback;
       confirm-close-surface = false;
+      shell-integration-features = "no-cursor,sudo,ssh-terminfo";
     };
   };
 

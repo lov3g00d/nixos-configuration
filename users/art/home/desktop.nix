@@ -1,12 +1,31 @@
 {pkgs, ...}: {
   wayland.windowManager.hyprland = {
     enable = true;
+    plugins = with pkgs.hyprlandPlugins; [
+      hyprexpo
+      borders-plus-plus
+    ];
     settings = {
+      "plugin:hyprexpo" = {
+        columns = 3;
+        gap_size = 5;
+        bg_col = "rgb(1e1e2e)";
+        workspace_method = "first 1";
+        enable_gesture = true;
+        gesture_positive = false;
+      };
+      "plugin:borders-plus-plus" = {
+        add_borders = 1;
+        "col.border_1" = "rgba(cba6f7aa)";
+        border_size_1 = 2;
+        natural_rounding = true;
+      };
       "$mod" = "SUPER";
 
       monitor = "eDP-1,2880x1800@120,0x0,auto";
 
       exec-once = [
+        "1password --silent"
         "waybar"
         "mako"
         "swayosd-server"
@@ -15,7 +34,7 @@
         "wl-paste --type text --watch cliphist store"
         "wl-paste --type image --watch cliphist store"
         "swww-daemon"
-        "~/.local/bin/hypr-session-restore"
+        # "~/.local/bin/hypr-session-restore"
       ];
 
       exec = ["~/.local/bin/wallpaper-random"];
@@ -37,7 +56,7 @@
         "$mod SHIFT, Return, exec, alacritty"
         "$mod ALT, Return, exec, kitty"
         "$mod, D, exec, rofi -show drun"
-        "$mod, E, exec, nautilus"
+        "$mod, grave, hyprexpo:expo, toggle"
         "$mod, Q, killactive"
         "$mod, F, fullscreen"
         "$mod, V, togglefloating"
@@ -128,6 +147,7 @@
       windowrulev2 = [
         "workspace 3, class:^(firefox)$"
         "workspace 4, class:^(Slack)$"
+        "workspace 8, class:^(1Password)$"
         "workspace 9, class:^(thunderbird)$"
       ];
 
@@ -183,7 +203,7 @@
 
       modules-left = ["custom/logo" "hyprland/workspaces" "hyprland/window"];
       modules-center = ["custom/weather" "custom/media"];
-      modules-right = ["tray" "custom/powerprofile" "bluetooth" "pulseaudio" "backlight" "network" "cpu" "memory" "temperature" "battery" "clock" "hyprland/language" "custom/power"];
+      modules-right = ["tray" "custom/caffeine" "custom/powerprofile" "bluetooth" "pulseaudio" "backlight" "network" "cpu" "memory" "temperature" "battery" "clock" "hyprland/language" "custom/power"];
 
       "custom/logo" = {
         format = "󱄅";
@@ -196,6 +216,14 @@
         tooltip = false;
         on-click = "systemctl suspend";
         on-click-right = "systemctl poweroff";
+      };
+
+      "custom/caffeine" = {
+        format = "{}";
+        return-type = "json";
+        interval = 2;
+        exec = "~/.local/bin/caffeine status";
+        on-click = "~/.local/bin/caffeine toggle";
       };
 
       "custom/powerprofile" = {
@@ -365,6 +393,8 @@
       temperature = {
         format = "{icon} {temperatureC}°";
         format-icons = ["󱃃" "󰔏" "󱃂"];
+        hwmon-path-abs = "/sys/devices/platform/coretemp.0/hwmon";
+        input-filename = "temp1_input";
         critical-threshold = 80;
         tooltip-format = "CPU Temp: {temperatureC}°C";
       };
@@ -538,9 +568,13 @@
       /* Individual modules */
       #bluetooth, #pulseaudio, #backlight, #network,
       #cpu, #memory, #temperature, #battery,
-      #custom-powerprofile, #language {
+      #custom-caffeine, #custom-powerprofile, #language {
         padding: 0 8px;
       }
+
+      #custom-caffeine { color: @overlay1; }
+      #custom-caffeine.active { color: @yellow; }
+      #custom-caffeine.inactive { color: @overlay1; }
 
       #custom-powerprofile { color: @green; }
       #custom-powerprofile.performance { color: @red; }
@@ -587,7 +621,7 @@
       #bluetooth:hover, #pulseaudio:hover, #backlight:hover,
       #network:hover, #cpu:hover, #memory:hover,
       #temperature:hover, #battery:hover, #clock:hover,
-      #custom-weather:hover, #custom-powerprofile:hover, #language:hover {
+      #custom-caffeine:hover, #custom-weather:hover, #custom-powerprofile:hover, #language:hover {
         background: @surface0;
         border-radius: 6px;
       }
@@ -641,13 +675,14 @@
     };
   };
 
-  # Auto-connect Bluetooth headphones
   home.file.".local/bin/bt-autoconnect" = {
     executable = true;
     text = ''
       #!/usr/bin/env bash
       sleep 3
-      bluetoothctl connect 50:5E:5C:88:38:93
+      BT_DEVICE="''${BT_HEADPHONES:-50:5E:5C:88:38:93}"
+      [ -f ~/.config/bt-headphones ] && BT_DEVICE=$(cat ~/.config/bt-headphones)
+      bluetoothctl connect "$BT_DEVICE"
     '';
   };
 
@@ -695,12 +730,12 @@
           on-timeout = "hyprlock";
         }
         {
-          timeout = 330;
+          timeout = 600;
           on-timeout = "hyprctl dispatch dpms off";
           on-resume = "hyprctl dispatch dpms on";
         }
         {
-          timeout = 600;
+          timeout = 900;
           on-timeout = "systemctl suspend";
         }
       ];
@@ -746,6 +781,53 @@
       sleep 0.05
       layout=$(hyprctl devices -j | jq -r '.keyboards[] | select(.main) | .active_keymap')
       hyprctl notify 5 1500 "rgb(cba6f7)" "  $layout"
+    '';
+  };
+
+  home.file.".local/bin/caffeine" = {
+    executable = true;
+    text = ''
+      #!/usr/bin/env bash
+      PIDFILE="/tmp/caffeine-$USER.pid"
+
+      toggle() {
+        if [ -f "$PIDFILE" ] && kill -0 "$(cat "$PIDFILE")" 2>/dev/null; then
+          kill "$(cat "$PIDFILE")" 2>/dev/null
+          rm -f "$PIDFILE"
+          notify-send "Caffeine" "Disabled - sleep allowed" -i battery-caution
+        else
+          systemd-inhibit --what=idle:sleep:handle-lid-switch \
+            --who="Caffeine" \
+            --why="User requested stay awake" \
+            sleep infinity &
+          echo $! > "$PIDFILE"
+          notify-send "Caffeine" "Enabled - preventing sleep" -i battery-full-charged
+        fi
+      }
+
+      status() {
+        if [ -f "$PIDFILE" ] && kill -0 "$(cat "$PIDFILE")" 2>/dev/null; then
+          echo '{"text": "󰅶", "tooltip": "Caffeine: ON (click to disable)", "class": "active"}'
+        else
+          echo '{"text": "󰛊", "tooltip": "Caffeine: OFF (click to enable)", "class": "inactive"}'
+        fi
+      }
+
+      case "''${1:-toggle}" in
+        toggle) toggle ;;
+        status) status ;;
+        on)
+          if ! ([ -f "$PIDFILE" ] && kill -0 "$(cat "$PIDFILE")" 2>/dev/null); then
+            toggle
+          fi
+          ;;
+        off)
+          if [ -f "$PIDFILE" ] && kill -0 "$(cat "$PIDFILE")" 2>/dev/null; then
+            toggle
+          fi
+          ;;
+        *) echo "Usage: caffeine [toggle|status|on|off]" ;;
+      esac
     '';
   };
 

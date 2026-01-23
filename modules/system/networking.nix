@@ -11,7 +11,8 @@
   services.resolved = {
     enable = true;
     dnssec = "allow-downgrade";
+    dnsovertls = "opportunistic";
     domains = ["~."];
-    fallbackDns = ["1.1.1.1" "1.0.0.1" "8.8.8.8"];
+    fallbackDns = ["1.1.1.1#cloudflare-dns.com" "1.0.0.1#cloudflare-dns.com"];
   };
 }

@@ -1,8 +1,4 @@
-{
-  pkgs,
-  lib,
-  ...
-}: {
+{pkgs, ...}: {
   services = {
     xserver.enable = true;
     desktopManager.gnome.enable = true;
@@ -37,10 +33,7 @@
       background.fit = "Cover";
       GTK = {
         application_prefer_dark_theme = true;
-        font_name = lib.mkForce "JetBrainsMono Nerd Font 14";
-        theme_name = lib.mkForce "catppuccin-mocha-mauve-standard";
-        icon_theme_name = lib.mkForce "Papirus-Dark";
-        cursor_theme_name = lib.mkForce "catppuccin-mocha-dark-cursors";
+        font_name = "JetBrainsMono Nerd Font 14";
       };
       commands = {
         reboot = ["systemctl" "reboot"];

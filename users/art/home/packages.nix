@@ -29,10 +29,15 @@
     dnsutils
     ttyper
     typioca
+    nmap
 
     # Nix tools
     nh
     nix-output-monitor
+    nix-fast-build
+    nixpkgs-review
+    nix-update
+    vulnix
 
     # Git tools
     lazygit
@@ -53,30 +58,32 @@
     swww
     swayosd
     gammastep
+    wayland-utils
 
     # Network
     wireguard-tools
     speedtest-cli
     bandwhich
-    dogdns
+    doggo
 
     # Communication
     slack
+    zoom-us
     telegram-desktop
     thunderbird
 
     # Productivity
-    _1password-cli
-    _1password-gui
     xournalpp
     libreoffice
 
     # Containers & K8s
     docker-compose
+    podman
     kubectl
     krew
     k9s
     kubernetes-helm
+    helmfile
     lens
     argocd
     velero
@@ -93,6 +100,7 @@
     # Development
     vscode
     devbox
+    devenv
     gcc
     gnumake
     dbeaver-bin

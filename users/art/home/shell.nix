@@ -28,21 +28,16 @@
       SAVEHIST=10000
       setopt HIST_IGNORE_ALL_DUPS HIST_FIND_NO_DUPS
 
+      zvm_after_init() {
+        eval "$(atuin init zsh --disable-up-arrow)"
+      }
+
       function y() {
         local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
         yazi "$@" --cwd-file="$tmp"
         IFS= read -r -d "" cwd < "$tmp"
         [ -n "$cwd" ] && [ "$cwd" != "$PWD" ] && builtin cd -- "$cwd"
         rm -f -- "$tmp"
-      }
-
-      function ssh() {
-        if [[ "$TERM" =~ ^(xterm-kitty|xterm-ghostty|alacritty)$ ]] && command -v infocmp &>/dev/null; then
-          local host_args=()
-          for arg in "$@"; do [[ "$arg" != -* ]] && host_args+=("$arg"); done
-          infocmp -x "$TERM" 2>/dev/null | command ssh -o BatchMode=yes "''${host_args[@]}" 'mkdir -p ~/.terminfo && tic -x - 2>/dev/null' 2>/dev/null &
-        fi
-        command ssh "$@"
       }
     '';
   };
