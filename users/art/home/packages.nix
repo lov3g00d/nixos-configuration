@@ -30,6 +30,7 @@
     ttyper
     typioca
     nmap
+    openssl
 
     # Nix tools
     nh

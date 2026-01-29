@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{pkgs, lib, ...}: {
   services = {
     xserver.enable = true;
     desktopManager.gnome.enable = true;
@@ -33,7 +33,7 @@
       background.fit = "Cover";
       GTK = {
         application_prefer_dark_theme = true;
-        font_name = "JetBrainsMono Nerd Font 14";
+        font_name = lib.mkForce "JetBrainsMono Nerd Font 14";
       };
       commands = {
         reboot = ["systemctl" "reboot"];
