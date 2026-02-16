@@ -19,3 +19,5 @@ result-*
 # Secrets (never commit)
 secrets/
 *.age
+
+.claude

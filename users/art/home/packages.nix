@@ -31,6 +31,8 @@
     typioca
     nmap
     openssl
+    go-task
+    helm-docs
 
     # Nix tools
     nh
@@ -46,6 +48,7 @@
     gh
     git-absorb
     difftastic
+    git-cliff
 
     # Desktop/Wayland
     libnotify
@@ -74,6 +77,7 @@
     thunderbird
 
     # Productivity
+    google-chrome
     xournalpp
     libreoffice
 

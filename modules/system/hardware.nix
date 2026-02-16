@@ -1,7 +1,10 @@
 {...}: {
   environment.sessionVariables.LIBVA_DRIVER_NAME = "iHD";
 
-  services.thermald.enable = false;
+  services.thermald = {
+    enable = true;
+    ignoreCpuidCheck = true;
+  };
 
   hardware.bluetooth = {
     enable = true;
