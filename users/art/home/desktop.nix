@@ -34,7 +34,6 @@
         "wl-paste --type text --watch cliphist store"
         "wl-paste --type image --watch cliphist store"
         "swww-daemon"
-        # "~/.local/bin/hypr-session-restore"
       ];
 
       exec = ["~/.local/bin/wallpaper-random"];
@@ -144,11 +143,12 @@
         "$mod, mouse:273, resizewindow"
       ];
 
-      windowrulev2 = [
-        "workspace 3, class:^(firefox)$"
-        "workspace 4, class:^(Slack)$"
-        "workspace 8, class:^(1Password)$"
-        "workspace 9, class:^(thunderbird)$"
+      windowrule = [
+        "match:class ^(firefox)$, workspace 3"
+        "match:class ^(Slack)$, workspace 4"
+        "match:class ^(zoom)$, workspace 7"
+        "match:class ^(1Password)$, workspace 8"
+        "match:class ^(thunderbird)$, workspace 9"
       ];
 
       general = {

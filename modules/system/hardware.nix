@@ -1,6 +1,12 @@
 {...}: {
   environment.sessionVariables.LIBVA_DRIVER_NAME = "iHD";
 
+  zramSwap = {
+    enable = true;
+    algorithm = "zstd";
+    memoryPercent = 50;
+  };
+
   services.thermald = {
     enable = true;
     ignoreCpuidCheck = true;
@@ -15,8 +21,13 @@
   services = {
     blueman.enable = true;
     fwupd.enable = true;
-    # thermald enabled by nixos-hardware module (lenovo-thinkpad-x1-13th-gen)
-    power-profiles-daemon.enable = false; # Conflicts with TLP, stuttering on Core Ultra
+    earlyoom = {
+      enable = true;
+      freeMemThreshold = 5;
+      freeSwapThreshold = 10;
+      enableNotifications = true;
+    };
+    power-profiles-daemon.enable = false; # Conflicts with TLP
     tlp = {
       enable = true;
       settings = {

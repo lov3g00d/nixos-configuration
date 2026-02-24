@@ -27,12 +27,14 @@
     tldr
     mtr
     dnsutils
-    ttyper
-    typioca
     nmap
     openssl
     go-task
     helm-docs
+
+    # Typing
+    ttyper
+    typioca
 
     # Nix tools
     nh
@@ -44,7 +46,6 @@
 
     # Git tools
     lazygit
-    lazydocker
     gh
     git-absorb
     difftastic
@@ -78,19 +79,23 @@
 
     # Productivity
     google-chrome
+    ungoogled-chromium
+    vivaldi
     xournalpp
     libreoffice
 
-    # Containers & K8s
+    # Containers & k8s
+    lazydocker
     docker-compose
     podman
+    podman-compose
     kubectl
     krew
     k9s
     kubernetes-helm
     helmfile
     lens
-    argocd
+    pkgs-24-05.argocd
     velero
 
     # Cloud & IaC

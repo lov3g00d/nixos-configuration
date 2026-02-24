@@ -154,8 +154,6 @@
       snippets.luasnip.enable = true;
 
       extraPlugins = with pkgs.vimPlugins; {
-        cmp-path = {package = cmp-path;};
-        cmp-buffer = {package = cmp-buffer;};
         cmp-cmdline = {package = cmp-cmdline;};
       };
 
