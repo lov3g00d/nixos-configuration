@@ -67,7 +67,10 @@
         enableTreesitter = true;
         nix = {
           enable = true;
-          lsp.enable = true;
+          lsp = {
+            enable = true;
+            servers = ["nixd"];
+          };
           format.enable = true;
           extraDiagnostics.enable = true;
         };
@@ -86,7 +89,6 @@
         };
         rust = {
           enable = true;
-          dap.enable = true;
         };
         html.enable = true;
         css.enable = true;
@@ -110,20 +112,20 @@
         clojure.enable = true;
         csharp.enable = true;
         cue.enable = true;
-        dart.enable = true;
+        # dart.enable = true; # broken: flutter build failure
         elixir.enable = true;
         fsharp.enable = true;
         gleam.enable = true;
         hcl.enable = true;
-        julia.enable = true;
+        # julia.enable = true; # broken: julia-depot build failure
         just.enable = true;
         kotlin.enable = true;
         nim.enable = true;
         nu.enable = true;
-        odin.enable = true;
+        # odin.enable = true; # broken: ols uses disallowed 'using' stmt
         php.enable = true;
         qml.enable = true;
-        r.enable = true;
+        # r.enable = true; # broken: R wrapper build failure
         ruby.enable = true;
         scala.enable = true;
         typst.enable = true;

@@ -1,16 +1,12 @@
-{pkgs, ...}: {
+{pkgs, lib, ...}: {
   boot = {
+    lanzaboote = {
+      enable = true;
+      pkiBundle = "/var/lib/sbctl";
+    };
     loader = {
-      systemd-boot.enable = false;
+      systemd-boot.enable = lib.mkForce false;
       efi.canTouchEfiVariables = true;
-      grub = {
-        enable = true;
-        device = "nodev";
-        efiSupport = true;
-        useOSProber = false;
-        theme = pkgs.catppuccin-grub.override {flavor = "mocha";};
-        gfxmodeEfi = "2880x1800";
-      };
       timeout = 5;
     };
     kernelPackages = pkgs.linuxPackages_latest;
@@ -19,12 +15,11 @@
     kernelParams = [
       "quiet"
       "splash"
-      "boot.shell_on_fail"
       "loglevel=3"
       "rd.systemd.show_status=false"
       "rd.udev.log_level=3"
       "udev.log_priority=3"
-      "i915.enable_guc=3"
+      "i915.enable_psr=0"
     ];
     plymouth = {
       enable = true;
@@ -40,5 +35,4 @@
     };
   };
 
-  hardware.enableRedistributableFirmware = true;
 }

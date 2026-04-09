@@ -1,6 +1,7 @@
 {
   pkgs,
-  pkgs-24-05,
+  pkgs-25-05,
+  pkgs-unstable,
   ...
 }: {
   home.packages = with pkgs; [
@@ -37,7 +38,6 @@
     typioca
 
     # Nix tools
-    nh
     nix-output-monitor
     nix-fast-build
     nixpkgs-review
@@ -52,6 +52,8 @@
     git-cliff
 
     # Desktop/Wayland
+    swayidle
+    xwayland-satellite
     libnotify
     cliphist
     pavucontrol
@@ -59,11 +61,18 @@
     playerctl
     grim
     slurp
+    satty
     wl-clipboard
-    swww
+    glow
+    nvtopPackages.full
     swayosd
     gammastep
+    awww
+    wl-screenrec
+    hyprpicker
     wayland-utils
+    libsForQt5.qtstyleplugin-kvantum
+    qt6Packages.qtstyleplugin-kvantum
 
     # Network
     wireguard-tools
@@ -95,26 +104,30 @@
     kubernetes-helm
     helmfile
     lens
-    pkgs-24-05.argocd
+    pkgs-25-05.argocd # pinned to v2 for cluster compat
     velero
 
     # Cloud & IaC
     awscli2
-    (pkgs-24-05.google-cloud-sdk.withExtraComponents [
-      pkgs-24-05.google-cloud-sdk.components.gke-gcloud-auth-plugin
+    (google-cloud-sdk.withExtraComponents [
+      google-cloud-sdk.components.gke-gcloud-auth-plugin
     ])
+    ssm-session-manager-plugin
     terraform
     terragrunt
     ansible
 
     # Development
-    vscode
     devbox
     devenv
     gcc
     gnumake
     dbeaver-bin
-    claude-code
+
+    # AI
+    pkgs-unstable.claude-code # nixpkgs-unstable pinned: upstream yanks npm releases frequently
+    codex
+    gemini-cli
 
     # Fonts
     nerd-fonts.hack

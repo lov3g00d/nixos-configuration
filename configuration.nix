@@ -5,8 +5,9 @@
     ./modules/system/hardware.nix
     ./modules/system/networking.nix
     ./modules/system/security.nix
+    ./modules/system/miniflux.nix
     ./modules/desktop/services.nix
-    ./modules/desktop/hyprland.nix
+    ./modules/desktop/niri.nix
     ./users/art
   ];
 
@@ -18,7 +19,8 @@
       trusted-users = ["root" "@wheel"];
       http-connections = 128; # default: 25
       max-substitution-jobs = 64; # default: 16
-      download-attempts = 3; # default: 5
+      extra-substituters = ["https://niri.cachix.org"];
+      extra-trusted-public-keys = ["niri.cachix.org-1:Wv0OmO7PsuocRKzfDoJ3mulSl7Z8eAQW2/mDiJ2t2ws="];
     };
     registry.seashells.to = {
       type = "github";
@@ -27,7 +29,7 @@
     };
   };
 
-  environment.systemPackages = with pkgs; [vim wget git curl tree ghostty.terminfo];
+  environment.systemPackages = with pkgs; [vim wget git curl tree ghostty.terminfo sbctl];
 
   programs.firefox.enable = true;
   programs._1password.enable = true;
@@ -44,9 +46,7 @@
   nixpkgs.config.allowUnfree = true;
   virtualisation.docker.enable = true;
 
-  security.pam.services.hyprlock = {};
-
-  time.timeZone = "Asia/Bangkok";
+  time.timeZone = "Europe/Bucharest";
   i18n.defaultLocale = "en_US.UTF-8";
 
   system.stateVersion = "25.11";

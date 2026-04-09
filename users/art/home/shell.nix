@@ -24,21 +24,14 @@
       update = "cd /etc/nixos && nix flake update && nh os switch /etc/nixos";
     };
     initContent = ''
-      HISTSIZE=10000
-      SAVEHIST=10000
+      HISTSIZE=1000000000
+      SAVEHIST=1000000000
       setopt HIST_IGNORE_ALL_DUPS HIST_FIND_NO_DUPS
 
       zvm_after_init() {
         eval "$(atuin init zsh --disable-up-arrow)"
       }
 
-      function y() {
-        local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
-        yazi "$@" --cwd-file="$tmp"
-        IFS= read -r -d "" cwd < "$tmp"
-        [ -n "$cwd" ] && [ "$cwd" != "$PWD" ] && builtin cd -- "$cwd"
-        rm -f -- "$tmp"
-      }
     '';
   };
 
@@ -66,7 +59,7 @@
 
   programs.atuin = {
     enable = true;
-    enableZshIntegration = true;
+    enableZshIntegration = false;
     flags = ["--disable-up-arrow"];
     settings = {
       auto_sync = false;
