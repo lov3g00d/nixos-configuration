@@ -64,7 +64,7 @@
     satty
     wl-clipboard
     glow
-    nvtopPackages.full
+    nvtopPackages.intel
     swayosd
     gammastep
     awww
@@ -123,6 +123,7 @@
     gcc
     gnumake
     dbeaver-bin
+    pgadmin4-desktopmode
 
     # AI
     pkgs-unstable.claude-code # nixpkgs-unstable pinned: upstream yanks npm releases frequently

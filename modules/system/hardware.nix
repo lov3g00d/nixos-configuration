@@ -52,6 +52,10 @@
       enableNotifications = true;
     };
     power-profiles-daemon.enable = false;
+    fstrim.enable = true;
+    # TLP is the single owner of platform_profile + CPU perf/EPP: it auto-switches
+    # on AC/BAT transitions. The waybar `custom/powerprofile` widget is a passive
+    # indicator only — no user-driven override.
     tlp = {
       enable = true;
       settings = {
@@ -60,7 +64,7 @@
         CPU_ENERGY_PERF_POLICY_ON_AC = "balance_performance";
         CPU_ENERGY_PERF_POLICY_ON_BAT = "balance_power";
         CPU_MIN_PERF_ON_AC = 0;
-        CPU_MAX_PERF_ON_AC = 80;
+        CPU_MAX_PERF_ON_AC = 100;
         CPU_MIN_PERF_ON_BAT = 0;
         CPU_MAX_PERF_ON_BAT = 60;
         CPU_BOOST_ON_AC = 1;

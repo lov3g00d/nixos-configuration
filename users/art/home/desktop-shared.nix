@@ -62,24 +62,20 @@
     '';
   };
 
-  home.file.".local/bin/power-menu" = {
+  home.file.".local/bin/power-menu-system" = {
     executable = true;
     text = ''
       #!/usr/bin/env bash
-      current=$(cat /sys/firmware/acpi/platform_profile 2>/dev/null || echo "unknown")
-
-      options="󰾆  Power Saver\n󰾅  Balanced\n󰓅  Performance"
-      selected=$(echo -e "$options" | rofi -dmenu -p "Power Profile" -mesg "Current: $current" -theme-str 'window {width: 300px;}')
+      options="󰌾  Lock\n󰒲  Suspend\n󰜉  Reboot\n󰐥  Shutdown\n󰗽  Log out"
+      selected=$(echo -e "$options" | rofi -dmenu -p "System" -theme-str 'window {width: 280px;}')
 
       case "$selected" in
-        *"Power Saver"*) profile="low-power" ;;
-        *"Balanced"*) profile="balanced" ;;
-        *"Performance"*) profile="performance" ;;
-        *) exit 0 ;;
+        *Lock*)      swaylock -f ;;
+        *Suspend*)   systemctl suspend ;;
+        *Reboot*)    systemctl reboot ;;
+        *Shutdown*)  systemctl poweroff ;;
+        *"Log out"*) niri msg action quit ;;
       esac
-
-      echo "$profile" | pkexec tee /sys/firmware/acpi/platform_profile > /dev/null
-      notify-send "Power Profile" "Switched to $profile" -i battery
     '';
   };
 

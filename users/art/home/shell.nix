@@ -28,10 +28,10 @@
       SAVEHIST=1000000000
       setopt HIST_IGNORE_ALL_DUPS HIST_FIND_NO_DUPS
 
-      zvm_after_init() {
-        eval "$(atuin init zsh --disable-up-arrow)"
-      }
-
+      # Array form composes with other plugins and survives later redefinitions;
+      # the function form (zvm_after_init() { ... }) gets clobbered by anything
+      # sourced after this point in .zshrc.
+      zvm_after_init_commands+=('eval "$(atuin init zsh --disable-up-arrow)"')
     '';
   };
 
@@ -60,6 +60,7 @@
   programs.atuin = {
     enable = true;
     enableZshIntegration = false;
+    daemon.enable = true;
     flags = ["--disable-up-arrow"];
     settings = {
       auto_sync = false;

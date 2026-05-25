@@ -11,7 +11,5 @@
 
   security = {
     protectKernelImage = true;
-    forcePageTableIsolation = true;
-    virtualisation.flushL1DataCache = "always";
   };
 }

@@ -374,22 +374,23 @@
       "custom/power" = {
         format = "󰐥";
         tooltip = false;
-        on-click = "systemctl suspend";
-        on-click-right = "systemctl poweroff";
+        on-click = "~/.local/bin/power-menu-system";
       };
 
       "custom/caffeine" = {
         format = "{}";
         return-type = "json";
-        interval = 2;
+        interval = 5;
         exec = "~/.local/bin/caffeine status";
         on-click = "~/.local/bin/caffeine toggle";
       };
 
+      # Passive indicator: TLP owns platform_profile, this just reflects current state.
+      # Right-click opens tlp-stat for diagnostics.
       "custom/powerprofile" = {
         format = "{}";
         return-type = "json";
-        interval = 5;
+        interval = 10;
         exec = ''
           profile=$(cat /sys/firmware/acpi/platform_profile 2>/dev/null || echo "unknown")
           case $profile in
@@ -398,9 +399,8 @@
             "low-power") icon="󰾆"; class="powersave" ;;
             *) icon="󰾅"; class="balanced" ;;
           esac
-          echo "{\"text\": \"$icon\", \"tooltip\": \"Profile: $profile\", \"class\": \"$class\"}"
+          echo "{\"text\": \"$icon\", \"tooltip\": \"Profile: $profile (managed by TLP)\", \"class\": \"$class\"}"
         '';
-        on-click = "~/.local/bin/power-menu";
         on-click-right = "ghostty -e sudo tlp-stat";
       };
 
@@ -414,7 +414,7 @@
         interval = 900;
         exec = ''
           city=$(curl -4sf --max-time 3 "http://ip-api.com/line/?fields=city" 2>/dev/null | head -1)
-          [ -z "$city" ] && city="Bangkok"
+          [ -z "$city" ] && city="Bucharest"
           curl -sf --max-time 5 "wttr.in/$city?format=%c+%t" 2>/dev/null | sed 's/+//' || echo "󰖐 --"
         '';
         tooltip-format = "Click for details";
@@ -540,7 +540,7 @@
       };
 
       tray = {
-        icon-size = 15;
+        icon-size = 18;
         spacing = 6;
       };
 
