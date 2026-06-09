@@ -7,6 +7,7 @@
     "kernel.unprivileged_bpf_disabled" = 1;
     "net.core.bpf_jit_harden" = 2;
     "kernel.yama.ptrace_scope" = 1;
+    "kernel.kexec_load_disabled" = 1;
   };
 
   security = {

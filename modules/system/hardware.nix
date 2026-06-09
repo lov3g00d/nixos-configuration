@@ -39,7 +39,10 @@
   hardware.bluetooth = {
     enable = true;
     powerOnBoot = true;
-    settings.General.Experimental = true;
+    settings.General = {
+      Experimental = true;
+      FastConnectable = true;
+    };
   };
 
   services = {
@@ -69,6 +72,8 @@
         CPU_MAX_PERF_ON_BAT = 60;
         CPU_BOOST_ON_AC = 1;
         CPU_BOOST_ON_BAT = 0;
+        CPU_HWP_DYN_BOOST_ON_AC = 1;
+        CPU_HWP_DYN_BOOST_ON_BAT = 0;
         PLATFORM_PROFILE_ON_AC = "balanced";
         PLATFORM_PROFILE_ON_BAT = "low-power";
         WIFI_PWR_ON_AC = 0;

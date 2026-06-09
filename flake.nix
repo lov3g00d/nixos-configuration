@@ -93,7 +93,7 @@
         name = "nixos-config";
         packages = with pkgs; [
           nil
-          nixfmt-rfc-style
+          nixfmt
           statix
           deadnix
           manix

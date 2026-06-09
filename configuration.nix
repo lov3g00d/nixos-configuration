@@ -29,7 +29,7 @@
     };
   };
 
-  environment.systemPackages = with pkgs; [vim wget git curl tree ghostty.terminfo sbctl];
+  environment.systemPackages = with pkgs; [vim git ghostty.terminfo sbctl];
 
   programs.firefox.enable = true;
   programs._1password.enable = true;

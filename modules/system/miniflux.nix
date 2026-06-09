@@ -62,6 +62,16 @@ in {
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;
+      NoNewPrivileges = true;
+      ProtectSystem = "strict";
+      ProtectHome = true;
+      PrivateTmp = true;
+      ProtectKernelTunables = true;
+      ProtectKernelModules = true;
+      ProtectControlGroups = true;
+      RestrictNamespaces = true;
+      RestrictRealtime = true;
+      LockPersonality = true;
     };
     script = ''
       for i in $(seq 1 30); do

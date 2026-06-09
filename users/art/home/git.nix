@@ -34,9 +34,15 @@ in {
         email = defaultProfile.email;
       };
       init.defaultBranch = "main";
+      commit.verbose = true;
       pull.rebase = true;
+      push.autoSetupRemote = true;
+      fetch.prune = true;
+      rebase.autoSquash = true;
+      rebase.autoStash = true;
       merge.conflictstyle = "diff3";
       diff.colorMoved = "default";
+      diff.algorithm = "histogram";
       gpg.format = "ssh";
       "gpg \"ssh\"".program = "${pkgs._1password-gui}/bin/op-ssh-sign";
     };

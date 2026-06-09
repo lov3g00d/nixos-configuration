@@ -31,6 +31,7 @@
       theme = "catppuccin-mocha";
       themePackages = [(pkgs.catppuccin-plymouth.override {variant = "mocha";})];
     };
+    kernelModules = ["tcp_bbr"];
     kernel.sysctl = {
       # High swappiness because zramSwap (priority 5) absorbs pressure in RAM;
       # the disk swap partition is only an overflow fallback. Pairs with
@@ -43,6 +44,8 @@
       "vm.dirty_ratio" = 10;
       "vm.dirty_background_ratio" = 5;
       "fs.inotify.max_user_watches" = 524288;
+      "net.ipv4.tcp_congestion_control" = "bbr";
+      "net.core.default_qdisc" = "fq";
     };
   };
 
