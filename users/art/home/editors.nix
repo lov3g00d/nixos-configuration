@@ -44,6 +44,7 @@
       lsp = {
         enable = true;
         formatOnSave = true;
+        inlayHints.enable = true;
         lightbulb.enable = true;
         trouble.enable = true;
         lspSignature.enable = true;
@@ -90,6 +91,7 @@
           extraDiagnostics.enable = true;
         };
         bash.enable = true;
+        zsh.enable = true;
         lua.enable = true;
 
         # Daily-driver languages
@@ -113,6 +115,7 @@
         css.enable = true;
 
         # Infra / DevOps
+        docker.enable = true;
         terraform.enable = true;
         hcl.enable = true;
         helm.enable = true;
@@ -142,6 +145,7 @@
         enable = true;
         fold = true;
         context.enable = true;
+        textobjects.enable = true;
       };
 
       # ─── Completion & snippets ───────────────────────────────────────────
@@ -168,7 +172,16 @@
         };
       };
 
-      telescope.enable = true;
+      telescope = {
+        enable = true;
+        extensions = [
+          {
+            name = "fzf";
+            packages = [pkgs.vimPlugins.telescope-fzf-native-nvim];
+            setup.fzf.fuzzy = true;
+          }
+        ];
+      };
 
       git = {
         enable = true;
