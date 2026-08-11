@@ -8,6 +8,7 @@
       "video"
       "audio"
       "docker"
+      "libvirtd"
     ];
     shell = pkgs.zsh;
   };

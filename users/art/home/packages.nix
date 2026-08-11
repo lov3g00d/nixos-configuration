@@ -24,6 +24,7 @@
     hyperfine
     btop
     tmux
+    herdr
     httpie
     tldr
     mtr

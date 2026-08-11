@@ -5,7 +5,9 @@
     ./modules/system/hardware.nix
     ./modules/system/networking.nix
     ./modules/system/security.nix
+    ./modules/system/tor.nix
     ./modules/system/miniflux.nix
+    ./modules/system/virtualisation.nix
     ./modules/desktop/services.nix
     ./modules/desktop/niri.nix
     ./users/art
@@ -44,7 +46,6 @@
     flake = "/etc/nixos";
   };
   nixpkgs.config.allowUnfree = true;
-  virtualisation.docker.enable = true;
 
   time.timeZone = "Europe/Bucharest";
   i18n.defaultLocale = "en_US.UTF-8";
