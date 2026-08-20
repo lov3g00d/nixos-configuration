@@ -19,12 +19,15 @@
       }
     ];
     levels = [
-      [0 0 55]
-      [1 50 60]
-      [3 55 65]
-      [5 60 75]
-      [7 70 85]
-      ["level auto" 80 32767]
+      [0 0 20]
+      [1 15 30]
+      [2 25 40]
+      [3 35 50]
+      [4 45 60]
+      [5 55 70]
+      [6 65 80]
+      [7 75 90]
+      ["level full-speed" 85 32767]
     ];
   };
   boot.extraModprobeConfig = "options thinkpad_acpi fan_control=1";
