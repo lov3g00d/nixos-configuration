@@ -13,6 +13,8 @@
     ./desktop-shared.nix
     ./niri-desktop.nix
     ./newsboat.nix
+    ./security.nix
+    ./endpoint-verification.nix
   ];
 
   home.stateVersion = "25.11";

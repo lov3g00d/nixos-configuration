@@ -1,6 +1,8 @@
 {...}: {
   services.fprintd.enable = true;
 
+  programs.wireshark.enable = true;
+
   boot.kernel.sysctl = {
     "kernel.kptr_restrict" = 2;
     "kernel.dmesg_restrict" = 1;

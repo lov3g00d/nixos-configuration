@@ -9,6 +9,7 @@
       "audio"
       "docker"
       "libvirtd"
+      "wireshark"
     ];
     shell = pkgs.zsh;
   };

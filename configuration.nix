@@ -5,6 +5,7 @@
     ./modules/system/hardware.nix
     ./modules/system/networking.nix
     ./modules/system/security.nix
+    ./modules/system/endpoint-verification
     ./modules/system/tor.nix
     ./modules/system/miniflux.nix
     ./modules/system/virtualisation.nix
@@ -46,6 +47,24 @@
     flake = "/etc/nixos";
   };
   nixpkgs.config.allowUnfree = true;
+
+  # Automatic security updates: pull nixpkgs daily and stage the new generation
+  # for next boot. "boot" over "switch" so an unstable bump never live-switches
+  # mid-work; --commit-lock-file records the bumped flake.lock (root-authored,
+  # unsigned).
+  system.autoUpgrade = {
+    enable = true;
+    flake = "/etc/nixos";
+    operation = "boot";
+    flags = [
+      "--update-input"
+      "nixpkgs"
+      "--commit-lock-file"
+    ];
+    dates = "daily";
+    randomizedDelaySec = "45min";
+    persistent = true;
+  };
 
   time.timeZone = "Europe/Bucharest";
   i18n.defaultLocale = "en_US.UTF-8";
