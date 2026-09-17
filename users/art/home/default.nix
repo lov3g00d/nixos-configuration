@@ -30,7 +30,11 @@
     EDITOR = "nvim";
     VISUAL = "nvim";
     KREW_ROOT = "${config.home.homeDirectory}/.krew";
+    TF_PLUGIN_CACHE_DIR = "${config.home.homeDirectory}/.terraform.d/plugin-cache";
   };
+
+  # Terraform won't create the cache dir itself; ensure it exists.
+  home.file.".terraform.d/plugin-cache/.keep".text = "";
 
   home.sessionPath = [
     "${config.home.homeDirectory}/.krew/bin"
