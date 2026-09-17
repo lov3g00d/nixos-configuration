@@ -80,6 +80,7 @@
     speedtest-cli
     bandwhich
     doggo
+    rclone
 
     # Communication
     slack
