@@ -6,6 +6,9 @@
     padding = 8;
     scrollback = 1000000;
   };
+  # Ghostty's scrollback-limit is in BYTES (default 10 MB), not lines like kitty/
+  # alacritty, so it can't share commonSettings.scrollback or it ends up smaller.
+  ghosttyScrollbackBytes = 500000000;
 in {
   programs.ghostty = {
     enable = true;
@@ -18,7 +21,8 @@ in {
       window-padding-y = commonSettings.padding;
       cursor-style = "bar";
       cursor-style-blink = false;
-      scrollback-limit = commonSettings.scrollback;
+      scrollback-limit = ghosttyScrollbackBytes;
+      mouse-scroll-multiplier = "precision:0.5,discrete:1";
       confirm-close-surface = false;
       shell-integration-features = "no-cursor,sudo,ssh-terminfo";
     };

@@ -9,11 +9,6 @@
       email = "zamkovoy99@gmail.com";
       signingKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOVXe0NilOBtIVdsGEdw3Uis4W2i+BDSkTY4icKtm1g8";
     };
-    platonic = {
-      name = "artem-platonic";
-      email = "artem@platonic.io";
-      signingKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDggqFZHQRloncjP5kxBYOEqCizWPemTjvdqDsEk8yjJ";
-    };
     myle = {
       name = "lov3g00d";
       email = "zamkovoy99@gmail.com";
@@ -48,16 +43,6 @@ in {
     };
     includes = [
       {
-        condition = "gitdir:~/Projects/platonic/";
-        contents = {
-          user = {
-            name = gitProfiles.platonic.name;
-            email = gitProfiles.platonic.email;
-            signingkey = gitProfiles.platonic.signingKey;
-          };
-        };
-      }
-      {
         condition = "gitdir:~/Projects/myle/";
         contents = {
           user = {
@@ -73,30 +58,17 @@ in {
   programs.ssh = {
     enable = true;
     enableDefaultConfig = false;
-    matchBlocks = {
-      "github.com-platonic" = {
-        hostname = "github.com";
-        user = "git";
-        identitiesOnly = true;
-        identityFile = "~/.ssh/platonic.pub";
-        extraOptions = {
-          IdentityAgent = "~/.1password/agent.sock";
-        };
-      };
+    settings = {
       "*.compute.internal *.googleapis.com compute.*" = {
-        identityFile = "~/.ssh/google_compute_engine";
-        extraOptions = {
-          StrictHostKeyChecking = "no";
-          UserKnownHostsFile = "/dev/null";
-          SetEnv = "TERM=xterm-256color";
-        };
+        IdentityFile = "~/.ssh/google_compute_engine";
+        StrictHostKeyChecking = "no";
+        UserKnownHostsFile = "/dev/null";
+        SetEnv = {TERM = "xterm-256color";};
       };
       "*" = {
-        addKeysToAgent = "yes";
-        extraOptions = {
-          IdentityAgent = "~/.1password/agent.sock";
-          SetEnv = "TERM=xterm-256color";
-        };
+        AddKeysToAgent = "yes";
+        IdentityAgent = "~/.1password/agent.sock";
+        SetEnv = {TERM = "xterm-256color";};
       };
     };
   };
@@ -113,10 +85,5 @@ in {
   home.file.".config/1Password/ssh/agent.toml".text = ''
     [[ssh-keys]]
     vault = "Personal"
-
-    [[ssh-keys]]
-    vault = "Platonic"
   '';
-
-  home.file.".ssh/platonic.pub".text = "${gitProfiles.platonic.signingKey}";
 }

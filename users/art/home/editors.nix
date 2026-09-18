@@ -215,163 +215,228 @@
       #   <leader>g… git          (fugitive)
       #   <leader>h… hop          (motion)
       #   <leader>x… diagnostics  (trouble)
-      maps = {
-        normal = {
-          # Find
-          "<leader>ff" = {
-            action = "<cmd>Telescope find_files<CR>";
-            desc = "Find files";
-          };
-          "<leader>fg" = {
-            action = "<cmd>Telescope live_grep<CR>";
-            desc = "Live grep";
-          };
-          "<leader>fb" = {
-            action = "<cmd>Telescope buffers<CR>";
-            desc = "Buffers";
-          };
-          "<leader>fh" = {
-            action = "<cmd>Telescope help_tags<CR>";
-            desc = "Help tags";
-          };
-          "<leader>fr" = {
-            action = "<cmd>Telescope oldfiles<CR>";
-            desc = "Recent files";
-          };
-          "<leader>fd" = {
-            action = "<cmd>Telescope diagnostics<CR>";
-            desc = "All diagnostics";
-          };
+      keymaps = [
+        # Find
+        {
+          key = "<leader>ff";
+          mode = "n";
+          action = "<cmd>Telescope find_files<CR>";
+          desc = "Find files";
+        }
+        {
+          key = "<leader>fg";
+          mode = "n";
+          action = "<cmd>Telescope live_grep<CR>";
+          desc = "Live grep";
+        }
+        {
+          key = "<leader>fb";
+          mode = "n";
+          action = "<cmd>Telescope buffers<CR>";
+          desc = "Buffers";
+        }
+        {
+          key = "<leader>fh";
+          mode = "n";
+          action = "<cmd>Telescope help_tags<CR>";
+          desc = "Help tags";
+        }
+        {
+          key = "<leader>fr";
+          mode = "n";
+          action = "<cmd>Telescope oldfiles<CR>";
+          desc = "Recent files";
+        }
+        {
+          key = "<leader>fd";
+          mode = "n";
+          action = "<cmd>Telescope diagnostics<CR>";
+          desc = "All diagnostics";
+        }
 
-          # Files / windows / buffers
-          "<leader>e" = {
-            action = "<cmd>NvimTreeToggle<CR>";
-            desc = "Toggle file tree";
-          };
-          "<leader>t" = {
-            action = "<cmd>ToggleTerm<CR>";
-            desc = "Toggle terminal";
-          };
-          "<leader>w" = {
-            action = "<cmd>w<CR>";
-            desc = "Save file";
-          };
-          "<leader>q" = {
-            action = "<cmd>q<CR>";
-            desc = "Quit";
-          };
-          "<Esc>" = {
-            action = "<cmd>nohlsearch<CR>";
-            desc = "Clear search highlight";
-          };
+        # Files / windows / buffers
+        {
+          key = "<leader>e";
+          mode = "n";
+          action = "<cmd>NvimTreeToggle<CR>";
+          desc = "Toggle file tree";
+        }
+        {
+          key = "<leader>t";
+          mode = "n";
+          action = "<cmd>ToggleTerm<CR>";
+          desc = "Toggle terminal";
+        }
+        {
+          key = "<leader>w";
+          mode = "n";
+          action = "<cmd>w<CR>";
+          desc = "Save file";
+        }
+        {
+          key = "<leader>q";
+          mode = "n";
+          action = "<cmd>q<CR>";
+          desc = "Quit";
+        }
+        {
+          key = "<Esc>";
+          mode = "n";
+          action = "<cmd>nohlsearch<CR>";
+          desc = "Clear search highlight";
+        }
 
-          "<C-h>" = {
-            action = "<C-w>h";
-            desc = "Window left";
-          };
-          "<C-j>" = {
-            action = "<C-w>j";
-            desc = "Window down";
-          };
-          "<C-k>" = {
-            action = "<C-w>k";
-            desc = "Window up";
-          };
-          "<C-l>" = {
-            action = "<C-w>l";
-            desc = "Window right";
-          };
+        {
+          key = "<C-h>";
+          mode = "n";
+          action = "<C-w>h";
+          desc = "Window left";
+        }
+        {
+          key = "<C-j>";
+          mode = "n";
+          action = "<C-w>j";
+          desc = "Window down";
+        }
+        {
+          key = "<C-k>";
+          mode = "n";
+          action = "<C-w>k";
+          desc = "Window up";
+        }
+        {
+          key = "<C-l>";
+          mode = "n";
+          action = "<C-w>l";
+          desc = "Window right";
+        }
 
-          # Code (LSP)
-          "<leader>cf" = {
-            action = "<cmd>lua vim.lsp.buf.format()<CR>";
-            desc = "Format buffer";
-          };
-          "<leader>ca" = {
-            action = "<cmd>lua vim.lsp.buf.code_action()<CR>";
-            desc = "Code action";
-          };
-          "<leader>cr" = {
-            action = "<cmd>lua vim.lsp.buf.rename()<CR>";
-            desc = "Rename symbol";
-          };
+        # Code (LSP)
+        {
+          key = "<leader>cf";
+          mode = "n";
+          action = "<cmd>lua vim.lsp.buf.format()<CR>";
+          desc = "Format buffer";
+        }
+        {
+          key = "<leader>ca";
+          mode = "n";
+          action = "<cmd>lua vim.lsp.buf.code_action()<CR>";
+          desc = "Code action";
+        }
+        {
+          key = "<leader>cr";
+          mode = "n";
+          action = "<cmd>lua vim.lsp.buf.rename()<CR>";
+          desc = "Rename symbol";
+        }
 
-          # Debug (DAP)
-          "<leader>db" = {
-            action = "<cmd>DapToggleBreakpoint<CR>";
-            desc = "Toggle breakpoint";
-          };
-          "<leader>dc" = {
-            action = "<cmd>DapContinue<CR>";
-            desc = "Continue";
-          };
-          "<leader>do" = {
-            action = "<cmd>DapStepOver<CR>";
-            desc = "Step over";
-          };
-          "<leader>di" = {
-            action = "<cmd>DapStepInto<CR>";
-            desc = "Step into";
-          };
-          "<leader>du" = {
-            action = "<cmd>lua require('dapui').toggle()<CR>";
-            desc = "Toggle DAP UI";
-          };
+        # Debug (DAP)
+        {
+          key = "<leader>db";
+          mode = "n";
+          action = "<cmd>DapToggleBreakpoint<CR>";
+          desc = "Toggle breakpoint";
+        }
+        {
+          key = "<leader>dc";
+          mode = "n";
+          action = "<cmd>DapContinue<CR>";
+          desc = "Continue";
+        }
+        {
+          key = "<leader>do";
+          mode = "n";
+          action = "<cmd>DapStepOver<CR>";
+          desc = "Step over";
+        }
+        {
+          key = "<leader>di";
+          mode = "n";
+          action = "<cmd>DapStepInto<CR>";
+          desc = "Step into";
+        }
+        {
+          key = "<leader>du";
+          mode = "n";
+          action = "<cmd>lua require('dapui').toggle()<CR>";
+          desc = "Toggle DAP UI";
+        }
 
-          # Git (fugitive)
-          "<leader>gg" = {
-            action = "<cmd>Git<CR>";
-            desc = "Git status";
-          };
-          "<leader>gp" = {
-            action = "<cmd>Git push<CR>";
-            desc = "Git push";
-          };
-          "<leader>gb" = {
-            action = "<cmd>Git blame<CR>";
-            desc = "Git blame";
-          };
+        # Git (fugitive)
+        {
+          key = "<leader>gg";
+          mode = "n";
+          action = "<cmd>Git<CR>";
+          desc = "Git status";
+        }
+        {
+          key = "<leader>gp";
+          mode = "n";
+          action = "<cmd>Git push<CR>";
+          desc = "Git push";
+        }
+        {
+          key = "<leader>gb";
+          mode = "n";
+          action = "<cmd>Git blame<CR>";
+          desc = "Git blame";
+        }
 
-          # Hop (motion)
-          "<leader>hw" = {
-            action = "<cmd>HopWord<CR>";
-            desc = "Hop word";
-          };
-          "<leader>hl" = {
-            action = "<cmd>HopLine<CR>";
-            desc = "Hop line";
-          };
+        # Hop (motion)
+        {
+          key = "<leader>hw";
+          mode = "n";
+          action = "<cmd>HopWord<CR>";
+          desc = "Hop word";
+        }
+        {
+          key = "<leader>hl";
+          mode = "n";
+          action = "<cmd>HopLine<CR>";
+          desc = "Hop line";
+        }
 
-          # Diagnostics (trouble + native)
-          "<leader>xx" = {
-            action = "<cmd>Trouble diagnostics toggle<CR>";
-            desc = "Workspace diagnostics";
-          };
-          "<leader>xX" = {
-            action = "<cmd>Trouble diagnostics toggle filter.buf=0<CR>";
-            desc = "Buffer diagnostics";
-          };
-          "[d" = {
-            action = "<cmd>lua vim.diagnostic.goto_prev()<CR>";
-            desc = "Previous diagnostic";
-          };
-          "]d" = {
-            action = "<cmd>lua vim.diagnostic.goto_next()<CR>";
-            desc = "Next diagnostic";
-          };
-        };
+        # Diagnostics (trouble + native)
+        {
+          key = "<leader>xx";
+          mode = "n";
+          action = "<cmd>Trouble diagnostics toggle<CR>";
+          desc = "Workspace diagnostics";
+        }
+        {
+          key = "<leader>xX";
+          mode = "n";
+          action = "<cmd>Trouble diagnostics toggle filter.buf=0<CR>";
+          desc = "Buffer diagnostics";
+        }
+        {
+          key = "[d";
+          mode = "n";
+          action = "<cmd>lua vim.diagnostic.goto_prev()<CR>";
+          desc = "Previous diagnostic";
+        }
+        {
+          key = "]d";
+          mode = "n";
+          action = "<cmd>lua vim.diagnostic.goto_next()<CR>";
+          desc = "Next diagnostic";
+        }
 
-        visual = {
-          "<" = {
-            action = "<gv";
-            desc = "Indent left";
-          };
-          ">" = {
-            action = ">gv";
-            desc = "Indent right";
-          };
-        };
-      };
+        # Visual
+        {
+          key = "<";
+          mode = "v";
+          action = "<gv";
+          desc = "Indent left";
+        }
+        {
+          key = ">";
+          mode = "v";
+          action = ">gv";
+          desc = "Indent right";
+        }
+      ];
 
       # ─── Lua overrides ───────────────────────────────────────────────────
       # Kept here because nvf doesn't expose a structured option for either:

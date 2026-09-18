@@ -21,6 +21,7 @@
 
   catppuccin = {
     enable = true;
+    autoEnable = true;
     flavor = "mocha";
     accent = "mauve";
     waybar.enable = false;
@@ -42,6 +43,7 @@
   ];
 
   home.pointerCursor = {
+    enable = true;
     name = "catppuccin-mocha-mauve-cursors";
     package = pkgs.catppuccin-cursors.mochaMauve;
     size = 24;

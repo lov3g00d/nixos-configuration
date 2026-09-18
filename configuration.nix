@@ -9,6 +9,7 @@
     ./modules/system/tor.nix
     ./modules/system/miniflux.nix
     ./modules/system/virtualisation.nix
+    ./modules/system/encryption.nix
     ./modules/desktop/services.nix
     ./modules/desktop/niri.nix
     ./users/art
@@ -47,6 +48,11 @@
     flake = "/etc/nixos";
   };
   nixpkgs.config.allowUnfree = true;
+
+  catppuccin = {
+    enable = true;
+    autoEnable = false;
+  };
 
   # Automatic security updates: pull nixpkgs daily and stage the new generation
   # for next boot. "boot" over "switch" so an unstable bump never live-switches
