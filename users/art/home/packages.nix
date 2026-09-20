@@ -70,6 +70,8 @@
     gammastep
     awww
     wl-screenrec
+    obs-studio
+    libva-utils
     hyprpicker
     wayland-utils
     libsForQt5.qtstyleplugin-kvantum

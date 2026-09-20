@@ -128,9 +128,11 @@
 
   home.file."Pictures/screenshots/.keep".text = "";
 
-  # Suppress blueman tray applet — waybar bluetooth module handles this
-  xdg.configFile."autostart/blueman.desktop".text = ''
-    [Desktop Entry]
-    Hidden=true
-  '';
+  # Suppress blueman's duplicate tray icon so only the waybar bluetooth module
+  # shows. blueman-manager (waybar on-click) auto-spawns blueman-applet, whose
+  # StatusNotifierItem plugin registers a second bluetooth icon in waybar's tray.
+  # Disabling just that applet plugin drops the icon while keeping the applet
+  # (pairing agent, notifications). The old autostart Hidden=true block was dead:
+  # niri does not process XDG autostart.
+  dconf.settings."org/blueman/general".plugin-list = ["!StatusNotifierItem"];
 }
