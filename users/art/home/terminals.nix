@@ -10,6 +10,14 @@
   # alacritty, so it can't share commonSettings.scrollback or it ends up smaller.
   ghosttyScrollbackBytes = 500000000;
 in {
+  programs.herdr = {
+    enable = true;
+    settings = {
+      onboarding = false;
+      experimental.pane_history = true;
+    };
+  };
+
   programs.ghostty = {
     enable = true;
     enableZshIntegration = true;

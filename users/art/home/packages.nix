@@ -24,7 +24,6 @@
     hyperfine
     btop
     tmux
-    herdr
     httpie
     tldr
     mtr
@@ -70,7 +69,6 @@
     gammastep
     awww
     wl-screenrec
-    obs-studio
     libva-utils
     hyprpicker
     wayland-utils
@@ -141,6 +139,16 @@
     nerd-fonts.symbols-only
     font-awesome
   ];
+
+  programs.obs-studio = {
+    enable = true;
+    plugins = with pkgs.obs-studio-plugins; [
+      obs-backgroundremoval
+      obs-pipewire-audio-capture
+      obs-multi-rtmp
+      obs-vkcapture
+    ];
+  };
 
   fonts.fontconfig.enable = true;
 }

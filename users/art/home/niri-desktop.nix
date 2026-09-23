@@ -761,26 +761,33 @@
     };
   };
 
-  services.swayidle = {
+  # The swayidle unit runs with a bash-only PATH, so every command needs an
+  # absolute path; bare names fail with "command not found" and nothing locks.
+  services.swayidle = let
+    swaylock = "${pkgs.swaylock}/bin/swaylock";
+    pidof = "${pkgs.procps}/bin/pidof";
+    niri = "/run/current-system/sw/bin/niri";
+    systemctl = "/run/current-system/sw/bin/systemctl";
+  in {
     enable = true;
     timeouts = [
       {
         timeout = 300;
-        command = "swaylock -f";
+        command = "${swaylock} -f";
       }
       {
         timeout = 600;
-        command = "niri msg action power-off-monitors";
-        resumeCommand = "niri msg action power-on-monitors";
+        command = "${niri} msg action power-off-monitors";
+        resumeCommand = "${niri} msg action power-on-monitors";
       }
       {
         timeout = 900;
-        command = "systemctl suspend";
+        command = "${systemctl} suspend";
       }
     ];
     events = {
-      before-sleep = "pidof swaylock || swaylock -f";
-      lock = "pidof swaylock || swaylock -f";
+      before-sleep = "${pidof} swaylock || ${swaylock} -f";
+      lock = "${pidof} swaylock || ${swaylock} -f";
     };
   };
 
