@@ -54,22 +54,35 @@
     autoEnable = false;
   };
 
-  # Automatic security updates: pull nixpkgs daily and stage the new generation
-  # for next boot. "boot" over "switch" so an unstable bump never live-switches
-  # mid-work; --commit-lock-file records the bumped flake.lock (root-authored,
-  # unsigned).
+  # Automatic security updates: build against the latest nixos-unstable daily
+  # and stage the generation for next boot. "boot" over "switch" so a bump never
+  # live-switches mid-work. --override-input implies --no-write-lock-file: root
+  # must not write or commit in this art-owned repo (no git identity, and every
+  # attempt left root-owned objects in .git). flake.lock moves only via `update`.
   system.autoUpgrade = {
     enable = true;
     flake = "/etc/nixos";
     operation = "boot";
+    upgrade = false;
     flags = [
-      "--update-input"
+      "--override-input"
       "nixpkgs"
-      "--commit-lock-file"
+      "github:NixOS/nixpkgs/nixos-unstable"
     ];
     dates = "daily";
     randomizedDelaySec = "45min";
     persistent = true;
+  };
+
+  systemd.services.nixos-upgrade.onFailure = ["nixos-upgrade-failed.service"];
+  systemd.services.nixos-upgrade-failed = {
+    description = "Desktop notification for a failed nixos-upgrade";
+    serviceConfig.Type = "oneshot";
+    script = ''
+      ${pkgs.util-linux}/bin/runuser -u art -- \
+        env DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$(id -u art)/bus" \
+        ${pkgs.libnotify}/bin/notify-send -u critical "nixos-upgrade failed" "journalctl -u nixos-upgrade"
+    '';
   };
 
   time.timeZone = "Europe/Bucharest";
