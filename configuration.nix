@@ -4,12 +4,14 @@
     ./modules/system/boot.nix
     ./modules/system/hardware.nix
     ./modules/system/networking.nix
+    ./modules/system/awsvpnclient.nix
     ./modules/system/security.nix
     ./modules/system/endpoint-verification
     ./modules/system/tor.nix
     ./modules/system/miniflux.nix
     ./modules/system/virtualisation.nix
     ./modules/system/encryption.nix
+    ./modules/system/envfs.nix
     ./modules/desktop/services.nix
     ./modules/desktop/niri.nix
     ./users/art

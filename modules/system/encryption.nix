@@ -1,8 +1,5 @@
 { lib, ... }:
 {
-  # Required for TPM2 unlock (systemd in the initrd).
-  boot.initrd.systemd.enable = true;
-
   # Swapfile on the encrypted root (encrypted for free). zram stays primary.
   # Drop this entry if zram is enough for you.
   swapDevices = lib.mkForce [

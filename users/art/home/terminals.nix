@@ -15,6 +15,7 @@ in {
     settings = {
       onboarding = false;
       experimental.pane_history = true;
+      keys.detach = "prefix+d";
     };
   };
 

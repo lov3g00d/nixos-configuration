@@ -47,6 +47,9 @@
         truncation_length = 3;
         truncate_to_repo = true;
       };
+      gcloud = {
+        format = "on [$symbol$project]($style) ";
+      };
     };
   };
 

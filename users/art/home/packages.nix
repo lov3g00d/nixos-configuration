@@ -1,7 +1,6 @@
 {
   pkgs,
   pkgs-25-05,
-  pkgs-unstable,
   ...
 }: {
   home.packages = with pkgs; [
@@ -122,15 +121,17 @@
     # Development
     devbox
     devenv
+    go
     gcc
     gnumake
     dbeaver-bin
     pgadmin4-desktopmode
 
     # AI
-    pkgs-unstable.claude-code # nixpkgs-unstable pinned: upstream yanks npm releases frequently
+    claude-code
     codex
     gemini-cli
+    pi-coding-agent
 
     # Fonts
     nerd-fonts.hack

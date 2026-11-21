@@ -1,0 +1,3 @@
+{...}: {
+  services.awsvpnclient.enable = true;
+}

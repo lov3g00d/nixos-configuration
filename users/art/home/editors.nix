@@ -4,7 +4,11 @@
 # (packages.nix tooling, file types we actually edit) plus haskell + php which
 # the user maintains explicitly. Adding a language is one line; carrying
 # unused language servers is closure bloat.
-{pkgs, ...}: {
+{
+  pkgs,
+  lib,
+  ...
+}: {
   programs.nvf = {
     enable = true;
     settings.vim = {
@@ -36,6 +40,7 @@
         splitbelow = true;
         splitright = true;
         scrolloff = 8;
+        clipboard = "unnamedplus";
       };
 
       globals.mapleader = " ";
@@ -49,13 +54,65 @@
         trouble.enable = true;
         lspSignature.enable = true;
         presets.tailwindcss-language-server.enable = true;
+        servers.gopls.settings.gopls = {
+          gofumpt = true;
+          staticcheck = true;
+          usePlaceholders = true;
+          completeUnimported = true;
+          analyses = {
+            unusedparams = true;
+            unusedwrite = true;
+            nilness = true;
+            shadow = true;
+            useany = true;
+          };
+          hints = {
+            assignVariableTypes = true;
+            compositeLiteralFields = true;
+            compositeLiteralTypes = true;
+            constantValues = true;
+            functionTypeParameters = true;
+            parameterNames = true;
+            rangeVariableTypes = true;
+          };
+          codelenses = {
+            generate = true;
+            test = true;
+            tidy = true;
+            upgrade_dependency = true;
+            regenerate_cgo = true;
+            vendor = true;
+          };
+        };
+        servers.nixd.settings.nixd = {
+          nixpkgs.expr = "import (builtins.getFlake \"/etc/nixos\").inputs.nixpkgs {}";
+          options = {
+            nixos.expr = "(builtins.getFlake \"/etc/nixos\").nixosConfigurations.nixos.options";
+            home_manager.expr = "(builtins.getFlake \"/etc/nixos\").nixosConfigurations.nixos.options.home-manager.users.type.getSubOptions []";
+          };
+        };
+        mappings = {
+          codeAction = "<leader>ca";
+          renameSymbol = "<leader>cr";
+        };
+      };
+
+      # ─── Diagnostics ─────────────────────────────────────────────────────
+      diagnostics = {
+        enable = true;
+        config = {
+          underline = true;
+          severity_sort = true;
+          signs = true;
+          virtual_text = true;
+          update_in_insert = false;
+        };
       };
 
       # ─── UI ──────────────────────────────────────────────────────────────
       ui = {
         noice.enable = true;
         illuminate.enable = true;
-        breadcrumbs.enable = true;
         colorizer.enable = true;
       };
 
@@ -64,14 +121,23 @@
         nvim-cursorline.enable = true;
       };
 
-      binds.whichKey.enable = true;
+      binds.whichKey = {
+        enable = true;
+        register = {
+          "<leader>c" = "+Code";
+          "<leader>d" = "+Debug";
+          "<leader>g" = "+Git";
+          "<leader>G" = "+Go";
+        };
+      };
       notify.nvim-notify.enable = true;
       dashboard.alpha.enable = true;
       tabline.nvimBufferline.enable = true;
 
       statusline.lualine = {
         enable = true;
-        theme = "catppuccin";
+        setupOpts.options.theme = "auto";
+        integrations.breadcrumbs.nvim-navic.enable = true;
       };
 
       # ─── Languages ───────────────────────────────────────────────────────
@@ -98,17 +164,30 @@
         python = {
           enable = true;
           dap.enable = true;
+          lsp.servers = ["basedpyright" "ruff"];
         };
         typescript.enable = true;
         go = {
           enable = true;
-          lsp.enable = true;
-          format.enable = true;
+          format = {
+            enable = true;
+            type = ["goimports" "gofumpt"];
+          };
           dap.enable = true;
-          treesitter.enable = true;
+          extraDiagnostics.enable = true;
+          extensions.gopher-nvim.enable = true;
         };
-        rust.enable = true;
-        clang.enable = true;
+        rust = {
+          enable = true;
+          dap = {
+            enable = true;
+            debugger = ["lldb"];
+          };
+        };
+        clang = {
+          enable = true;
+          dap.enable = true;
+        };
 
         # Web
         html.enable = true;
@@ -132,14 +211,6 @@
         php.enable = true;
       };
 
-      extraPackages = with pkgs; [
-        gofumpt
-        golangci-lint
-        gotools
-        go-tools
-        delve
-      ];
-
       # ─── Treesitter ──────────────────────────────────────────────────────
       treesitter = {
         enable = true;
@@ -149,12 +220,11 @@
       };
 
       # ─── Completion & snippets ───────────────────────────────────────────
-      autocomplete.nvim-cmp.enable = true;
-      snippets.luasnip.enable = true;
-
-      extraPlugins = with pkgs.vimPlugins; {
-        cmp-cmdline = {package = cmp-cmdline;};
+      autocomplete.nvim-cmp = {
+        enable = true;
+        sourcePlugins = [pkgs.vimPlugins.cmp-cmdline];
       };
+      snippets.luasnip.enable = true;
 
       # ─── Debugger ────────────────────────────────────────────────────────
       debugger.nvim-dap = {
@@ -195,7 +265,11 @@
         surround.enable = true;
       };
 
-      utility.motion.hop.enable = true;
+      utility.motion.hop = {
+        enable = true;
+        mappings.hop = "s";
+      };
+      utility.direnv.enable = true;
       autopairs.nvim-autopairs.enable = true;
       comments.comment-nvim.enable = true;
 
@@ -213,36 +287,13 @@
       #   <leader>c… code         (LSP actions)
       #   <leader>d… debug        (DAP)
       #   <leader>g… git          (fugitive)
-      #   <leader>h… hop          (motion)
+      #   <leader>G… go           (gopher)
+      #   <leader>h… git hunks    (gitsigns)
       #   <leader>x… diagnostics  (trouble)
       keymaps = [
-        # Find
+        # Find (ff/fg/fb/fh/fr are nvf telescope natives; only extras here)
         {
-          key = "<leader>ff";
-          mode = "n";
-          action = "<cmd>Telescope find_files<CR>";
-          desc = "Find files";
-        }
-        {
-          key = "<leader>fg";
-          mode = "n";
-          action = "<cmd>Telescope live_grep<CR>";
-          desc = "Live grep";
-        }
-        {
-          key = "<leader>fb";
-          mode = "n";
-          action = "<cmd>Telescope buffers<CR>";
-          desc = "Buffers";
-        }
-        {
-          key = "<leader>fh";
-          mode = "n";
-          action = "<cmd>Telescope help_tags<CR>";
-          desc = "Help tags";
-        }
-        {
-          key = "<leader>fr";
+          key = "<leader>fo";
           mode = "n";
           action = "<cmd>Telescope oldfiles<CR>";
           desc = "Recent files";
@@ -262,7 +313,7 @@
           desc = "Toggle file tree";
         }
         {
-          key = "<leader>t";
+          key = "<leader>tt";
           mode = "n";
           action = "<cmd>ToggleTerm<CR>";
           desc = "Toggle terminal";
@@ -311,24 +362,12 @@
           desc = "Window right";
         }
 
-        # Code (LSP)
+        # Code (LSP): ca (code action) / cr (rename) are nvf lsp.mappings natives
         {
           key = "<leader>cf";
           mode = "n";
-          action = "<cmd>lua vim.lsp.buf.format()<CR>";
+          action = "<cmd>lua require('conform').format({ lsp_format = 'fallback' })<CR>";
           desc = "Format buffer";
-        }
-        {
-          key = "<leader>ca";
-          mode = "n";
-          action = "<cmd>lua vim.lsp.buf.code_action()<CR>";
-          desc = "Code action";
-        }
-        {
-          key = "<leader>cr";
-          mode = "n";
-          action = "<cmd>lua vim.lsp.buf.rename()<CR>";
-          desc = "Rename symbol";
         }
 
         # Debug (DAP)
@@ -383,18 +422,30 @@
           desc = "Git blame";
         }
 
-        # Hop (motion)
+        # Go (gopher.nvim)
         {
-          key = "<leader>hw";
+          key = "<leader>Ge";
           mode = "n";
-          action = "<cmd>HopWord<CR>";
-          desc = "Hop word";
+          action = "<cmd>GoIfErr<CR>";
+          desc = "Go: if err";
         }
         {
-          key = "<leader>hl";
+          key = "<leader>Gt";
           mode = "n";
-          action = "<cmd>HopLine<CR>";
-          desc = "Hop line";
+          action = "<cmd>GoTagAdd json<CR>";
+          desc = "Go: add json tags";
+        }
+        {
+          key = "<leader>GT";
+          mode = "n";
+          action = "<cmd>GoTagRm json<CR>";
+          desc = "Go: remove json tags";
+        }
+        {
+          key = "<leader>Gs";
+          mode = "n";
+          action = "<cmd>GoTestAdd<CR>";
+          desc = "Go: test for func";
         }
 
         # Diagnostics (trouble + native)
@@ -409,18 +460,6 @@
           mode = "n";
           action = "<cmd>Trouble diagnostics toggle filter.buf=0<CR>";
           desc = "Buffer diagnostics";
-        }
-        {
-          key = "[d";
-          mode = "n";
-          action = "<cmd>lua vim.diagnostic.goto_prev()<CR>";
-          desc = "Previous diagnostic";
-        }
-        {
-          key = "]d";
-          mode = "n";
-          action = "<cmd>lua vim.diagnostic.goto_next()<CR>";
-          desc = "Next diagnostic";
         }
 
         # Visual
@@ -438,36 +477,17 @@
         }
       ];
 
-      # ─── Lua overrides ───────────────────────────────────────────────────
-      # Kept here because nvf doesn't expose a structured option for either:
-      #  - clipboard: needs vim.opt append, not a flag
-      #  - cmp-cmdline: cmdline sources require cmp.setup.cmdline() at runtime
-      luaConfigRC.clipboard = ''
-        vim.opt.clipboard:append("unnamedplus")
-      '';
-
-      luaConfigRC.cmp-sources = ''
+      # ─── Cmdline completion ──────────────────────────────────────────────
+      # cmp cmdline sources have no nvf option; they need cmp.setup.cmdline() at runtime.
+      lazy.plugins.nvim-cmp.after = lib.mkAfter ''
         local cmp = require('cmp')
-        local config = cmp.get_config()
-
-        table.insert(config.sources, { name = 'path' })
-        table.insert(config.sources, { name = 'buffer', keyword_length = 3 })
-        cmp.setup(config)
-
         cmp.setup.cmdline(':', {
           mapping = cmp.mapping.preset.cmdline(),
-          sources = cmp.config.sources({
-            { name = 'path' }
-          }, {
-            { name = 'cmdline' }
-          })
+          sources = cmp.config.sources({ { name = 'path' } }, { { name = 'cmdline' } })
         })
-
         cmp.setup.cmdline('/', {
           mapping = cmp.mapping.preset.cmdline(),
-          sources = {
-            { name = 'buffer' }
-          }
+          sources = { { name = 'buffer' } }
         })
       '';
     };

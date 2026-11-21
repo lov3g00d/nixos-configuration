@@ -3,9 +3,6 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    # Fast-moving channel used for packages whose upstreams yank releases (e.g. claude-code).
-    # nixos-unstable is gated on Hydra and can lag by days, long enough for an npm yank to brick the build.
-    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     nixpkgs-25-05.url = "github:nixos/nixpkgs/nixos-25.05"; # argocd v2 compat (cluster still on v2.x)
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     catppuccin = {
@@ -32,11 +29,14 @@
       url = "github:sodiboo/niri-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    awsvpnclient = {
+      url = "github:AddG0/awsvpnclient-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {
     nixpkgs,
-    nixpkgs-unstable,
     nixpkgs-25-05,
     nixos-hardware,
     home-manager,
@@ -45,14 +45,11 @@
     nix-index-database,
     lanzaboote,
     niri,
+    awsvpnclient,
     ...
   }: let
     system = "x86_64-linux";
     pkgs-25-05 = import nixpkgs-25-05 {
-      inherit system;
-      config.allowUnfree = true;
-    };
-    pkgs-unstable = import nixpkgs-unstable {
       inherit system;
       config.allowUnfree = true;
     };
@@ -67,6 +64,7 @@
         catppuccin.nixosModules.catppuccin
         niri.nixosModules.niri
         lanzaboote.nixosModules.lanzaboote
+        awsvpnclient.nixosModules.default
         home-manager.nixosModules.home-manager
         {nixpkgs.overlays = [niri.overlays.niri];}
         {
@@ -75,7 +73,7 @@
             useUserPackages = true;
             backupFileExtension = "bak";
             users.art = import ./users/art/home;
-            extraSpecialArgs = {inherit pkgs-25-05 pkgs-unstable sharedFeeds;};
+            extraSpecialArgs = {inherit pkgs-25-05 sharedFeeds;};
             sharedModules = [
               catppuccin.homeModules.catppuccin
               nvf.homeManagerModules.default

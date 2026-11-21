@@ -14,7 +14,6 @@
     # and Xe-LPG iGPU driver patches that land mainline before stable LTS.
     kernelPackages = pkgs.linuxPackages_latest;
     consoleLogLevel = 0;
-    initrd.verbose = false;
     kernelParams = [
       "quiet"
       "splash"
@@ -48,5 +47,4 @@
       "net.core.default_qdisc" = "fq";
     };
   };
-
 }

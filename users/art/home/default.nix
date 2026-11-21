@@ -32,6 +32,7 @@
     VISUAL = "nvim";
     KREW_ROOT = "${config.home.homeDirectory}/.krew";
     TF_PLUGIN_CACHE_DIR = "${config.home.homeDirectory}/.terraform.d/plugin-cache";
+    AWS_CLI_AUTO_PROMPT = "on-partial";
   };
 
   # Terraform won't create the cache dir itself; ensure it exists.

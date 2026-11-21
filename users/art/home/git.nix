@@ -1,6 +1,5 @@
 {
   pkgs,
-  config,
   ...
 }: let
   gitProfiles = {
@@ -13,6 +12,11 @@
       name = "lov3g00d";
       email = "zamkovoy99@gmail.com";
       signingKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOVXe0NilOBtIVdsGEdw3Uis4W2i+BDSkTY4icKtm1g8";
+    };
+    opsfleet = {
+      name = "artemzamkovyi";
+      email = "artem.zamkovyi@opsfleet.com";
+      signingKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHPFpkppTMiBoUZPt2rKFXq0tH1KWe9IrgwBM+RItZva";
     };
   };
   defaultProfile = gitProfiles.personal;
@@ -52,6 +56,17 @@ in {
           };
         };
       }
+      {
+        condition = "gitdir:~/Projects/opsfleet/";
+        contents = {
+          user = {
+            name = gitProfiles.opsfleet.name;
+            email = gitProfiles.opsfleet.email;
+            signingkey = gitProfiles.opsfleet.signingKey;
+          };
+          url."git@github.com-opsfleet:".insteadOf = "git@github.com:";
+        };
+      }
     ];
   };
 
@@ -64,6 +79,13 @@ in {
         StrictHostKeyChecking = "no";
         UserKnownHostsFile = "/dev/null";
         SetEnv = {TERM = "xterm-256color";};
+      };
+      "github.com-opsfleet" = {
+        HostName = "github.com";
+        User = "git";
+        IdentityAgent = "~/.1password/agent.sock";
+        IdentityFile = "~/.ssh/opsfleet_id_ed25519.pub";
+        IdentitiesOnly = "yes";
       };
       "*" = {
         AddKeysToAgent = "yes";
@@ -85,5 +107,8 @@ in {
   home.file.".config/1Password/ssh/agent.toml".text = ''
     [[ssh-keys]]
     vault = "Personal"
+
+    [[ssh-keys]]
+    vault = "OpsFleet"
   '';
 }
