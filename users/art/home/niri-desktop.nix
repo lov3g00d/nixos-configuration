@@ -173,6 +173,49 @@
         hotkey-overlay.title = "Clipboard History";
       };
 
+      "Mod+S" = {
+        action.spawn = [
+          "noctalia"
+          "msg"
+          "panel-toggle"
+          "control-center"
+        ];
+        hotkey-overlay.title = "Control Center";
+      };
+      "Mod+X" = {
+        action.spawn = [
+          "noctalia"
+          "msg"
+          "panel-toggle"
+          "session"
+        ];
+        hotkey-overlay.title = "Session Menu";
+      };
+      "Mod+N" = {
+        action.spawn = [
+          "noctalia"
+          "msg"
+          "notification-dnd-toggle"
+        ];
+        hotkey-overlay.title = "Toggle Do Not Disturb";
+      };
+      "Alt+Tab" = {
+        action.spawn = [
+          "noctalia"
+          "msg"
+          "window-switcher"
+          "hold"
+        ];
+        hotkey-overlay.title = "Window Switcher";
+      };
+      "Alt+Shift+Tab".action.spawn = [
+        "noctalia"
+        "msg"
+        "window-switcher"
+        "hold"
+        "reverse"
+      ];
+
       "Mod+Q" = {
         action.close-window = [ ];
         hotkey-overlay.title = "Close Window";
@@ -418,6 +461,8 @@
         setup_wizard_enabled = false;
         polkit_agent = true;
         greeter_sync.auto_sync = true;
+        niri_overview_type_to_launch_enabled = true;
+        niri_overview_close_on_launch_enabled = true;
         screenshot.directory = "${config.home.homeDirectory}/Pictures/screenshots";
       };
 
@@ -495,6 +540,8 @@
         { type = "nightlight"; }
         { type = "notification"; }
       ];
+
+      lockscreen.blurred_desktop = true;
 
       wallpaper.default.path = "${config.home.homeDirectory}/Pictures/wallpapers/pokemon-rowlet-sleeping-in-wreath-desktop-wallpaper.jpg";
 
