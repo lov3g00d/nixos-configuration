@@ -24,6 +24,7 @@
     autoEnable = true;
     flavor = "mocha";
     accent = "mauve";
+    kvantum.enable = false;
   };
 
   home.sessionVariables = {
@@ -61,7 +62,6 @@
   qt = {
     enable = true;
     platformTheme.name = "gtk3";
-    style.name = "kvantum";
   };
 
   dconf.settings."org/gnome/desktop/interface" = {
