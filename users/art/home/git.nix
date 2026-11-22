@@ -1,4 +1,5 @@
 {
+  lib,
   pkgs,
   ...
 }: let
@@ -26,6 +27,9 @@ in {
     signing = {
       key = defaultProfile.signingKey;
       signByDefault = true;
+      allowedSigners = lib.concatLines (lib.unique (lib.mapAttrsToList
+        (_: p: ''${p.email} namespaces="git" ${p.signingKey}'')
+        gitProfiles));
     };
     settings = {
       user = {

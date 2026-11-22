@@ -71,6 +71,7 @@
             useGlobalPkgs = true;
             useUserPackages = true;
             backupFileExtension = "bak";
+            overwriteBackup = true;
             users.art = import ./users/art/home;
             extraSpecialArgs = {inherit pkgs-25-05 sharedFeeds;};
             sharedModules = [
