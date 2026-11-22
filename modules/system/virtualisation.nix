@@ -21,7 +21,5 @@
   };
   programs.virt-manager.enable = true;
 
-  # Ships /etc/containers/policy.json + registries.conf so rootless podman can
-  # pull images; the bare podman package provides neither.
-  virtualisation.containers.enable = true;
+  virtualisation.podman.enable = true;
 }

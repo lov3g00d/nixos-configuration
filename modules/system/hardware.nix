@@ -44,10 +44,7 @@
   hardware.bluetooth = {
     enable = true;
     powerOnBoot = true;
-    settings.General = {
-      Experimental = true;
-      FastConnectable = true;
-    };
+    settings.General.FastConnectable = true;
   };
 
   services = {

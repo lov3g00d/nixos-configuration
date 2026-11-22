@@ -1,6 +1,6 @@
 {
   lib,
-  pkgs,
+  osConfig,
   ...
 }: let
   gitProfiles = {
@@ -47,7 +47,7 @@ in {
       diff.colorMoved = "default";
       diff.algorithm = "histogram";
       gpg.format = "ssh";
-      "gpg \"ssh\"".program = "${pkgs._1password-gui}/bin/op-ssh-sign";
+      "gpg \"ssh\"".program = "${osConfig.programs._1password-gui.package}/bin/op-ssh-sign";
     };
     includes = [
       {

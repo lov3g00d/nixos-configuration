@@ -97,7 +97,6 @@
     # Containers & k8s
     lazydocker
     docker-compose
-    podman
     podman-compose
     kubectl
     krew

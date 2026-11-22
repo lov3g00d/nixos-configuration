@@ -36,6 +36,7 @@
   };
 
   outputs = {
+    self,
     nixpkgs,
     nixpkgs-25-05,
     nixos-hardware,
@@ -53,12 +54,12 @@
       inherit system;
       config.allowUnfree = true;
     };
-    sharedFeeds = import ./data/feeds.nix;
   in {
     nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
       inherit system;
       modules = [
         ./configuration.nix
+        {system.configurationRevision = self.rev or self.dirtyRev or null;}
         nixos-hardware.nixosModules.lenovo-thinkpad-x1-13th-gen
         catppuccin.nixosModules.catppuccin
         niri.nixosModules.niri
@@ -73,7 +74,7 @@
             backupFileExtension = "bak";
             overwriteBackup = true;
             users.art = import ./users/art/home;
-            extraSpecialArgs = {inherit pkgs-25-05 sharedFeeds;};
+            extraSpecialArgs = {inherit pkgs-25-05;};
             sharedModules = [
               catppuccin.homeModules.catppuccin
               nvf.homeModules.default
