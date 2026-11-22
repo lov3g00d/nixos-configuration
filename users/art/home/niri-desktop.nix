@@ -156,8 +156,8 @@
       {
         matches = [
           {
-            app-id = "^firefox$";
-            title = "Picture-in-Picture";
+            app-id = "^vivaldi";
+            title = "(?i)^picture.in.picture$";
           }
         ];
         open-floating = true;
@@ -187,7 +187,7 @@
         hotkey-overlay.title = "App Launcher";
       };
       "Mod+B" = {
-        action.spawn = [ "firefox" ];
+        action.spawn = [ "vivaldi" ];
         hotkey-overlay.title = "Browser";
       };
       "Mod+C" = {

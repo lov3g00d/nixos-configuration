@@ -69,5 +69,34 @@
     color-scheme = "prefer-dark";
   };
 
+  xdg.mimeApps = {
+    enable = true;
+    defaultApplications =
+      let
+        browser = "vivaldi-stable.desktop";
+        mail = "thunderbird.desktop";
+        telegram = "org.telegram.desktop.desktop";
+      in
+      {
+        "text/html" = browser;
+        "application/xhtml+xml" = browser;
+        "x-scheme-handler/http" = browser;
+        "x-scheme-handler/https" = browser;
+        "x-scheme-handler/about" = browser;
+        "x-scheme-handler/unknown" = browser;
+        "x-scheme-handler/mailto" = mail;
+        "x-scheme-handler/mid" = mail;
+        "message/rfc822" = mail;
+        "x-scheme-handler/webcal" = mail;
+        "x-scheme-handler/webcals" = mail;
+        "text/calendar" = mail;
+        "x-scheme-handler/tg" = telegram;
+        "x-scheme-handler/tonsite" = telegram;
+        "x-scheme-handler/ton" = telegram;
+        "x-scheme-handler/slack" = "slack.desktop";
+        "x-scheme-handler/claude-cli" = "claude-code-url-handler.desktop";
+      };
+  };
+
   programs.welcome.enable = true;
 }
