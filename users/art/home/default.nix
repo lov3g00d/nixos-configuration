@@ -24,7 +24,6 @@
     autoEnable = true;
     flavor = "mocha";
     accent = "mauve";
-    waybar.enable = false;
   };
 
   home.sessionVariables = {

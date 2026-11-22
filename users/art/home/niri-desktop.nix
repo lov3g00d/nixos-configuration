@@ -89,45 +89,18 @@
     };
 
     spawn-at-startup = [
-      { command = [ "swayosd-server" ]; }
-
+      { command = [ "noctalia" ]; }
       {
         command = [
           "1password"
           "--silent"
         ];
       }
-      { command = [ "${config.home.homeDirectory}/.local/bin/gammastep-auto" ]; }
       { command = [ "${config.home.homeDirectory}/.local/bin/bt-autoconnect" ]; }
-      { command = [ "awww-daemon" ]; }
-      {
-        command = [
-          "sh"
-          "-c"
-          "sleep 1 && awww img ${config.home.homeDirectory}/Pictures/wallpapers/pokemon-rowlet-sleeping-in-wreath-desktop-wallpaper.jpg --transition-type grow --transition-duration 2"
-        ];
-      }
-      {
-        command = [
-          "wl-paste"
-          "--type"
-          "text"
-          "--watch"
-          "cliphist"
-          "store"
-        ];
-      }
-      {
-        command = [
-          "wl-paste"
-          "--type"
-          "image"
-          "--watch"
-          "cliphist"
-          "store"
-        ];
-      }
     ];
+
+    # Noctalia's notification actions and window activation need this.
+    debug.honor-xdg-activation-with-invalid-serial = [ ];
 
     window-rules = [
       {
@@ -180,9 +153,10 @@
       };
       "Mod+D" = {
         action.spawn = [
-          "rofi"
-          "-show"
-          "drun"
+          "noctalia"
+          "msg"
+          "panel-toggle"
+          "launcher"
         ];
         hotkey-overlay.title = "App Launcher";
       };
@@ -192,9 +166,10 @@
       };
       "Mod+C" = {
         action.spawn = [
-          "sh"
-          "-c"
-          "cliphist list | rofi -dmenu | cliphist decode | wl-copy"
+          "noctalia"
+          "msg"
+          "panel-toggle"
+          "clipboard"
         ];
         hotkey-overlay.title = "Clipboard History";
       };
@@ -312,9 +287,10 @@
 
       "Print" = {
         action.spawn = [
-          "sh"
-          "-c"
-          "grim -g \"$(slurp)\" - | satty -f -"
+          "noctalia"
+          "msg"
+          "screenshot-region"
+          "--annotate"
         ];
         hotkey-overlay.title = "Screenshot + Annotate";
       };
@@ -340,8 +316,10 @@
 
       "Mod+Escape" = {
         action.spawn = [
-          "swaylock"
-          "-f"
+          "noctalia"
+          "msg"
+          "session"
+          "lock"
         ];
         hotkey-overlay.title = "Lock Screen";
       };
@@ -358,33 +336,33 @@
       "XF86AudioRaiseVolume" = {
         allow-when-locked = true;
         action.spawn = [
-          "swayosd-client"
-          "--output-volume"
-          "raise"
+          "noctalia"
+          "msg"
+          "volume-up"
         ];
       };
       "XF86AudioLowerVolume" = {
         allow-when-locked = true;
         action.spawn = [
-          "swayosd-client"
-          "--output-volume"
-          "lower"
+          "noctalia"
+          "msg"
+          "volume-down"
         ];
       };
       "XF86AudioMute" = {
         allow-when-locked = true;
         action.spawn = [
-          "swayosd-client"
-          "--output-volume"
-          "mute-toggle"
+          "noctalia"
+          "msg"
+          "volume-mute"
         ];
       };
       "XF86AudioMicMute" = {
         allow-when-locked = true;
         action.spawn = [
-          "swayosd-client"
-          "--input-volume"
-          "mute-toggle"
+          "noctalia"
+          "msg"
+          "mic-mute"
         ];
       };
       "XF86AudioPlay" = {
@@ -418,559 +396,155 @@
       "XF86MonBrightnessUp" = {
         allow-when-locked = true;
         action.spawn = [
-          "swayosd-client"
-          "--brightness"
-          "raise"
+          "noctalia"
+          "msg"
+          "brightness-up"
         ];
       };
       "XF86MonBrightnessDown" = {
         allow-when-locked = true;
         action.spawn = [
-          "swayosd-client"
-          "--brightness"
-          "lower"
+          "noctalia"
+          "msg"
+          "brightness-down"
         ];
       };
       "XF86KbdBrightnessUp" = {
         allow-when-locked = true;
         action.spawn = [
-          "brightnessctl"
-          "--device=*::kbd_backlight"
-          "set"
-          "+10%"
+          "noctalia"
+          "msg"
+          "keyboard-backlight-up"
         ];
       };
       "XF86KbdBrightnessDown" = {
         allow-when-locked = true;
         action.spawn = [
-          "brightnessctl"
-          "--device=*::kbd_backlight"
-          "set"
-          "10%-"
+          "noctalia"
+          "msg"
+          "keyboard-backlight-down"
         ];
       };
     };
   };
 
-  programs.waybar = {
-    enable = true;
-    systemd.enable = true;
-    settings.mainBar = {
-      layer = "top";
-      position = "top";
-      height = 36;
-      margin-top = 6;
-      margin-left = 12;
-      margin-right = 12;
-      spacing = 0;
-
-      modules-left = [
-        "custom/logo"
-        "niri/workspaces"
-        "niri/window"
-      ];
-      modules-center = [
-        "custom/weather"
-        "custom/media"
-      ];
-      modules-right = [
-        "tray"
-        "custom/caffeine"
-        "custom/powerprofile"
-        "bluetooth"
-        "pulseaudio"
-        "backlight"
-        "network"
-        "cpu"
-        "memory"
-        "temperature"
-        "battery"
-        "clock"
-        "niri/language"
-        "custom/power"
-      ];
-
-      "custom/logo" = {
-        format = "󱄅";
-        tooltip = false;
-        on-click = "rofi -show drun";
-      };
-
-      "custom/power" = {
-        format = "󰐥";
-        tooltip = false;
-        on-click = "~/.local/bin/power-menu-system";
-      };
-
-      "custom/caffeine" = {
-        format = "{}";
-        return-type = "json";
-        interval = 5;
-        exec = "~/.local/bin/caffeine status";
-        on-click = "~/.local/bin/caffeine toggle";
-      };
-
-      # Passive indicator: TLP owns platform_profile, this just reflects current state.
-      # Right-click opens tlp-stat for diagnostics.
-      "custom/powerprofile" = {
-        format = "{}";
-        return-type = "json";
-        interval = 10;
-        exec = ''
-          profile=$(cat /sys/firmware/acpi/platform_profile 2>/dev/null || echo "unknown")
-          case $profile in
-            "performance") icon="󰓅"; class="performance" ;;
-            "balanced") icon="󰾅"; class="balanced" ;;
-            "low-power") icon="󰾆"; class="powersave" ;;
-            *) icon="󰾅"; class="balanced" ;;
-          esac
-          echo "{\"text\": \"$icon\", \"tooltip\": \"Profile: $profile (managed by TLP)\", \"class\": \"$class\"}"
-        '';
-        on-click-right = "ghostty -e sudo tlp-stat";
-      };
-
-      "niri/language" = {
-        format = "{}";
-        on-click = "niri msg action switch-layout";
-      };
-
-      "custom/weather" = {
-        format = "{}";
-        interval = 900;
-        exec = ''
-          city=$(curl -4sf --max-time 3 "http://ip-api.com/line/?fields=city" 2>/dev/null | head -1)
-          [ -z "$city" ] && city="Bucharest"
-          city=$(${pkgs.jq}/bin/jq -rn --arg c "$city" '$c | @uri')
-          out=$(curl -sf --max-time 5 "wttr.in/$city?format=%c+%t" 2>/dev/null)
-          if [ -n "$out" ]; then echo "$out" | sed 's/+//'; else echo "󰖐 --"; fi
-        '';
-        tooltip-format = "Click for details";
-        on-click = "xdg-open https://wttr.in";
-      };
-
-      "niri/window" = {
-        format = "{title}";
-        max-length = 35;
-      };
-
-      "niri/workspaces" = {
-        format = "{index}";
-        on-click = "activate";
-      };
-
-      "custom/media" = {
-        format = "{icon} {}";
-        return-type = "json";
-        format-icons = {
-          Playing = "󰐊";
-          Paused = "󰏤";
-        };
-        exec = ''playerctl -a metadata --format '{"text": "{{artist}} - {{title}}", "tooltip": "{{playerName}}: {{artist}} - {{title}}", "alt": "{{status}}", "class": "{{status}}"}' -F 2>/dev/null'';
-        on-click = "playerctl play-pause";
-        on-scroll-up = "playerctl next";
-        on-scroll-down = "playerctl previous";
-        max-length = 45;
-      };
-
-      bluetooth = {
-        format = "󰂯";
-        format-off = "󰂲";
-        format-connected = "󰂱 {num_connections}";
-        format-connected-battery = "󰂱 {device_battery_percentage}%";
-        tooltip-format = "{controller_alias}: {status}";
-        tooltip-format-connected = "{controller_alias}\n\n{device_enumerate}";
-        tooltip-format-enumerate-connected = "󰂱 {device_alias}\n󰁹 {device_battery_percentage}%";
-        on-click = "blueman-manager";
-      };
-
-      pulseaudio = {
-        format = "{icon} {volume}%";
-        format-muted = "󰝟 Mute";
-        format-icons = {
-          headphone = "󰋋";
-          hands-free = "󰋎";
-          headset = "󰋎";
-          phone = "󰏲";
-          portable = "󰏲";
-          default = [
-            "󰕿"
-            "󰖀"
-            "󰕾"
-          ];
-        };
-        tooltip-format = "{desc}";
-        on-click = "pavucontrol";
-        on-click-right = "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
-        on-scroll-up = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%+";
-        on-scroll-down = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%-";
-      };
-
-      backlight = {
-        format = "{icon} {percent}%";
-        format-icons = [
-          "󰃚"
-          "󰃛"
-          "󰃜"
-          "󰃝"
-          "󰃞"
-          "󰃟"
-          "󰃠"
-        ];
-        tooltip-format = "Brightness: {percent}%";
-        on-scroll-up = "brightnessctl set +3%";
-        on-scroll-down = "brightnessctl set 3%-";
-      };
-
-      network = {
-        format-wifi = "{icon} {signalStrength}%";
-        format-ethernet = "󰈀 Wired";
-        format-disconnected = "󰖪 Off";
-        format-icons = [
-          "󰤯"
-          "󰤟"
-          "󰤢"
-          "󰤥"
-          "󰤨"
-        ];
-        tooltip-format-wifi = "󰖩 {essid}\n󰩟 {ipaddr}\n󰁅 {bandwidthDownBytes}  󰁝 {bandwidthUpBytes}";
-        tooltip-format-ethernet = "󰈀 {ifname}\n󰩟 {ipaddr}";
-        tooltip-format-disconnected = "Disconnected";
-        on-click = "ghostty -e nmtui";
-        interval = 2;
-      };
-
-      cpu = {
-        format = "{icon} {usage}%";
-        format-icons = [
-          "▁"
-          "▂"
-          "▃"
-          "▄"
-          "▅"
-          "▆"
-          "▇"
-          "█"
-        ];
-        interval = 2;
-        tooltip-format = "CPU: {usage}%\n{avg_frequency}GHz";
-        states = {
-          warning = 70;
-          critical = 90;
-        };
-      };
-
-      memory = {
-        format = "{icon} {percentage}%";
-        format-icons = [
-          "▁"
-          "▂"
-          "▃"
-          "▄"
-          "▅"
-          "▆"
-          "▇"
-          "█"
-        ];
-        interval = 3;
-        tooltip-format = "RAM: {used:0.1f}G / {total:0.1f}G";
-        states = {
-          warning = 70;
-          critical = 90;
-        };
-      };
-
-      temperature = {
-        format = "{icon} {temperatureC}°";
-        format-icons = [
-          "󱃃"
-          "󰔏"
-          "󱃂"
-        ];
-        hwmon-path-abs = "/sys/devices/platform/coretemp.0/hwmon";
-        input-filename = "temp1_input";
-        critical-threshold = 80;
-        tooltip-format = "CPU Temp: {temperatureC}°C";
-      };
-
-      battery = {
-        states = {
-          good = 80;
-          warning = 30;
-          critical = 15;
-        };
-        format = "{icon} {capacity}%";
-        format-charging = "󱐋 {capacity}%";
-        format-plugged = "󰚥 {capacity}%";
-        format-full = "󰁹 Full";
-        format-icons = [
-          "󰂎"
-          "󰁺"
-          "󰁻"
-          "󰁼"
-          "󰁽"
-          "󰁾"
-          "󰁿"
-          "󰂀"
-          "󰂁"
-          "󰂂"
-          "󰁹"
-        ];
-        tooltip-format = "{timeTo}\n{power}W";
-      };
-
-      tray = {
-        icon-size = 18;
-        spacing = 6;
-      };
-
-      clock = {
-        format = "{:%H:%M}";
-        format-alt = "{:%a %d %b}";
-        tooltip-format = "<big>{:%B %Y}</big>\n<tt>{calendar}</tt>";
-        calendar = {
-          format = {
-            months = "<span color='#cba6f7'><b>{}</b></span>";
-            today = "<span color='#f38ba8'><b>{}</b></span>";
-          };
-        };
-      };
-    };
-
-    style = ''
-      @define-color rosewater #f5e0dc;
-      @define-color flamingo #f2cdcd;
-      @define-color pink #f5c2e7;
-      @define-color mauve #cba6f7;
-      @define-color red #f38ba8;
-      @define-color maroon #eba0ac;
-      @define-color peach #fab387;
-      @define-color yellow #f9e2af;
-      @define-color green #a6e3a1;
-      @define-color teal #94e2d5;
-      @define-color sky #89dceb;
-      @define-color sapphire #74c7ec;
-      @define-color blue #89b4fa;
-      @define-color lavender #b4befe;
-      @define-color text #cdd6f4;
-      @define-color subtext1 #bac2de;
-      @define-color subtext0 #a6adc8;
-      @define-color overlay2 #9399b2;
-      @define-color overlay1 #7f849c;
-      @define-color overlay0 #6c7086;
-      @define-color surface2 #585b70;
-      @define-color surface1 #45475a;
-      @define-color surface0 #313244;
-      @define-color base #1e1e2e;
-      @define-color mantle #181825;
-      @define-color crust #11111b;
-
-      * {
-        font-family: "JetBrainsMono Nerd Font";
-        font-size: 13px;
-        min-height: 0;
-      }
-
-      window#waybar {
-        background: transparent;
-      }
-
-      tooltip {
-        background: @base;
-        border: 1px solid @surface1;
-        border-radius: 8px;
-        padding: 4px 8px;
-      }
-
-      tooltip label {
-        color: @text;
-      }
-
-      .modules-left {
-        background: alpha(@base, 0.9);
-        border-radius: 12px;
-        margin-right: 8px;
-        padding: 0 4px;
-      }
-
-      .modules-center {
-        background: alpha(@base, 0.9);
-        border-radius: 12px;
-        padding: 0 12px;
-      }
-
-      .modules-right {
-        background: alpha(@base, 0.9);
-        border-radius: 12px;
-        margin-left: 8px;
-        padding: 0 4px;
-      }
-
-      #custom-logo {
-        color: @blue;
-        font-size: 17px;
-        padding: 0 12px 0 8px;
-      }
-      #custom-logo:hover { color: @lavender; }
-
-      #custom-power {
-        color: @overlay1;
-        font-size: 15px;
-        padding: 0 8px 0 6px;
-      }
-      #custom-power:hover { color: @red; }
-
-      #workspaces {
-        padding: 0 4px;
-      }
-
-      #workspaces button {
-        color: @overlay1;
-        padding: 2px 8px;
-        margin: 2px;
-        border-radius: 8px;
-        font-size: 14px;
-      }
-
-      #workspaces button:hover {
-        color: @text;
-        background: @surface0;
-      }
-
-      #workspaces button.active {
-        color: @crust;
-        background: @mauve;
-        font-weight: bold;
-      }
-
-      #workspaces button.urgent {
-        color: @crust;
-        background: @red;
-      }
-
-      #window {
-        color: @subtext0;
-        padding: 0 12px;
-        font-style: italic;
-      }
-
-      #custom-weather {
-        color: @sky;
-        padding: 0 8px;
-      }
-
-      #custom-media {
-        color: @mauve;
-        padding: 0 8px;
-      }
-      #custom-media.Playing { color: @green; }
-      #custom-media.Paused { color: @overlay0; }
-
-      #tray {
-        padding: 0 8px;
-      }
-      #tray > .passive { -gtk-icon-effect: dim; }
-
-      #bluetooth, #pulseaudio, #backlight, #network,
-      #cpu, #memory, #temperature, #battery,
-      #custom-caffeine, #custom-powerprofile, #language {
-        padding: 0 8px;
-      }
-
-      #custom-caffeine { color: @overlay1; }
-      #custom-caffeine.active { color: @yellow; }
-
-      #custom-powerprofile { color: @green; }
-      #custom-powerprofile.performance { color: @red; }
-      #custom-powerprofile.powersave { color: @blue; }
-
-      #language { color: @flamingo; }
-
-      #bluetooth { color: @blue; }
-      #bluetooth.connected { color: @sapphire; }
-      #bluetooth.disabled { color: @surface2; }
-
-      #pulseaudio { color: @pink; }
-      #pulseaudio.muted { color: @surface2; }
-
-      #backlight { color: @yellow; }
-
-      #network { color: @sapphire; }
-      #network.disconnected { color: @surface2; }
-
-      #cpu { color: @green; }
-      #cpu.warning { color: @yellow; }
-      #cpu.critical { color: @red; }
-
-      #memory { color: @peach; }
-      #memory.warning { color: @yellow; }
-      #memory.critical { color: @red; }
-
-      #temperature { color: @teal; }
-      #temperature.critical { color: @red; }
-
-      #battery { color: @green; }
-      #battery.warning { color: @yellow; }
-      #battery.critical { color: @red; }
-      #battery.charging { color: @sapphire; }
-
-      #clock {
-        color: @lavender;
-        font-weight: bold;
-        padding: 0 12px;
-      }
-
-      #bluetooth:hover, #pulseaudio:hover, #backlight:hover,
-      #network:hover, #cpu:hover, #memory:hover,
-      #temperature:hover, #battery:hover, #clock:hover,
-      #custom-caffeine:hover, #custom-weather:hover, #custom-powerprofile:hover, #language:hover {
-        background: @surface0;
-        border-radius: 6px;
-      }
-    '';
-  };
-
-  programs.swaylock = {
+  programs.noctalia = {
     enable = true;
     settings = {
-      font = "JetBrainsMono Nerd Font";
-      font-size = 24;
-      indicator-radius = 100;
-      indicator-thickness = 7;
-      show-failed-attempts = true;
-    };
-  };
+      shell = {
+        font_family = "JetBrainsMono Nerd Font";
+        setup_wizard_enabled = false;
+        screenshot.directory = "${config.home.homeDirectory}/Pictures/screenshots";
+      };
 
-  # The swayidle unit runs with a bash-only PATH, so every command needs an
-  # absolute path; bare names fail with "command not found" and nothing locks.
-  services.swayidle =
-    let
-      swaylock = "${pkgs.swaylock}/bin/swaylock";
-      pidof = "${pkgs.procps}/bin/pidof";
-      niri = "/run/current-system/sw/bin/niri";
-      systemctl = "/run/current-system/sw/bin/systemctl";
-    in
-    {
-      enable = true;
-      timeouts = [
-        {
-          timeout = 300;
-          command = "${swaylock} -f";
-        }
-        {
-          timeout = 600;
-          command = "${niri} msg action power-off-monitors";
-          resumeCommand = "${niri} msg action power-on-monitors";
-        }
-        {
-          timeout = 900;
-          command = "${systemctl} suspend";
-        }
+      theme = {
+        mode = "dark";
+        source = "builtin";
+        builtin = "Catppuccin";
+      };
+
+      bar.default = {
+        margin_edge = 6;
+        margin_ends = 12;
+        background_opacity = 0.9;
+        widget_spacing = 8;
+        start = [
+          "launcher"
+          "workspaces"
+          "active_window"
+          "media"
+        ];
+        center = [
+          "clock"
+          "weather"
+        ];
+        end = [
+          "tray"
+          "group:controls"
+          "group:system"
+          "battery"
+          "keyboard_layout"
+          "notifications"
+          "session"
+        ];
+        capsule_group = [
+          {
+            id = "controls";
+            members = [
+              "caffeine"
+              "bluetooth"
+              "volume"
+              "brightness"
+              "network"
+            ];
+          }
+          {
+            id = "system";
+            members = [
+              "cpu"
+              "ram"
+              "temp"
+            ];
+          }
+        ];
+      };
+
+      widget = {
+        active_window.max_length = 200;
+        media = {
+          hide_when_no_media = true;
+          max_length = 180;
+        };
+        weather.show_condition = false;
+        network.show_label = false;
+        ram = {
+          type = "sysmon";
+          stat = "ram_pct";
+        };
+      };
+
+      # TLP owns power profiles, so the power_profile shortcut is left out.
+      control_center.shortcuts = [
+        { type = "wifi"; }
+        { type = "bluetooth"; }
+        { type = "caffeine"; }
+        { type = "nightlight"; }
+        { type = "notification"; }
       ];
-      events = {
-        before-sleep = "${pidof} swaylock || ${swaylock} -f";
-        lock = "${pidof} swaylock || ${swaylock} -f";
+
+      # The lock screen authenticates through the login PAM stack, where
+      # pam_fprintd already handles the reader; Noctalia's own D-Bus fingerprint
+      # path would fight it for the sensor.
+      lockscreen.fingerprint = false;
+
+      wallpaper.default.path = "${config.home.homeDirectory}/Pictures/wallpapers/pokemon-rowlet-sleeping-in-wreath-desktop-wallpaper.jpg";
+
+      location.auto_locate = true;
+      nightlight = {
+        enabled = true;
+        temperature_day = 6000;
+        temperature_night = 3400;
+      };
+
+      idle.behavior = {
+        lock = {
+          action = "lock";
+          enabled = true;
+          timeout = 300;
+        };
+        screen-off = {
+          action = "screen_off";
+          enabled = true;
+          timeout = 600;
+        };
+        lock-and-suspend = {
+          action = "lock_and_suspend";
+          enabled = true;
+          timeout = 900;
+        };
       };
     };
+  };
 
   home.file.".local/bin/kb-switch-niri" = {
     executable = true;

@@ -16,7 +16,6 @@
   };
 
   security.rtkit.enable = true;
-  security.pam.services.swaylock = { };
 
   services.displayManager.regreet = {
     enable = true;

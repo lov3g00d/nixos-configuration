@@ -1,30 +1,5 @@
-{ pkgs, ... }: {
-  services.mako = {
-    enable = true;
-    settings = {
-      default-timeout = 5000;
-      border-radius = 10;
-      border-size = 2;
-      padding = "15";
-      margin = "10";
-      layer = "overlay";
-      on-notify = "exec pw-play /run/current-system/sw/share/sounds/freedesktop/stereo/message-new-instant.oga";
-    };
-  };
-
-  programs.rofi = {
-    enable = true;
-    settings = {
-      modi = "drun,run,window";
-      show-icons = true;
-      display-drun = "Apps";
-      display-run = "Run";
-      display-window = "Windows";
-      drun-display-format = "{name}";
-      window-format = "{w} · {c} · {t}";
-    };
-  };
-
+{ ... }:
+{
   home.file.".local/bin/bt-autoconnect" = {
     executable = true;
     text = ''
@@ -36,103 +11,11 @@
     '';
   };
 
-  home.file.".local/bin/gammastep-auto" = {
-    executable = true;
-    text = ''
-      #!/usr/bin/env bash
-      get_location() {
-        LOC=$(curl -4sf --max-time 5 "http://ip-api.com/line/?fields=lat,lon" 2>/dev/null | tr '\n' ':')
-        [ -n "$LOC" ] && echo "$LOC" && return
-        LOC=$(curl -sf --max-time 5 "https://ipinfo.io/loc" 2>/dev/null | tr ',' ':')
-        [ -n "$LOC" ] && echo "$LOC" && return
-        LAT=$(curl -sf --max-time 5 "https://ifconfig.co/latitude" 2>/dev/null)
-        LON=$(curl -sf --max-time 5 "https://ifconfig.co/longitude" 2>/dev/null)
-        [ -n "$LAT" ] && [ -n "$LON" ] && echo "$LAT:$LON" && return
-      }
-
-      LOC=$(get_location)
-      LAT=$(echo "$LOC" | cut -d: -f1)
-      LON=$(echo "$LOC" | cut -d: -f2)
-
-      if [ -n "$LAT" ] && [ -n "$LON" ]; then
-        exec gammastep -l "$LAT:$LON" -t 6000:3400 -b 1.0:0.9
-      else
-        exec gammastep -l 44.43:26.1 -t 6000:3400 -b 1.0:0.9
-      fi
-    '';
-  };
-
-  home.file.".local/bin/power-menu-system" = {
-    executable = true;
-    text = ''
-      #!/usr/bin/env bash
-      options="󰌾  Lock\n󰒲  Suspend\n󰜉  Reboot\n󰐥  Shutdown\n󰗽  Log out"
-      selected=$(echo -e "$options" | rofi -dmenu -p "System" -theme-str 'window {width: 280px;}')
-
-      case "$selected" in
-        *Lock*)      swaylock -f ;;
-        *Suspend*)   systemctl suspend ;;
-        *Reboot*)    systemctl reboot ;;
-        *Shutdown*)  systemctl poweroff ;;
-        *"Log out"*) niri msg action quit ;;
-      esac
-    '';
-  };
-
-  home.file.".local/bin/caffeine" = {
-    executable = true;
-    text = ''
-      #!/usr/bin/env bash
-      PIDFILE="/tmp/caffeine-$USER.pid"
-
-      toggle() {
-        if [ -f "$PIDFILE" ] && kill -0 "$(cat "$PIDFILE")" 2>/dev/null; then
-          kill "$(cat "$PIDFILE")" 2>/dev/null
-          rm -f "$PIDFILE"
-          notify-send "Caffeine" "Disabled - sleep allowed" -i battery-caution
-        else
-          systemd-inhibit --what=idle:sleep:handle-lid-switch \
-            --who="Caffeine" \
-            --why="User requested stay awake" \
-            sleep infinity &
-          echo $! > "$PIDFILE"
-          notify-send "Caffeine" "Enabled - preventing sleep" -i battery-full-charged
-        fi
-      }
-
-      status() {
-        if [ -f "$PIDFILE" ] && kill -0 "$(cat "$PIDFILE")" 2>/dev/null; then
-          echo '{"text": "󰅶", "tooltip": "Caffeine: ON (click to disable)", "class": "active"}'
-        else
-          echo '{"text": "󰛊", "tooltip": "Caffeine: OFF (click to enable)", "class": "inactive"}'
-        fi
-      }
-
-      case "''${1:-toggle}" in
-        toggle) toggle ;;
-        status) status ;;
-        on)
-          if ! ([ -f "$PIDFILE" ] && kill -0 "$(cat "$PIDFILE")" 2>/dev/null); then
-            toggle
-          fi
-          ;;
-        off)
-          if [ -f "$PIDFILE" ] && kill -0 "$(cat "$PIDFILE")" 2>/dev/null; then
-            toggle
-          fi
-          ;;
-        *) echo "Usage: caffeine [toggle|status|on|off]" ;;
-      esac
-    '';
-  };
-
   home.file."Pictures/screenshots/.keep".text = "";
 
-  # Suppress blueman's duplicate tray icon so only the waybar bluetooth module
-  # shows. blueman-manager (waybar on-click) auto-spawns blueman-applet, whose
-  # StatusNotifierItem plugin registers a second bluetooth icon in waybar's tray.
-  # Disabling just that applet plugin drops the icon while keeping the applet
-  # (pairing agent, notifications). The old autostart Hidden=true block was dead:
-  # niri does not process XDG autostart.
+  # Suppress blueman's tray icon so only the bar's bluetooth widget shows.
+  # blueman-manager auto-spawns blueman-applet, whose StatusNotifierItem plugin
+  # registers a second bluetooth icon in the tray. Disabling just that plugin
+  # drops the icon while keeping the applet (pairing agent, notifications).
   dconf.settings."org/blueman/general".plugin-list = [ "!StatusNotifierItem" ];
 }

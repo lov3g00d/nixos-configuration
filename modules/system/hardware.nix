@@ -94,8 +94,7 @@
     power-profiles-daemon.enable = false;
     fstrim.enable = true;
     # TLP is the single owner of platform_profile + CPU perf/EPP: it auto-switches
-    # on AC/BAT transitions. The waybar `custom/powerprofile` widget is a passive
-    # indicator only — no user-driven override.
+    # on AC/BAT transitions, with no user-driven override.
     tlp = {
       enable = true;
       settings = {

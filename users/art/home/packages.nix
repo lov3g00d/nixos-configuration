@@ -46,22 +46,15 @@
     git-cliff
 
     # Desktop/Wayland
-    swayidle
     xwayland-satellite
     libnotify
-    cliphist
     pavucontrol
     brightnessctl
     playerctl
-    grim
     slurp
-    satty
     wl-clipboard
     glow
     nvtopPackages.intel
-    swayosd
-    gammastep
-    awww
     wl-screenrec
     libva-utils
     hyprpicker
