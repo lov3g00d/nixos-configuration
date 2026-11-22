@@ -83,7 +83,6 @@
   };
 
   services = {
-    blueman.enable = true;
     fwupd.enable = true;
     earlyoom = {
       enable = true;

@@ -47,16 +47,11 @@
 
     # Desktop/Wayland
     xwayland-satellite
-    libnotify
-    pavucontrol
     playerctl
-    slurp
     wl-clipboard
     glow
     nvtopPackages.intel
-    wl-screenrec
     libva-utils
-    hyprpicker
     wayland-utils
 
     # Network

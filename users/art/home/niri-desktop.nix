@@ -96,7 +96,6 @@
           "--silent"
         ];
       }
-      { command = [ "${config.home.homeDirectory}/.local/bin/bt-autoconnect" ]; }
     ];
 
     # Noctalia's notification actions and window activation need this.
@@ -296,23 +295,6 @@
       };
       "Mod+Print".action.screenshot-screen = [ ];
       "Mod+Shift+Print".action.screenshot-window = [ ];
-
-      "Mod+Alt+R" = {
-        action.spawn = [
-          "sh"
-          "-c"
-          "pkill wl-screenrec && notify-send 'Recording' 'Saved to ~/Videos/recordings/' || (mkdir -p ~/Videos/recordings && wl-screenrec -g \"$(slurp)\" -f ~/Videos/recordings/rec-$(date +%Y%m%d-%H%M%S).mp4 & notify-send 'Recording' 'Started — Mod+Shift+R to stop')"
-        ];
-        hotkey-overlay.title = "Toggle Screen Recording";
-      };
-      "Mod+P" = {
-        action.spawn = [
-          "sh"
-          "-c"
-          "hyprpicker -a && notify-send 'Color Picker' 'Copied to clipboard'"
-        ];
-        hotkey-overlay.title = "Color Picker";
-      };
 
       "Mod+Escape" = {
         action.spawn = [
@@ -541,16 +523,5 @@
         };
       };
     };
-  };
-
-  home.file.".local/bin/kb-switch-niri" = {
-    executable = true;
-    text = ''
-      #!/usr/bin/env bash
-      niri msg action switch-layout
-      sleep 0.05
-      layout=$(niri msg keyboard-layouts 2>/dev/null | grep '^\*' | sed 's/^\* //' | head -1)
-      notify-send -t 1500 "Keyboard" "$layout" -h string:x-canonical-private-synchronous:kb-layout
-    '';
   };
 }
