@@ -60,7 +60,7 @@
 
   qt = {
     enable = true;
-    platformTheme.name = "kvantum";
+    platformTheme.name = "gtk3";
     style.name = "kvantum";
   };
 

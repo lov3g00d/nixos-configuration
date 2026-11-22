@@ -71,8 +71,6 @@
     libva-utils
     hyprpicker
     wayland-utils
-    libsForQt5.qtstyleplugin-kvantum
-    qt6Packages.qtstyleplugin-kvantum
 
     # Network
     wireguard-tools
