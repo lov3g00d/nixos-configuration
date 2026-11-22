@@ -76,7 +76,7 @@
             extraSpecialArgs = {inherit pkgs-25-05 sharedFeeds;};
             sharedModules = [
               catppuccin.homeModules.catppuccin
-              nvf.homeManagerModules.default
+              nvf.homeModules.default
               nix-index-database.homeModules.nix-index
             ];
           };

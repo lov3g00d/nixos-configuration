@@ -1,8 +1,4 @@
-{
-  pkgs,
-  lib,
-  ...
-}: {
+{pkgs, ...}: {
   services = {
     xserver.enable = true;
     desktopManager.gnome.enable = true;
@@ -22,7 +18,7 @@
   security.rtkit.enable = true;
   security.pam.services.swaylock = {};
 
-  programs.regreet = {
+  services.displayManager.regreet = {
     enable = true;
     theme = {
       package = pkgs.catppuccin-gtk.override {
@@ -39,12 +35,14 @@
       package = pkgs.catppuccin-cursors.mochaDark;
       name = "catppuccin-mocha-dark-cursors";
     };
+    font = {
+      package = pkgs.nerd-fonts.jetbrains-mono;
+      name = "JetBrainsMono Nerd Font";
+      size = 14;
+    };
     settings = {
       background.fit = "Cover";
-      GTK = {
-        application_prefer_dark_theme = true;
-        font_name = lib.mkForce "JetBrainsMono Nerd Font 14";
-      };
+      GTK.application_prefer_dark_theme = true;
       commands = {
         reboot = ["systemctl" "reboot"];
         poweroff = ["systemctl" "poweroff"];

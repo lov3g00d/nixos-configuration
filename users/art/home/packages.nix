@@ -130,7 +130,7 @@
     # AI
     claude-code
     codex
-    gemini-cli
+    antigravity-cli
     pi-coding-agent
 
     # Fonts
