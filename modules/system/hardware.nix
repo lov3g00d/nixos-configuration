@@ -66,7 +66,6 @@
       ]
     ];
   };
-  boot.extraModprobeConfig = "options thinkpad_acpi fan_control=1";
   # https://github.com/NixOS/nixpkgs/issues/395739
   systemd.services.thinkfan.preStart = ''
     if ! grep -q "^commands:" /proc/acpi/ibm/fan 2>/dev/null; then

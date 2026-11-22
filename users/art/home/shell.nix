@@ -4,6 +4,12 @@
     enableCompletion = true;
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
+    history = {
+      size = 1000000000;
+      save = 1000000000;
+      ignoreAllDups = true;
+      findNoDups = true;
+    };
     plugins = [
       {
         name = "zsh-vi-mode";
@@ -24,10 +30,6 @@
       update = "cd /etc/nixos && nix flake update && nh os switch /etc/nixos";
     };
     initContent = ''
-      HISTSIZE=1000000000
-      SAVEHIST=1000000000
-      setopt HIST_IGNORE_ALL_DUPS HIST_FIND_NO_DUPS
-
       # Array form composes with other plugins and survives later redefinitions;
       # the function form (zvm_after_init() { ... }) gets clobbered by anything
       # sourced after this point in .zshrc.
@@ -64,7 +66,6 @@
     enable = true;
     enableZshIntegration = false;
     daemon.enable = true;
-    flags = [ "--disable-up-arrow" ];
     settings = {
       auto_sync = false;
       search_mode = "fuzzy";
