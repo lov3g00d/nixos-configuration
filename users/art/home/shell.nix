@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{ pkgs, ... }: {
   programs.zsh = {
     enable = true;
     enableCompletion = true;
@@ -64,7 +64,7 @@
     enable = true;
     enableZshIntegration = false;
     daemon.enable = true;
-    flags = ["--disable-up-arrow"];
+    flags = [ "--disable-up-arrow" ];
     settings = {
       auto_sync = false;
       search_mode = "fuzzy";

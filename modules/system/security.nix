@@ -1,4 +1,4 @@
-{...}: {
+{ ... }: {
   services.fprintd.enable = true;
 
   programs.wireshark.enable = true;

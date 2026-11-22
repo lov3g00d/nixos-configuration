@@ -1,4 +1,4 @@
-{...}: {
+{ ... }: {
   environment.sessionVariables.LIBVA_DRIVER_NAME = "iHD";
 
   zramSwap = {
@@ -15,19 +15,55 @@
       {
         type = "hwmon";
         query = "/sys/devices/platform/coretemp.0/hwmon";
-        indices = [1];
+        indices = [ 1 ];
       }
     ];
     levels = [
-      [0 0 20]
-      [1 15 30]
-      [2 25 40]
-      [3 35 50]
-      [4 45 60]
-      [5 55 70]
-      [6 65 80]
-      [7 75 90]
-      ["level full-speed" 85 32767]
+      [
+        0
+        0
+        20
+      ]
+      [
+        1
+        15
+        30
+      ]
+      [
+        2
+        25
+        40
+      ]
+      [
+        3
+        35
+        50
+      ]
+      [
+        4
+        45
+        60
+      ]
+      [
+        5
+        55
+        70
+      ]
+      [
+        6
+        65
+        80
+      ]
+      [
+        7
+        75
+        90
+      ]
+      [
+        "level full-speed"
+        85
+        32767
+      ]
     ];
   };
   boot.extraModprobeConfig = "options thinkpad_acpi fan_control=1";

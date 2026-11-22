@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{ pkgs, ... }: {
   services.envfs = {
     enable = true;
     # bash in the fallback so /bin/bash resolves even for callers with a stripped

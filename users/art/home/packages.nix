@@ -2,7 +2,8 @@
   pkgs,
   pkgs-25-05,
   ...
-}: {
+}:
+{
   home.packages = with pkgs; [
     # CLI utilities
     aria2

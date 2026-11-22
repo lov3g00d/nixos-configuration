@@ -3,9 +3,11 @@
   lib,
   ...
 }:
-with lib; let
+with lib;
+let
   cfg = config.programs.welcome;
-in {
+in
+{
   options.programs.welcome = {
     enable = mkEnableOption "custom welcome message";
   };

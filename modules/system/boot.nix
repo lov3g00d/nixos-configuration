@@ -1,4 +1,4 @@
-{pkgs, lib, ...}: {
+{ pkgs, lib, ... }: {
   boot = {
     lanzaboote = {
       enable = true;
@@ -27,9 +27,9 @@
     plymouth = {
       enable = true;
       theme = "catppuccin-mocha";
-      themePackages = [(pkgs.catppuccin-plymouth.override {variant = "mocha";})];
+      themePackages = [ (pkgs.catppuccin-plymouth.override { variant = "mocha"; }) ];
     };
-    kernelModules = ["tcp_bbr"];
+    kernelModules = [ "tcp_bbr" ];
     kernel.sysctl = {
       # High swappiness because zramSwap (priority 5) absorbs pressure in RAM;
       # the disk swap partition is only an overflow fallback. Pairs with

@@ -1,4 +1,5 @@
-{...}: let
+{ ... }:
+let
   commonSettings = {
     font = "Hack Nerd Font";
     fontSize = 14;
@@ -9,7 +10,8 @@
   # Ghostty's scrollback-limit is in BYTES (default 10 MB), not lines like kitty/
   # alacritty, so it can't share commonSettings.scrollback or it ends up smaller.
   ghosttyScrollbackBytes = 500000000;
-in {
+in
+{
   programs.herdr = {
     enable = true;
     settings = {

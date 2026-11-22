@@ -35,72 +35,76 @@
     };
   };
 
-  outputs = {
-    self,
-    nixpkgs,
-    nixpkgs-25-05,
-    nixos-hardware,
-    home-manager,
-    catppuccin,
-    nvf,
-    nix-index-database,
-    lanzaboote,
-    niri,
-    awsvpnclient,
-    ...
-  }: let
-    system = "x86_64-linux";
-    pkgs-25-05 = import nixpkgs-25-05 {
-      inherit system;
-      config.allowUnfree = true;
-    };
-  in {
-    nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
-      inherit system;
-      modules = [
-        ./configuration.nix
-        {system.configurationRevision = self.rev or self.dirtyRev or null;}
-        nixos-hardware.nixosModules.lenovo-thinkpad-x1-13th-gen
-        catppuccin.nixosModules.catppuccin
-        niri.nixosModules.niri
-        lanzaboote.nixosModules.lanzaboote
-        awsvpnclient.nixosModules.default
-        home-manager.nixosModules.home-manager
-        {nixpkgs.overlays = [niri.overlays.niri];}
-        {
-          home-manager = {
-            useGlobalPkgs = true;
-            useUserPackages = true;
-            backupFileExtension = "bak";
-            overwriteBackup = true;
-            users.art = import ./users/art/home;
-            extraSpecialArgs = {inherit pkgs-25-05;};
-            sharedModules = [
-              catppuccin.homeModules.catppuccin
-              nvf.homeModules.default
-              nix-index-database.homeModules.nix-index
-            ];
-          };
-        }
-      ];
-    };
-
-    devShells.${system}.default = let
-      pkgs = import nixpkgs {inherit system;};
+  outputs =
+    {
+      self,
+      nixpkgs,
+      nixpkgs-25-05,
+      nixos-hardware,
+      home-manager,
+      catppuccin,
+      nvf,
+      nix-index-database,
+      lanzaboote,
+      niri,
+      awsvpnclient,
+      ...
+    }:
+    let
+      system = "x86_64-linux";
+      pkgs-25-05 = import nixpkgs-25-05 {
+        inherit system;
+        config.allowUnfree = true;
+      };
     in
-      pkgs.mkShell {
-        name = "nixos-config";
-        packages = with pkgs; [
-          nil
-          nixfmt
-          statix
-          deadnix
-          manix
-          nix-tree
-          nix-diff
-          nvd
-          nix-output-monitor
+    {
+      nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
+        inherit system;
+        modules = [
+          ./configuration.nix
+          { system.configurationRevision = self.rev or self.dirtyRev or null; }
+          nixos-hardware.nixosModules.lenovo-thinkpad-x1-13th-gen
+          catppuccin.nixosModules.catppuccin
+          niri.nixosModules.niri
+          lanzaboote.nixosModules.lanzaboote
+          awsvpnclient.nixosModules.default
+          home-manager.nixosModules.home-manager
+          { nixpkgs.overlays = [ niri.overlays.niri ]; }
+          {
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              backupFileExtension = "bak";
+              overwriteBackup = true;
+              users.art = import ./users/art/home;
+              extraSpecialArgs = { inherit pkgs-25-05; };
+              sharedModules = [
+                catppuccin.homeModules.catppuccin
+                nvf.homeModules.default
+                nix-index-database.homeModules.nix-index
+              ];
+            };
+          }
         ];
       };
-  };
+
+      devShells.${system}.default =
+        let
+          pkgs = import nixpkgs { inherit system; };
+        in
+        pkgs.mkShell {
+          name = "nixos-config";
+          packages = with pkgs; [
+            nil
+            nixfmt
+            statix
+            deadnix
+            manix
+            nix-tree
+            nix-diff
+            nvd
+            nix-output-monitor
+          ];
+        };
+    };
 }

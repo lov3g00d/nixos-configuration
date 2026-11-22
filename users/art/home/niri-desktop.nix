@@ -3,7 +3,8 @@
   pkgs,
   lib,
   ...
-}: {
+}:
+{
   programs.niri.settings = {
     cursor = {
       theme = "catppuccin-mocha-mauve-cursors";
@@ -45,12 +46,14 @@
       center-focused-column = "on-overflow";
 
       preset-column-widths = [
-        {proportion = 1.0 / 3.0;}
-        {proportion = 0.5;}
-        {proportion = 2.0 / 3.0;}
+        { proportion = 1.0 / 3.0; }
+        { proportion = 0.5; }
+        { proportion = 2.0 / 3.0; }
       ];
 
-      default-column-width = {proportion = 0.5;};
+      default-column-width = {
+        proportion = 0.5;
+      };
 
       focus-ring = {
         enable = true;
@@ -86,36 +89,67 @@
     };
 
     spawn-at-startup = [
-      {command = ["swayosd-server"];}
+      { command = [ "swayosd-server" ]; }
 
-      {command = ["1password" "--silent"];}
-      {command = ["${config.home.homeDirectory}/.local/bin/gammastep-auto"];}
-      {command = ["${config.home.homeDirectory}/.local/bin/bt-autoconnect"];}
-      {command = ["awww-daemon"];}
-      {command = ["sh" "-c" "sleep 1 && awww img ${config.home.homeDirectory}/Pictures/wallpapers/pokemon-rowlet-sleeping-in-wreath-desktop-wallpaper.jpg --transition-type grow --transition-duration 2"];}
-      {command = ["wl-paste" "--type" "text" "--watch" "cliphist" "store"];}
-      {command = ["wl-paste" "--type" "image" "--watch" "cliphist" "store"];}
+      {
+        command = [
+          "1password"
+          "--silent"
+        ];
+      }
+      { command = [ "${config.home.homeDirectory}/.local/bin/gammastep-auto" ]; }
+      { command = [ "${config.home.homeDirectory}/.local/bin/bt-autoconnect" ]; }
+      { command = [ "awww-daemon" ]; }
+      {
+        command = [
+          "sh"
+          "-c"
+          "sleep 1 && awww img ${config.home.homeDirectory}/Pictures/wallpapers/pokemon-rowlet-sleeping-in-wreath-desktop-wallpaper.jpg --transition-type grow --transition-duration 2"
+        ];
+      }
+      {
+        command = [
+          "wl-paste"
+          "--type"
+          "text"
+          "--watch"
+          "cliphist"
+          "store"
+        ];
+      }
+      {
+        command = [
+          "wl-paste"
+          "--type"
+          "image"
+          "--watch"
+          "cliphist"
+          "store"
+        ];
+      }
     ];
 
     window-rules = [
       {
-        geometry-corner-radius = let
-          r = 10.0;
-        in {
-          top-left = r;
-          top-right = r;
-          bottom-left = r;
-          bottom-right = r;
-        };
+        geometry-corner-radius =
+          let
+            r = 10.0;
+          in
+          {
+            top-left = r;
+            top-right = r;
+            bottom-left = r;
+            bottom-right = r;
+          };
         clip-to-geometry = true;
         opacity = 0.99;
       }
       {
-        matches = [{is-focused = false;}];
+        matches = [ { is-focused = false; } ];
         opacity = 0.92;
       }
       {
-        matches = [{app-id = "^1Password$";}];
+        matches = [ { app-id = "^1Password$"; } ];
         open-floating = true;
         block-out-from = "screencast";
       }
@@ -137,97 +171,105 @@
     #   Super + Ctrl + key  = resize / cross boundaries
     binds = {
       "Mod+Return" = {
-        action.spawn = ["ghostty"];
+        action.spawn = [ "ghostty" ];
         hotkey-overlay.title = "Terminal (Ghostty)";
       };
       "Mod+Shift+Return" = {
-        action.spawn = ["alacritty"];
+        action.spawn = [ "alacritty" ];
         hotkey-overlay.title = "Terminal (Alacritty)";
       };
       "Mod+D" = {
-        action.spawn = ["rofi" "-show" "drun"];
+        action.spawn = [
+          "rofi"
+          "-show"
+          "drun"
+        ];
         hotkey-overlay.title = "App Launcher";
       };
       "Mod+B" = {
-        action.spawn = ["firefox"];
+        action.spawn = [ "firefox" ];
         hotkey-overlay.title = "Browser";
       };
       "Mod+C" = {
-        action.spawn = ["sh" "-c" "cliphist list | rofi -dmenu | cliphist decode | wl-copy"];
+        action.spawn = [
+          "sh"
+          "-c"
+          "cliphist list | rofi -dmenu | cliphist decode | wl-copy"
+        ];
         hotkey-overlay.title = "Clipboard History";
       };
 
       "Mod+Q" = {
-        action.close-window = [];
+        action.close-window = [ ];
         hotkey-overlay.title = "Close Window";
       };
       "Mod+F" = {
-        action.fullscreen-window = [];
+        action.fullscreen-window = [ ];
         hotkey-overlay.title = "Fullscreen";
       };
       "Mod+V" = {
-        action.toggle-window-floating = [];
+        action.toggle-window-floating = [ ];
         hotkey-overlay.title = "Toggle Floating";
       };
       "Mod+Space" = {
-        action.switch-focus-between-floating-and-tiling = [];
+        action.switch-focus-between-floating-and-tiling = [ ];
         hotkey-overlay.title = "Focus Float/Tile";
       };
 
-      "Mod+H".action.focus-column-left = [];
-      "Mod+J".action.focus-window-down = [];
-      "Mod+K".action.focus-window-up = [];
-      "Mod+L".action.focus-column-right = [];
-      "Mod+Left".action.focus-column-left = [];
-      "Mod+Down".action.focus-window-down = [];
-      "Mod+Up".action.focus-window-up = [];
-      "Mod+Right".action.focus-column-right = [];
-      "Mod+Home".action.focus-column-first = [];
-      "Mod+End".action.focus-column-last = [];
+      "Mod+H".action.focus-column-left = [ ];
+      "Mod+J".action.focus-window-down = [ ];
+      "Mod+K".action.focus-window-up = [ ];
+      "Mod+L".action.focus-column-right = [ ];
+      "Mod+Left".action.focus-column-left = [ ];
+      "Mod+Down".action.focus-window-down = [ ];
+      "Mod+Up".action.focus-window-up = [ ];
+      "Mod+Right".action.focus-column-right = [ ];
+      "Mod+Home".action.focus-column-first = [ ];
+      "Mod+End".action.focus-column-last = [ ];
       "Mod+Tab" = {
-        action.focus-window-down-or-column-right = [];
+        action.focus-window-down-or-column-right = [ ];
         hotkey-overlay.title = "Next Window/Column";
       };
-      "Mod+Shift+Tab".action.focus-window-up-or-column-left = [];
+      "Mod+Shift+Tab".action.focus-window-up-or-column-left = [ ];
 
-      "Mod+Shift+H".action.move-column-left = [];
-      "Mod+Shift+J".action.move-window-down = [];
-      "Mod+Shift+K".action.move-window-up = [];
-      "Mod+Shift+L".action.move-column-right = [];
-      "Mod+Shift+Left".action.move-column-left = [];
-      "Mod+Shift+Down".action.move-window-down = [];
-      "Mod+Shift+Up".action.move-window-up = [];
-      "Mod+Shift+Right".action.move-column-right = [];
-      "Mod+Shift+Home".action.move-column-to-first = [];
-      "Mod+Shift+End".action.move-column-to-last = [];
+      "Mod+Shift+H".action.move-column-left = [ ];
+      "Mod+Shift+J".action.move-window-down = [ ];
+      "Mod+Shift+K".action.move-window-up = [ ];
+      "Mod+Shift+L".action.move-column-right = [ ];
+      "Mod+Shift+Left".action.move-column-left = [ ];
+      "Mod+Shift+Down".action.move-window-down = [ ];
+      "Mod+Shift+Up".action.move-window-up = [ ];
+      "Mod+Shift+Right".action.move-column-right = [ ];
+      "Mod+Shift+Home".action.move-column-to-first = [ ];
+      "Mod+Shift+End".action.move-column-to-last = [ ];
 
       "Mod+BracketLeft" = {
-        action.consume-or-expel-window-left = [];
+        action.consume-or-expel-window-left = [ ];
         hotkey-overlay.title = "Consume/Expel Left";
       };
       "Mod+BracketRight" = {
-        action.consume-or-expel-window-right = [];
+        action.consume-or-expel-window-right = [ ];
         hotkey-overlay.title = "Consume/Expel Right";
       };
       "Mod+W" = {
-        action.toggle-column-tabbed-display = [];
+        action.toggle-column-tabbed-display = [ ];
         hotkey-overlay.title = "Toggle Tabs";
       };
 
       "Mod+R" = {
-        action.switch-preset-column-width = [];
+        action.switch-preset-column-width = [ ];
         hotkey-overlay.title = "Cycle Width (⅓ ½ ⅔)";
       };
       "Mod+M" = {
-        action.maximize-column = [];
+        action.maximize-column = [ ];
         hotkey-overlay.title = "Maximize Column";
       };
       "Mod+G" = {
-        action.center-column = [];
+        action.center-column = [ ];
         hotkey-overlay.title = "Center Column";
       };
       "Mod+Ctrl+F" = {
-        action.expand-column-to-available-width = [];
+        action.expand-column-to-available-width = [ ];
         hotkey-overlay.title = "Fill Available Width";
       };
       "Mod+Ctrl+H".action.set-column-width = "-5%";
@@ -240,17 +282,17 @@
       "Mod+Ctrl+Down".action.set-window-height = "+5%";
 
       "Mod+Page_Up" = {
-        action.focus-workspace-up = [];
+        action.focus-workspace-up = [ ];
         hotkey-overlay.title = "Workspace Up";
       };
       "Mod+Page_Down" = {
-        action.focus-workspace-down = [];
+        action.focus-workspace-down = [ ];
         hotkey-overlay.title = "Workspace Down";
       };
-      "Mod+Shift+Page_Up".action.move-column-to-workspace-up = [];
-      "Mod+Shift+Page_Down".action.move-column-to-workspace-down = [];
-      "Mod+Ctrl+Page_Up".action.move-workspace-up = [];
-      "Mod+Ctrl+Page_Down".action.move-workspace-down = [];
+      "Mod+Shift+Page_Up".action.move-column-to-workspace-up = [ ];
+      "Mod+Shift+Page_Down".action.move-column-to-workspace-down = [ ];
+      "Mod+Ctrl+Page_Up".action.move-workspace-up = [ ];
+      "Mod+Ctrl+Page_Down".action.move-workspace-down = [ ];
 
       "Mod+1".action.focus-workspace = 1;
       "Mod+2".action.focus-workspace = 2;
@@ -264,87 +306,148 @@
       "Mod+Shift+5".action.move-column-to-workspace = 5;
 
       "Mod+O" = {
-        action.toggle-overview = [];
+        action.toggle-overview = [ ];
         hotkey-overlay.title = "Overview (all workspaces)";
       };
 
       "Print" = {
-        action.spawn = ["sh" "-c" "grim -g \"$(slurp)\" - | satty -f -"];
+        action.spawn = [
+          "sh"
+          "-c"
+          "grim -g \"$(slurp)\" - | satty -f -"
+        ];
         hotkey-overlay.title = "Screenshot + Annotate";
       };
-      "Mod+Print".action.screenshot-screen = [];
-      "Mod+Shift+Print".action.screenshot-window = [];
+      "Mod+Print".action.screenshot-screen = [ ];
+      "Mod+Shift+Print".action.screenshot-window = [ ];
 
       "Mod+Alt+R" = {
-        action.spawn = ["sh" "-c" "pkill wl-screenrec && notify-send 'Recording' 'Saved to ~/Videos/recordings/' || (mkdir -p ~/Videos/recordings && wl-screenrec -g \"$(slurp)\" -f ~/Videos/recordings/rec-$(date +%Y%m%d-%H%M%S).mp4 & notify-send 'Recording' 'Started — Mod+Shift+R to stop')"];
+        action.spawn = [
+          "sh"
+          "-c"
+          "pkill wl-screenrec && notify-send 'Recording' 'Saved to ~/Videos/recordings/' || (mkdir -p ~/Videos/recordings && wl-screenrec -g \"$(slurp)\" -f ~/Videos/recordings/rec-$(date +%Y%m%d-%H%M%S).mp4 & notify-send 'Recording' 'Started — Mod+Shift+R to stop')"
+        ];
         hotkey-overlay.title = "Toggle Screen Recording";
       };
       "Mod+P" = {
-        action.spawn = ["sh" "-c" "hyprpicker -a && notify-send 'Color Picker' 'Copied to clipboard'"];
+        action.spawn = [
+          "sh"
+          "-c"
+          "hyprpicker -a && notify-send 'Color Picker' 'Copied to clipboard'"
+        ];
         hotkey-overlay.title = "Color Picker";
       };
 
       "Mod+Escape" = {
-        action.spawn = ["swaylock" "-f"];
+        action.spawn = [
+          "swaylock"
+          "-f"
+        ];
         hotkey-overlay.title = "Lock Screen";
       };
       "Mod+Shift+E" = {
-        action.quit = [];
+        action.quit = [ ];
         hotkey-overlay.title = "Quit Niri";
       };
-      "Mod+Shift+P".action.power-off-monitors = [];
+      "Mod+Shift+P".action.power-off-monitors = [ ];
       "Mod+Shift+Slash" = {
-        action.show-hotkey-overlay = [];
+        action.show-hotkey-overlay = [ ];
         hotkey-overlay.title = "Show This Overlay";
       };
 
       "XF86AudioRaiseVolume" = {
         allow-when-locked = true;
-        action.spawn = ["swayosd-client" "--output-volume" "raise"];
+        action.spawn = [
+          "swayosd-client"
+          "--output-volume"
+          "raise"
+        ];
       };
       "XF86AudioLowerVolume" = {
         allow-when-locked = true;
-        action.spawn = ["swayosd-client" "--output-volume" "lower"];
+        action.spawn = [
+          "swayosd-client"
+          "--output-volume"
+          "lower"
+        ];
       };
       "XF86AudioMute" = {
         allow-when-locked = true;
-        action.spawn = ["swayosd-client" "--output-volume" "mute-toggle"];
+        action.spawn = [
+          "swayosd-client"
+          "--output-volume"
+          "mute-toggle"
+        ];
       };
       "XF86AudioMicMute" = {
         allow-when-locked = true;
-        action.spawn = ["swayosd-client" "--input-volume" "mute-toggle"];
+        action.spawn = [
+          "swayosd-client"
+          "--input-volume"
+          "mute-toggle"
+        ];
       };
       "XF86AudioPlay" = {
         allow-when-locked = true;
-        action.spawn = ["playerctl" "play-pause"];
+        action.spawn = [
+          "playerctl"
+          "play-pause"
+        ];
       };
       "XF86AudioPause" = {
         allow-when-locked = true;
-        action.spawn = ["playerctl" "play-pause"];
+        action.spawn = [
+          "playerctl"
+          "play-pause"
+        ];
       };
       "XF86AudioNext" = {
         allow-when-locked = true;
-        action.spawn = ["playerctl" "next"];
+        action.spawn = [
+          "playerctl"
+          "next"
+        ];
       };
       "XF86AudioPrev" = {
         allow-when-locked = true;
-        action.spawn = ["playerctl" "previous"];
+        action.spawn = [
+          "playerctl"
+          "previous"
+        ];
       };
       "XF86MonBrightnessUp" = {
         allow-when-locked = true;
-        action.spawn = ["swayosd-client" "--brightness" "raise"];
+        action.spawn = [
+          "swayosd-client"
+          "--brightness"
+          "raise"
+        ];
       };
       "XF86MonBrightnessDown" = {
         allow-when-locked = true;
-        action.spawn = ["swayosd-client" "--brightness" "lower"];
+        action.spawn = [
+          "swayosd-client"
+          "--brightness"
+          "lower"
+        ];
       };
       "XF86KbdBrightnessUp" = {
         allow-when-locked = true;
-        action.spawn = ["brightnessctl" "--device=*::kbd_backlight" "set" "+10%"];
+        action.spawn = [
+          "brightnessctl"
+          "--device=*::kbd_backlight"
+          "set"
+          "+10%"
+        ];
       };
       "XF86KbdBrightnessDown" = {
         allow-when-locked = true;
-        action.spawn = ["brightnessctl" "--device=*::kbd_backlight" "set" "10%-"];
+        action.spawn = [
+          "brightnessctl"
+          "--device=*::kbd_backlight"
+          "set"
+          "10%-"
+        ];
       };
     };
   };
@@ -361,9 +464,31 @@
       margin-right = 12;
       spacing = 0;
 
-      modules-left = ["custom/logo" "niri/workspaces" "niri/window"];
-      modules-center = ["custom/weather" "custom/media"];
-      modules-right = ["tray" "custom/caffeine" "custom/powerprofile" "bluetooth" "pulseaudio" "backlight" "network" "cpu" "memory" "temperature" "battery" "clock" "niri/language" "custom/power"];
+      modules-left = [
+        "custom/logo"
+        "niri/workspaces"
+        "niri/window"
+      ];
+      modules-center = [
+        "custom/weather"
+        "custom/media"
+      ];
+      modules-right = [
+        "tray"
+        "custom/caffeine"
+        "custom/powerprofile"
+        "bluetooth"
+        "pulseaudio"
+        "backlight"
+        "network"
+        "cpu"
+        "memory"
+        "temperature"
+        "battery"
+        "clock"
+        "niri/language"
+        "custom/power"
+      ];
 
       "custom/logo" = {
         format = "󱄅";
@@ -465,7 +590,11 @@
           headset = "󰋎";
           phone = "󰏲";
           portable = "󰏲";
-          default = ["󰕿" "󰖀" "󰕾"];
+          default = [
+            "󰕿"
+            "󰖀"
+            "󰕾"
+          ];
         };
         tooltip-format = "{desc}";
         on-click = "pavucontrol";
@@ -476,7 +605,15 @@
 
       backlight = {
         format = "{icon} {percent}%";
-        format-icons = ["󰃚" "󰃛" "󰃜" "󰃝" "󰃞" "󰃟" "󰃠"];
+        format-icons = [
+          "󰃚"
+          "󰃛"
+          "󰃜"
+          "󰃝"
+          "󰃞"
+          "󰃟"
+          "󰃠"
+        ];
         tooltip-format = "Brightness: {percent}%";
         on-scroll-up = "brightnessctl set +3%";
         on-scroll-down = "brightnessctl set 3%-";
@@ -486,7 +623,13 @@
         format-wifi = "{icon} {signalStrength}%";
         format-ethernet = "󰈀 Wired";
         format-disconnected = "󰖪 Off";
-        format-icons = ["󰤯" "󰤟" "󰤢" "󰤥" "󰤨"];
+        format-icons = [
+          "󰤯"
+          "󰤟"
+          "󰤢"
+          "󰤥"
+          "󰤨"
+        ];
         tooltip-format-wifi = "󰖩 {essid}\n󰩟 {ipaddr}\n󰁅 {bandwidthDownBytes}  󰁝 {bandwidthUpBytes}";
         tooltip-format-ethernet = "󰈀 {ifname}\n󰩟 {ipaddr}";
         tooltip-format-disconnected = "Disconnected";
@@ -496,7 +639,16 @@
 
       cpu = {
         format = "{icon} {usage}%";
-        format-icons = ["▁" "▂" "▃" "▄" "▅" "▆" "▇" "█"];
+        format-icons = [
+          "▁"
+          "▂"
+          "▃"
+          "▄"
+          "▅"
+          "▆"
+          "▇"
+          "█"
+        ];
         interval = 2;
         tooltip-format = "CPU: {usage}%\n{avg_frequency}GHz";
         states = {
@@ -507,7 +659,16 @@
 
       memory = {
         format = "{icon} {percentage}%";
-        format-icons = ["▁" "▂" "▃" "▄" "▅" "▆" "▇" "█"];
+        format-icons = [
+          "▁"
+          "▂"
+          "▃"
+          "▄"
+          "▅"
+          "▆"
+          "▇"
+          "█"
+        ];
         interval = 3;
         tooltip-format = "RAM: {used:0.1f}G / {total:0.1f}G";
         states = {
@@ -518,7 +679,11 @@
 
       temperature = {
         format = "{icon} {temperatureC}°";
-        format-icons = ["󱃃" "󰔏" "󱃂"];
+        format-icons = [
+          "󱃃"
+          "󰔏"
+          "󱃂"
+        ];
         hwmon-path-abs = "/sys/devices/platform/coretemp.0/hwmon";
         input-filename = "temp1_input";
         critical-threshold = 80;
@@ -535,7 +700,19 @@
         format-charging = "󱐋 {capacity}%";
         format-plugged = "󰚥 {capacity}%";
         format-full = "󰁹 Full";
-        format-icons = ["󰂎" "󰁺" "󰁻" "󰁼" "󰁽" "󰁾" "󰁿" "󰂀" "󰂁" "󰂂" "󰁹"];
+        format-icons = [
+          "󰂎"
+          "󰁺"
+          "󰁻"
+          "󰁼"
+          "󰁽"
+          "󰁾"
+          "󰁿"
+          "󰂀"
+          "󰂁"
+          "󰂂"
+          "󰁹"
+        ];
         tooltip-format = "{timeTo}\n{power}W";
       };
 
@@ -763,33 +940,35 @@
 
   # The swayidle unit runs with a bash-only PATH, so every command needs an
   # absolute path; bare names fail with "command not found" and nothing locks.
-  services.swayidle = let
-    swaylock = "${pkgs.swaylock}/bin/swaylock";
-    pidof = "${pkgs.procps}/bin/pidof";
-    niri = "/run/current-system/sw/bin/niri";
-    systemctl = "/run/current-system/sw/bin/systemctl";
-  in {
-    enable = true;
-    timeouts = [
-      {
-        timeout = 300;
-        command = "${swaylock} -f";
-      }
-      {
-        timeout = 600;
-        command = "${niri} msg action power-off-monitors";
-        resumeCommand = "${niri} msg action power-on-monitors";
-      }
-      {
-        timeout = 900;
-        command = "${systemctl} suspend";
-      }
-    ];
-    events = {
-      before-sleep = "${pidof} swaylock || ${swaylock} -f";
-      lock = "${pidof} swaylock || ${swaylock} -f";
+  services.swayidle =
+    let
+      swaylock = "${pkgs.swaylock}/bin/swaylock";
+      pidof = "${pkgs.procps}/bin/pidof";
+      niri = "/run/current-system/sw/bin/niri";
+      systemctl = "/run/current-system/sw/bin/systemctl";
+    in
+    {
+      enable = true;
+      timeouts = [
+        {
+          timeout = 300;
+          command = "${swaylock} -f";
+        }
+        {
+          timeout = 600;
+          command = "${niri} msg action power-off-monitors";
+          resumeCommand = "${niri} msg action power-on-monitors";
+        }
+        {
+          timeout = 900;
+          command = "${systemctl} suspend";
+        }
+      ];
+      events = {
+        before-sleep = "${pidof} swaylock || ${swaylock} -f";
+        lock = "${pidof} swaylock || ${swaylock} -f";
+      };
     };
-  };
 
   home.file.".local/bin/kb-switch-niri" = {
     executable = true;

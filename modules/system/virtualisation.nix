@@ -1,11 +1,15 @@
-{...}: {
+{ ... }: {
   virtualisation.docker = {
     enable = true;
     enableOnBoot = false;
     autoPrune = {
       enable = true;
       dates = "weekly";
-      flags = ["--all" "--filter" "until=168h"];
+      flags = [
+        "--all"
+        "--filter"
+        "until=168h"
+      ];
     };
   };
   # Docker DNATs published ports ahead of the NixOS firewall, so `-p 5432:5432`

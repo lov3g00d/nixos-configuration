@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{ pkgs, ... }: {
   imports = [
     ./hardware-configuration.nix
     ./modules/system/boot.nix
@@ -18,10 +18,16 @@
 
   nix = {
     settings = {
-      experimental-features = ["nix-command" "flakes"];
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
       auto-optimise-store = true;
       warn-dirty = false;
-      trusted-users = ["root" "@wheel"];
+      trusted-users = [
+        "root"
+        "@wheel"
+      ];
       http-connections = 128; # default: 25
       max-substitution-jobs = 64; # default: 16
     };
@@ -32,13 +38,18 @@
     };
   };
 
-  environment.systemPackages = with pkgs; [vim git ghostty.terminfo sbctl];
+  environment.systemPackages = with pkgs; [
+    vim
+    git
+    ghostty.terminfo
+    sbctl
+  ];
 
   programs.firefox.enable = true;
   programs._1password.enable = true;
   programs._1password-gui = {
     enable = true;
-    polkitPolicyOwners = ["art"];
+    polkitPolicyOwners = [ "art" ];
   };
   programs.nh = {
     enable = true;
@@ -73,7 +84,7 @@
     persistent = true;
   };
 
-  systemd.services.nixos-upgrade.onFailure = ["nixos-upgrade-failed.service"];
+  systemd.services.nixos-upgrade.onFailure = [ "nixos-upgrade-failed.service" ];
   systemd.services.nixos-upgrade-failed = {
     description = "Desktop notification for a failed nixos-upgrade";
     serviceConfig.Type = "oneshot";

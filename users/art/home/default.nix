@@ -2,7 +2,8 @@
   config,
   pkgs,
   ...
-}: {
+}:
+{
   imports = [
     ../../../modules/home/welcome.nix
     ./packages.nix

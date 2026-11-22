@@ -8,7 +8,8 @@
   pkgs,
   lib,
   ...
-}: {
+}:
+{
   programs.nvf = {
     enable = true;
     settings.vim = {
@@ -151,7 +152,7 @@
           enable = true;
           lsp = {
             enable = true;
-            servers = ["nixd"];
+            servers = [ "nixd" ];
           };
           format.enable = true;
           extraDiagnostics.enable = true;
@@ -164,14 +165,20 @@
         python = {
           enable = true;
           dap.enable = true;
-          lsp.servers = ["basedpyright" "ruff"];
+          lsp.servers = [
+            "basedpyright"
+            "ruff"
+          ];
         };
         typescript.enable = true;
         go = {
           enable = true;
           format = {
             enable = true;
-            type = ["goimports" "gofumpt"];
+            type = [
+              "goimports"
+              "gofumpt"
+            ];
           };
           dap.enable = true;
           extraDiagnostics.enable = true;
@@ -181,7 +188,7 @@
           enable = true;
           dap = {
             enable = true;
-            debugger = ["lldb"];
+            debugger = [ "lldb" ];
           };
         };
         clang = {
@@ -222,7 +229,7 @@
       # ─── Completion & snippets ───────────────────────────────────────────
       autocomplete.nvim-cmp = {
         enable = true;
-        sourcePlugins = [pkgs.vimPlugins.cmp-cmdline];
+        sourcePlugins = [ pkgs.vimPlugins.cmp-cmdline ];
       };
       snippets.luasnip.enable = true;
 
@@ -247,7 +254,7 @@
         extensions = [
           {
             name = "fzf";
-            packages = [pkgs.vimPlugins.telescope-fzf-native-nvim];
+            packages = [ pkgs.vimPlugins.telescope-fzf-native-nvim ];
             setup.fzf.fuzzy = true;
           }
         ];

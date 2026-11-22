@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{ pkgs, ... }: {
   services = {
     xserver.enable = true;
     desktopManager.gnome.enable = true;
@@ -16,13 +16,13 @@
   };
 
   security.rtkit.enable = true;
-  security.pam.services.swaylock = {};
+  security.pam.services.swaylock = { };
 
   services.displayManager.regreet = {
     enable = true;
     theme = {
       package = pkgs.catppuccin-gtk.override {
-        accents = ["mauve"];
+        accents = [ "mauve" ];
         variant = "mocha";
       };
       name = "catppuccin-mocha-mauve-standard";
@@ -44,8 +44,14 @@
       background.fit = "Cover";
       GTK.application_prefer_dark_theme = true;
       commands = {
-        reboot = ["systemctl" "reboot"];
-        poweroff = ["systemctl" "poweroff"];
+        reboot = [
+          "systemctl"
+          "reboot"
+        ];
+        poweroff = [
+          "systemctl"
+          "poweroff"
+        ];
       };
     };
   };

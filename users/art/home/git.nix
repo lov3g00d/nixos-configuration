@@ -2,7 +2,8 @@
   lib,
   osConfig,
   ...
-}: let
+}:
+let
   gitProfiles = {
     personal = {
       name = "lov3g00d";
@@ -21,15 +22,16 @@
     };
   };
   defaultProfile = gitProfiles.personal;
-in {
+in
+{
   programs.git = {
     enable = true;
     signing = {
       key = defaultProfile.signingKey;
       signByDefault = true;
-      allowedSigners = lib.concatLines (lib.unique (lib.mapAttrsToList
-        (_: p: ''${p.email} namespaces="git" ${p.signingKey}'')
-        gitProfiles));
+      allowedSigners = lib.concatLines (
+        lib.unique (lib.mapAttrsToList (_: p: ''${p.email} namespaces="git" ${p.signingKey}'') gitProfiles)
+      );
     };
     settings = {
       user = {
@@ -82,7 +84,9 @@ in {
         IdentityFile = "~/.ssh/google_compute_engine";
         StrictHostKeyChecking = "accept-new";
         UserKnownHostsFile = "~/.ssh/known_hosts_cloud";
-        SetEnv = {TERM = "xterm-256color";};
+        SetEnv = {
+          TERM = "xterm-256color";
+        };
       };
       "github.com-opsfleet" = {
         HostName = "github.com";
@@ -94,7 +98,9 @@ in {
       "*" = {
         AddKeysToAgent = "yes";
         IdentityAgent = "~/.1password/agent.sock";
-        SetEnv = {TERM = "xterm-256color";};
+        SetEnv = {
+          TERM = "xterm-256color";
+        };
       };
     };
   };

@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{ pkgs, ... }: {
   services.mako = {
     enable = true;
     settings = {
@@ -134,5 +134,5 @@
   # Disabling just that applet plugin drops the icon while keeping the applet
   # (pairing agent, notifications). The old autostart Hidden=true block was dead:
   # niri does not process XDG autostart.
-  dconf.settings."org/blueman/general".plugin-list = ["!StatusNotifierItem"];
+  dconf.settings."org/blueman/general".plugin-list = [ "!StatusNotifierItem" ];
 }
