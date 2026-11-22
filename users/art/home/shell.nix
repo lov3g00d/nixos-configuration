@@ -82,6 +82,20 @@
     enableZshIntegration = true;
   };
 
+  programs.bat.enable = true;
+  programs.btop.enable = true;
+  programs.k9s.enable = true;
+  programs.lazygit.enable = true;
+  programs.eza = {
+    enable = true;
+    enableZshIntegration = false;
+  };
+  # Ctrl-R belongs to atuin.
+  programs.fzf = {
+    enable = true;
+    enableZshIntegration = false;
+  };
+
   programs.nix-index = {
     enable = true;
     enableZshIntegration = true;

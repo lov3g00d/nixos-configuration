@@ -9,9 +9,6 @@
     aria2
     ripgrep
     fd
-    bat
-    eza
-    fzf
     jq
     yq
     zip
@@ -22,7 +19,6 @@
     procs
     tokei
     hyperfine
-    btop
     tmux
     httpie
     tldr
@@ -45,7 +41,6 @@
     vulnix
 
     # Git tools
-    lazygit
     gh
     git-absorb
     difftastic
@@ -99,7 +94,6 @@
     podman-compose
     kubectl
     krew
-    k9s
     kubernetes-helm
     helmfile
     lens
