@@ -3,7 +3,6 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixpkgs-25-05.url = "github:nixos/nixpkgs/nixos-25.05"; # argocd v2 compat (cluster still on v2.x)
     nixos-hardware = {
       url = "github:NixOS/nixos-hardware/master";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -42,7 +41,6 @@
     {
       self,
       nixpkgs,
-      nixpkgs-25-05,
       nixos-hardware,
       home-manager,
       catppuccin,
@@ -55,10 +53,6 @@
     }:
     let
       system = "x86_64-linux";
-      pkgs-25-05 = import nixpkgs-25-05 {
-        inherit system;
-        config.allowUnfree = true;
-      };
     in
     {
       nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
@@ -80,7 +74,6 @@
               backupFileExtension = "bak";
               overwriteBackup = true;
               users.art = import ./users/art/home;
-              extraSpecialArgs = { inherit pkgs-25-05; };
               sharedModules = [
                 catppuccin.homeModules.catppuccin
                 nvf.homeModules.default

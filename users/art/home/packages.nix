@@ -1,6 +1,5 @@
 {
   pkgs,
-  pkgs-25-05,
   ...
 }:
 {
@@ -97,7 +96,7 @@
     kubernetes-helm
     helmfile
     lens
-    pkgs-25-05.argocd # pinned to v2 for cluster compat
+    argocd
     velero
 
     # Cloud & IaC
