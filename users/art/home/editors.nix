@@ -154,7 +154,10 @@
             enable = true;
             servers = [ "nixd" ];
           };
-          format.enable = true;
+          format = {
+            enable = true;
+            type = [ "nixfmt" ];
+          };
           extraDiagnostics.enable = true;
         };
         bash.enable = true;

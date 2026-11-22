@@ -88,6 +88,8 @@
         ];
       };
 
+      formatter.${system} = nixpkgs.legacyPackages.${system}.nixfmt-tree;
+
       devShells.${system}.default =
         let
           pkgs = import nixpkgs { inherit system; };
