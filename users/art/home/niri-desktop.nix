@@ -512,11 +512,6 @@
         { type = "notification"; }
       ];
 
-      # The lock screen authenticates through the login PAM stack, where
-      # pam_fprintd already handles the reader; Noctalia's own D-Bus fingerprint
-      # path would fight it for the sensor.
-      lockscreen.fingerprint = false;
-
       wallpaper.default.path = "${config.home.homeDirectory}/Pictures/wallpapers/pokemon-rowlet-sleeping-in-wreath-desktop-wallpaper.jpg";
 
       location.auto_locate = true;

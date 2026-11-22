@@ -1,4 +1,5 @@
-{ pkgs, ... }: {
+{ config, pkgs, ... }:
+{
   services = {
     xserver.enable = true;
     desktopManager.gnome.enable = true;
@@ -16,6 +17,17 @@
   };
 
   security.rtkit.enable = true;
+
+  # Noctalia's lock screen checks passwords against the login stack and drives
+  # the fingerprint reader itself, so pam_fprintd must stay out of login. greetd
+  # only includes login, so it gets its own fprintd rule to keep fingerprint at
+  # the greeter.
+  security.pam.services.login.fprintAuth = false;
+  security.pam.services.greetd.rules.auth.fprintd = {
+    order = 10000;
+    control = "sufficient";
+    modulePath = "${config.services.fprintd.package}/lib/security/pam_fprintd.so";
+  };
 
   services.displayManager.regreet = {
     enable = true;
