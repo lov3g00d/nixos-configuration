@@ -393,28 +393,36 @@
       "XF86AudioPlay" = {
         allow-when-locked = true;
         action.spawn = [
-          "playerctl"
-          "play-pause"
+          "noctalia"
+          "msg"
+          "media"
+          "toggle"
         ];
       };
       "XF86AudioPause" = {
         allow-when-locked = true;
         action.spawn = [
-          "playerctl"
-          "play-pause"
+          "noctalia"
+          "msg"
+          "media"
+          "toggle"
         ];
       };
       "XF86AudioNext" = {
         allow-when-locked = true;
         action.spawn = [
-          "playerctl"
+          "noctalia"
+          "msg"
+          "media"
           "next"
         ];
       };
       "XF86AudioPrev" = {
         allow-when-locked = true;
         action.spawn = [
-          "playerctl"
+          "noctalia"
+          "msg"
+          "media"
           "previous"
         ];
       };

@@ -47,7 +47,6 @@
 
     # Desktop/Wayland
     xwayland-satellite
-    playerctl
     wl-clipboard
     glow
     nvtopPackages.intel
