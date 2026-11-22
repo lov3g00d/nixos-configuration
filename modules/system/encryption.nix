@@ -1,5 +1,9 @@
 { lib, ... }:
 {
+  # Let fstrim reach the SSD through dm-crypt. Tradeoff: reveals which blocks are
+  # in use (not their contents).
+  boot.initrd.luks.devices.cryptroot.allowDiscards = true;
+
   # Swapfile on the encrypted root (encrypted for free). zram stays primary.
   # Drop this entry if zram is enough for you.
   swapDevices = lib.mkForce [

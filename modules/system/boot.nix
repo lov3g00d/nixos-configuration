@@ -3,6 +3,7 @@
     lanzaboote = {
       enable = true;
       pkiBundle = "/var/lib/sbctl";
+      configurationLimit = 10;
     };
     loader = {
       systemd-boot.enable = lib.mkForce false;
@@ -13,11 +14,9 @@
     # newer Intel Thread Director scheduling for the 6P+8E+2LP-E hybrid layout,
     # and Xe-LPG iGPU driver patches that land mainline before stable LTS.
     kernelPackages = pkgs.linuxPackages_latest;
-    consoleLogLevel = 0;
+    consoleLogLevel = 3;
     kernelParams = [
       "quiet"
-      "splash"
-      "loglevel=3"
       "rd.systemd.show_status=false"
       "rd.udev.log_level=3"
       "udev.log_priority=3"
