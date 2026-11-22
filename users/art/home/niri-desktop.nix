@@ -435,6 +435,7 @@
         font_family = "JetBrainsMono Nerd Font";
         setup_wizard_enabled = false;
         polkit_agent = true;
+        greeter_sync.auto_sync = true;
         screenshot.directory = "${config.home.homeDirectory}/Pictures/screenshots";
       };
 
