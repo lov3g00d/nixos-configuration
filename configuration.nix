@@ -8,7 +8,6 @@
     ./modules/system/security.nix
     ./modules/system/endpoint-verification
     ./modules/system/tor.nix
-    ./modules/system/miniflux.nix
     ./modules/system/virtualisation.nix
     ./modules/system/encryption.nix
     ./modules/system/envfs.nix

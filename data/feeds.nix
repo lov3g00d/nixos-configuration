@@ -1,4 +1,4 @@
-# Centralized RSS feeds — shared between newsboat and miniflux.
+# Centralized RSS feeds for newsboat.
 # Each entry: { url, tags, title }
 [
   # Tech
