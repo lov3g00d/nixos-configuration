@@ -540,7 +540,9 @@
         exec = ''
           city=$(curl -4sf --max-time 3 "http://ip-api.com/line/?fields=city" 2>/dev/null | head -1)
           [ -z "$city" ] && city="Bucharest"
-          curl -sf --max-time 5 "wttr.in/$city?format=%c+%t" 2>/dev/null | sed 's/+//' || echo "󰖐 --"
+          city=$(${pkgs.jq}/bin/jq -rn --arg c "$city" '$c | @uri')
+          out=$(curl -sf --max-time 5 "wttr.in/$city?format=%c+%t" 2>/dev/null)
+          if [ -n "$out" ]; then echo "$out" | sed 's/+//'; else echo "󰖐 --"; fi
         '';
         tooltip-format = "Click for details";
         on-click = "xdg-open https://wttr.in";
