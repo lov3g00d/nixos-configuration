@@ -5,6 +5,9 @@
   programs.niri.package = pkgs.niri;
   # niri comes from nixpkgs (cache.nixos.org), so niri.cachix.org serves nothing.
   niri-flake.cache.enable = false;
+  # Noctalia is the polkit agent. The KDE one niri-flake starts crashes on its
+  # QML dialog under QT_STYLE_OVERRIDE=kvantum.
+  systemd.user.services.niri-flake-polkit.enable = false;
 
   services.gnome.gnome-keyring.enable = true;
 

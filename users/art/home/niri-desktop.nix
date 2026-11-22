@@ -434,6 +434,7 @@
       shell = {
         font_family = "JetBrainsMono Nerd Font";
         setup_wizard_enabled = false;
+        polkit_agent = true;
         screenshot.directory = "${config.home.homeDirectory}/Pictures/screenshots";
       };
 
