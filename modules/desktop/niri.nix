@@ -3,6 +3,8 @@
   # niri-flake's own niri-stable build is broken against current nixpkgs
   # (asserts on the removed libdisplay-info_0_2); nixpkgs' niri is newer anyway.
   programs.niri.package = pkgs.niri;
+  # niri comes from nixpkgs (cache.nixos.org), so niri.cachix.org serves nothing.
+  niri-flake.cache.enable = false;
 
   services.gnome.gnome-keyring.enable = true;
 

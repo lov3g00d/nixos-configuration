@@ -76,8 +76,8 @@ in {
     settings = {
       "*.compute.internal *.googleapis.com compute.*" = {
         IdentityFile = "~/.ssh/google_compute_engine";
-        StrictHostKeyChecking = "no";
-        UserKnownHostsFile = "/dev/null";
+        StrictHostKeyChecking = "accept-new";
+        UserKnownHostsFile = "~/.ssh/known_hosts_cloud";
         SetEnv = {TERM = "xterm-256color";};
       };
       "github.com-opsfleet" = {

@@ -7,6 +7,11 @@
     xserver.enable = true;
     desktopManager.gnome.enable = true;
     printing.enable = true;
+    # GNOME turns on avahi, which turns on cups-browsed (a root daemon that builds
+    # print queues from network adverts) and opens UDP 5353. No network printers
+    # are used, and nsswitch has no mdns, so neither is needed.
+    printing.browsed.enable = false;
+    avahi.openFirewall = false;
     pipewire = {
       enable = true;
       alsa.enable = true;

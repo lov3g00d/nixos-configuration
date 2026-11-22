@@ -25,8 +25,6 @@
       trusted-users = ["root" "@wheel"];
       http-connections = 128; # default: 25
       max-substitution-jobs = 64; # default: 16
-      extra-substituters = ["https://niri.cachix.org"];
-      extra-trusted-public-keys = ["niri.cachix.org-1:Wv0OmO7PsuocRKzfDoJ3mulSl7Z8eAQW2/mDiJ2t2ws="];
     };
     registry.seashells.to = {
       type = "github";
