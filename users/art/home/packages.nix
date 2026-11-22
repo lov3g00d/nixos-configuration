@@ -49,7 +49,6 @@
     xwayland-satellite
     libnotify
     pavucontrol
-    brightnessctl
     playerctl
     slurp
     wl-clipboard
