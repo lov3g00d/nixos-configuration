@@ -550,10 +550,10 @@
         };
       };
 
-      # TLP owns power profiles, so the power_profile shortcut is left out.
       control_center.shortcuts = [
         { type = "wifi"; }
         { type = "bluetooth"; }
+        { type = "power_profile"; }
         { type = "caffeine"; }
         { type = "nightlight"; }
         { type = "notification"; }

@@ -92,28 +92,18 @@
     };
     power-profiles-daemon.enable = false;
     fstrim.enable = true;
-    # TLP is the single owner of platform_profile + CPU perf/EPP: it auto-switches
-    # on AC/BAT transitions, with no user-driven override.
+    # TLP is the single owner of platform_profile and CPU policy. It switches on
+    # AC/BAT transitions by itself; tlp-pd adds the manual profile switch.
     tlp = {
       enable = true;
+      pd.enable = true;
       settings = {
-        CPU_SCALING_GOVERNOR_ON_AC = "powersave";
-        CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
-        CPU_ENERGY_PERF_POLICY_ON_AC = "balance_performance";
-        CPU_ENERGY_PERF_POLICY_ON_BAT = "balance_power";
-        CPU_MIN_PERF_ON_AC = 0;
-        CPU_MAX_PERF_ON_AC = 100;
-        CPU_MIN_PERF_ON_BAT = 0;
-        CPU_MAX_PERF_ON_BAT = 60;
+        PLATFORM_PROFILE_ON_AC = "balanced";
+        PLATFORM_PROFILE_ON_BAT = "low-power";
         CPU_BOOST_ON_AC = 1;
         CPU_BOOST_ON_BAT = 0;
         CPU_HWP_DYN_BOOST_ON_AC = 1;
         CPU_HWP_DYN_BOOST_ON_BAT = 0;
-        PLATFORM_PROFILE_ON_AC = "balanced";
-        PLATFORM_PROFILE_ON_BAT = "low-power";
-        WIFI_PWR_ON_AC = 0;
-        WIFI_PWR_ON_BAT = 1;
-        PCIE_ASPM_ON_AC = "default";
         PCIE_ASPM_ON_BAT = "powersupersave";
         START_CHARGE_THRESH_BAT0 = 40;
         STOP_CHARGE_THRESH_BAT0 = 80;
