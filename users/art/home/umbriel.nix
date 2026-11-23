@@ -174,6 +174,18 @@ let
       "Mod+Alt+M" = "spawn ${setLayout} master";
       "Mod+Alt+F" = "spawn ${setLayout} stacking";
       "Mod+Alt+T" = "layout-toggle-split";
+      "Mod+Grave" = {
+        action = "scratchpad-toggle";
+        repeat = false;
+      };
+      "Mod+Shift+Grave" = {
+        action = "window-move-to-scratchpad";
+        repeat = false;
+      };
+      "Mod+Ctrl+Grave" = {
+        action = "window-restore-from-scratchpad";
+        repeat = false;
+      };
       "Mod+Shift+E" = "session-quit";
       "Mod+Shift+P" = "dpms-off";
       "Mod+Shift+Slash" = {
