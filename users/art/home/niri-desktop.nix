@@ -101,6 +101,14 @@
     # Noctalia's notification actions and window activation need this.
     debug.honor-xdg-activation-with-invalid-serial = [ ];
 
+    # Noctalia's blurred copy of the wallpaper sits behind the overview.
+    layer-rules = [
+      {
+        matches = [ { namespace = "^noctalia-backdrop"; } ];
+        place-within-backdrop = true;
+      }
+    ];
+
     window-rules = [
       {
         geometry-corner-radius =
@@ -553,6 +561,7 @@
 
       lockscreen.blurred_desktop = true;
 
+      backdrop.enabled = true;
       wallpaper.default.path = "${config.home.homeDirectory}/Pictures/wallpapers/pokemon-rowlet-sleeping-in-wreath-desktop-wallpaper.jpg";
 
       location.auto_locate = true;
