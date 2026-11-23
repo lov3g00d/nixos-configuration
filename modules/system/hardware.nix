@@ -7,72 +7,9 @@
     memoryPercent = 50;
   };
 
+  # thermald refuses to run on ThinkPads with lap-mode detection; the firmware
+  # owns thermals and the fan.
   services.thermald.enable = false;
-
-  services.thinkfan = {
-    enable = true;
-    sensors = [
-      {
-        type = "hwmon";
-        query = "/sys/devices/platform/coretemp.0/hwmon";
-        indices = [ 1 ];
-      }
-    ];
-    levels = [
-      [
-        0
-        0
-        20
-      ]
-      [
-        1
-        15
-        30
-      ]
-      [
-        2
-        25
-        40
-      ]
-      [
-        3
-        35
-        50
-      ]
-      [
-        4
-        45
-        60
-      ]
-      [
-        5
-        55
-        70
-      ]
-      [
-        6
-        65
-        80
-      ]
-      [
-        7
-        75
-        90
-      ]
-      [
-        "level full-speed"
-        85
-        32767
-      ]
-    ];
-  };
-  # https://github.com/NixOS/nixpkgs/issues/395739
-  systemd.services.thinkfan.preStart = ''
-    if ! grep -q "^commands:" /proc/acpi/ibm/fan 2>/dev/null; then
-      /run/current-system/sw/bin/modprobe -r thinkpad_acpi || true
-      /run/current-system/sw/bin/modprobe thinkpad_acpi
-    fi
-  '';
 
   hardware.flipperzero.enable = true;
 
