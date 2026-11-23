@@ -115,7 +115,6 @@
     nerd-fonts.fira-code
     nerd-fonts.jetbrains-mono
     nerd-fonts.symbols-only
-    font-awesome
   ];
 
   programs.obs-studio = {
