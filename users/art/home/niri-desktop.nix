@@ -471,6 +471,8 @@
         greeter_sync.auto_sync = true;
         niri_overview_type_to_launch_enabled = true;
         niri_overview_close_on_launch_enabled = true;
+        umbriel_overview_type_to_launch_enabled = true;
+        umbriel_overview_close_on_launch_enabled = true;
         screenshot.directory = "${config.home.homeDirectory}/Pictures/screenshots";
       };
 

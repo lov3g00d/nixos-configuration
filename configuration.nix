@@ -13,6 +13,7 @@
     ./modules/system/envfs.nix
     ./modules/desktop/services.nix
     ./modules/desktop/niri.nix
+    ./modules/desktop/umbriel.nix
     ./users/art
   ];
 

@@ -13,6 +13,7 @@
     ./terminals.nix
     ./desktop-shared.nix
     ./niri-desktop.nix
+    ./umbriel.nix
     ./security.nix
     ./endpoint-verification.nix
   ];
