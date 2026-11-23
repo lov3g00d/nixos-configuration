@@ -92,6 +92,14 @@ let
       unfocused = "#313244FF";
     };
 
+    workspaces.back_and_forth = true;
+
+    hot_corners.top_left = {
+      enabled = true;
+      delay_ms = 0;
+      action = "overview-toggle";
+    };
+
     layout = {
       mode = "scrolling";
       gap = 8;
